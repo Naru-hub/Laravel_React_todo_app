@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Todo;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class TodoController extends Controller
 {
@@ -12,7 +13,13 @@ class TodoController extends Controller
      */
     public function index()
     {
-        //
+        // todoを全て取得
+        $todos = Todo::all();
+        // 取得した全てのtodoを返却
+        return Inertia::render('Todo/Index', [
+            'todos' => $todos,
+            'message' => session('message')
+        ]);
     }
 
     /**

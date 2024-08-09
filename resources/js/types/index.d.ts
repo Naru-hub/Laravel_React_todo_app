@@ -5,7 +5,19 @@ export interface User {
     email_verified_at: string;
 }
 
-export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
+export interface Todo {
+    id: number;
+    user_id: number;
+    title: string;
+    description: string;
+    is_completed: boolean;
+    created_at: Date;
+    updated_at: Date;
+}
+
+export type PageProps<
+    T extends Record<string, unknown> = Record<string, unknown>
+> = T & {
     auth: {
         user: User;
     };
