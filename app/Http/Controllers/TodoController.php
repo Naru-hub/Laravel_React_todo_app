@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Todo\StoreRequest;
 use App\Models\Todo;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -23,19 +24,22 @@ class TodoController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        //
+        // 新規のTodoモデルを作成
+        $todo = new Todo();
+        // todoの各項目をTodoモデルに設定
+        $userId = \Illuminate\Support\Facades\Auth::id();
+        $todo->user_id = $userId;
+        $todo->title = $request->get('title');
+        $todo->description = $request->get('description');
+        // DBにデータを登録
+        $todo->save();
+        return redirect('Todo/Index')->with([
+            'message' => 'Todoを作成しました'
+        ]);
     }
 
     /**

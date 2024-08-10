@@ -25,7 +25,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Todoのルーティングを設定
-    Route::get('Todo/Index', [TodoController::class, 'index'])->name('todo.index');
+    Route::get('/Todo/Index', [TodoController::class, 'index'])->name('todo.index')->middleware('auth');
+    Route::post('/Todo/store', [TodoController::class, 'store'])->name('todo.store')->middleware('auth');
 });
 
 require __DIR__ . '/auth.php';
