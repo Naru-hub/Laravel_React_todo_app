@@ -1,18 +1,18 @@
-import { FormEventHandler, useRef, useState } from 'react';
+import { FormEventHandler, useRef, useState } from "react";
 
-import Checkbox from '@/Components/Checkbox';
-import DangerButton from '@/Components/DangerButton';
-import EditButton from '@/Components/EditButton';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import Modal from '@/Components/Modal';
-import PrimaryButton from '@/Components/PrimaryButton';
-import SecondaryButton from '@/Components/SecondaryButton';
-import TextareaInput from '@/Components/TextareaInput';
-import TextInput from '@/Components/TextInput';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { PageProps, Todo } from '@/types';
-import { Head, useForm } from '@inertiajs/react';
+import Checkbox from "@/Components/Checkbox";
+import DangerButton from "@/Components/DangerButton";
+import EditButton from "@/Components/EditButton";
+import InputError from "@/Components/InputError";
+import InputLabel from "@/Components/InputLabel";
+import Modal from "@/Components/Modal";
+import PrimaryButton from "@/Components/PrimaryButton";
+import SecondaryButton from "@/Components/SecondaryButton";
+import TextareaInput from "@/Components/TextareaInput";
+import TextInput from "@/Components/TextInput";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { PageProps, Todo } from "@/types";
+import { Head, useForm } from "@inertiajs/react";
 
 export default function Dashboard({ auth, todos }: PageProps) {
     const [todoCreate, setTodoCreate] = useState(false);
@@ -144,18 +144,24 @@ export default function Dashboard({ auth, todos }: PageProps) {
                     </Modal>
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
-                            <table>
-                                <thead>
+                            <table className="w-full border-separate border border-slate-400">
+                                <thead className="bg-cyan-500">
                                     <tr>
-                                        <th>todo</th>
-                                        <th>created_at</th>
+                                        <th className="border border-slate-300 text-white px-2 py-2">
+                                            todo
+                                        </th>
+                                        <th className="border border-slate-300 text-white px-2 py-2">
+                                            created_at
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {todos.map((todo: Todo) => (
                                         <tr key={todo.id}>
-                                            <td>{todo.title}</td>
-                                            <td>
+                                            <td className="border border-slate-300 px-2 py-2">
+                                                {todo.title}
+                                            </td>
+                                            <td className="border border-slate-300 px-2 py-2">
                                                 {new Date(
                                                     todo.created_at
                                                 ).toLocaleDateString("ja-JP", {
