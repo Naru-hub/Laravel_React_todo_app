@@ -10,13 +10,14 @@ use Inertia\Inertia;
 class TodoController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Todo一覧
      */
     public function index()
     {
-        // todoを全て取得
+        // Todoを全て取得
         $todos = Todo::all();
-        // 取得した全てのtodoを返却
+
+        // 取得した全てのTodoを返却
         return Inertia::render('Todo/Index', [
             'todos' => $todos,
             'message' => session('message')
@@ -24,17 +25,20 @@ class TodoController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Todo作成・保存
      */
     public function store(StoreRequest $request)
     {
         // 新規のTodoモデルを作成
         $todo = new Todo();
-        // todoの各項目をTodoモデルに設定
+
+        // Todoの各項目をTodoモデルに設定
+        // user_idをログインしているuserに設定
         $userId = \Illuminate\Support\Facades\Auth::id();
         $todo->user_id = $userId;
         $todo->title = $request->get('title');
         $todo->description = $request->get('description');
+
         // DBにデータを登録
         $todo->save();
         return redirect('Todo/Index')->with([
@@ -43,11 +47,13 @@ class TodoController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Todo詳細
      */
-    public function show(Todo $todo)
+    public function show($id)
     {
-        //
+        // 一覧のリンクから選択したtodoの詳細情報を取得
+        $todo = Todo::find($id);
+        return Inertia::render('Todo/Detail', ['todo' => $todo]);
     }
 
     /**
