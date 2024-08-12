@@ -31,6 +31,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/Todo/store', [TodoController::class, 'store'])->name('todo.store')->middleware('auth');
     // 詳細
     Route::get('/Todo/Detail/{id}', [TodoController::class, 'show'])->name('todo.detail')->middleware('auth');
+    // 編集
+    Route::put('/Todo/update/{id}', [TodoController::class, 'update'])->name('todo.update')->middleware('auth');
 });
 
 require __DIR__ . '/auth.php';

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Todo\StoreRequest;
+use App\Http\Requests\Todo\UpdateRequest;
 use App\Models\Todo;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -51,25 +52,29 @@ class TodoController extends Controller
      */
     public function show($id)
     {
-        // 一覧のリンクから選択したtodoの詳細情報を取得
+        // Todo一覧のリンクから選択したTodoの詳細情報を取得
         $todo = Todo::find($id);
         return Inertia::render('Todo/Detail', ['todo' => $todo]);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Todo編集・保存
      */
-    public function edit(Todo $todo)
+    public function update(UpdateRequest $request, $id)
     {
-        //
-    }
+        // IDに紐づくTodoモデルを取得
+        $todo = Todo::find($id);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Todo $todo)
-    {
-        //
+        // Todoの各項目をTodoモデルに設定
+        $todo->title = $request->get('title');
+        $todo->description = $request->get('description');
+        $todo->is_completed = $request->get('is_completed');
+
+        // DBのTodoの値を更新
+        $todo->save();
+        return redirect('Todo/Index')->with([
+            'message' => 'Todoを保存しました'
+        ]);
     }
 
     /**
