@@ -6,6 +6,7 @@ use App\Http\Requests\Todo\StoreRequest;
 use App\Http\Requests\Todo\UpdateRequest;
 use App\Models\Todo;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 
 class TodoController extends Controller
 {
@@ -14,10 +15,11 @@ class TodoController extends Controller
      */
     public function index()
     {
-        // Todoを全て取得
-        $todos = Todo::all();
+        // ログインしたユーザーのTodoのみを取得
+        $user = Auth::user();
+        $todos = Todo::where('user_id', $user->id)->get();
 
-        // 取得した全てのTodoを返却
+        // 取得したTodoを返却
         return Inertia::render('Todo/Index', [
             'todos' => $todos,
             'message' => session('message')

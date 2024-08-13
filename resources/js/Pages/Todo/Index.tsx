@@ -15,12 +15,13 @@ import { PageProps, Todo } from "@/types";
 import { Inertia } from "@inertiajs/inertia";
 import { Head, Link, useForm } from "@inertiajs/react";
 
-export default function todoIndex({ auth, todos }: PageProps) {
+export default function todoIndex({ auth, todos, message }: PageProps) {
     const todoLists = todos as Todo[];
     const [todoCreate, setTodoCreate] = useState(false);
     const [todoUpdate, setTodoUpdate] = useState(false);
     const titleInput = useRef<HTMLInputElement>(null);
     const descriptionInput = useRef<HTMLInputElement>(null);
+    const actionMessage: string = message as string;
 
     const { data, setData, post, put, processing, reset, errors } = useForm({
         id: 0,
@@ -153,7 +154,7 @@ export default function todoIndex({ auth, todos }: PageProps) {
                                     id="description"
                                     name="description"
                                     ref={descriptionInput}
-                                    value={data.description}
+                                    value={data.description ?? ""}
                                     onChange={(e) =>
                                         setData("description", e.target.value)
                                     }
@@ -225,7 +226,7 @@ export default function todoIndex({ auth, todos }: PageProps) {
                                     id="description"
                                     name="description"
                                     ref={descriptionInput}
-                                    value={data.description}
+                                    value={data.description ?? ""}
                                     onChange={(e) =>
                                         setData("description", e.target.value)
                                     }
@@ -282,83 +283,101 @@ export default function todoIndex({ auth, todos }: PageProps) {
                     </Modal>
 
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                        {actionMessage && (
+                            <div className="mt-2 text-green-700 bg-green-100 p-3 rounded-lg text-center font-bold">
+                                {actionMessage}
+                            </div>
+                        )}
                         <div className="p-6 text-gray-900">
-                            <table className="w-full border-separate border border-slate-400">
-                                <thead className="bg-cyan-500">
-                                    <tr>
-                                        <th className="border border-slate-300 text-white px-2 py-2">
-                                            todo
-                                        </th>
-                                        <th className="border border-slate-300 text-white px-2 py-2">
-                                            is_completed
-                                        </th>
-                                        <th className="border border-slate-300 text-white px-2 py-2">
-                                            created_at
-                                        </th>
-                                        <th className="border border-slate-300 text-white px-2 py-2"></th>
-                                        <th className="border border-slate-300 text-white px-2 py-2"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {todoLists.map((todo: Todo) => (
-                                        <tr key={todo.id}>
-                                            <td
-                                                className={`${
-                                                    todo.is_completed
-                                                        ? "border border-slate-300 px-2 py-2 line-through text-slate-400"
-                                                        : "border border-slate-300 px-2 py-2"
-                                                }`}
-                                            >
-                                                <Link
-                                                    href={`/Todo/Detail/${todo.id}`}
-                                                    method="get"
-                                                >
-                                                    {todo.title}
-                                                </Link>
-                                            </td>
-                                            <td className="border border-slate-300 px-2 py-2">
-                                                {todo.is_completed
-                                                    ? "完了"
-                                                    : "未完了"}
-                                            </td>
-                                            <td className="border border-slate-300 px-2 py-2">
-                                                {new Date(
-                                                    todo.created_at
-                                                ).toLocaleDateString("ja-JP", {
-                                                    year: "numeric",
-                                                    month: "2-digit",
-                                                    day: "2-digit",
-                                                })}
-                                            </td>
-                                            <td className="border border-slate-300 px-2 py-2 text-center">
-                                                <EditButton
-                                                    onClick={() =>
-                                                        todoEditForm(
-                                                            todo.id,
-                                                            todo.title,
-                                                            todo.description,
-                                                            todo.is_completed
-                                                        )
-                                                    }
-                                                    disabled={processing}
-                                                >
-                                                    編集
-                                                </EditButton>
-                                            </td>
-                                            <td className="border border-slate-300 px-2 py-2 text-center">
-                                                <DangerButton
-                                                    onClick={() =>
-                                                        deleteTodo(todo.id)
-                                                    }
-                                                    disabled={processing}
-                                                >
-                                                    削除
-                                                </DangerButton>
-                                            </td>
+                            {todoLists.length > 0 ? (
+                                <table className="w-full border-separate border border-slate-400">
+                                    <thead className="bg-cyan-500">
+                                        <tr>
+                                            <th className="border border-slate-300 text-white px-2 py-2">
+                                                todo
+                                            </th>
+                                            <th className="border border-slate-300 text-white px-2 py-2">
+                                                is_completed
+                                            </th>
+                                            <th className="border border-slate-300 text-white px-2 py-2">
+                                                created_at
+                                            </th>
+                                            <th className="border border-slate-300 text-white px-2 py-2"></th>
+                                            <th className="border border-slate-300 text-white px-2 py-2"></th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {todoLists.map((todo: Todo) => (
+                                            <tr key={todo.id}>
+                                                <td
+                                                    className={`${
+                                                        todo.is_completed
+                                                            ? "border border-slate-300 px-2 py-2 line-through text-slate-400"
+                                                            : "border border-slate-300 px-2 py-2"
+                                                    }`}
+                                                >
+                                                    <Link
+                                                        href={`/Todo/Detail/${todo.id}`}
+                                                        method="get"
+                                                    >
+                                                        {todo.title}
+                                                    </Link>
+                                                </td>
+                                                <td className="border border-slate-300 px-2 py-2">
+                                                    {todo.is_completed
+                                                        ? "完了"
+                                                        : "未完了"}
+                                                </td>
+                                                <td className="border border-slate-300 px-2 py-2">
+                                                    {new Date(
+                                                        todo.created_at
+                                                    ).toLocaleDateString(
+                                                        "ja-JP",
+                                                        {
+                                                            year: "numeric",
+                                                            month: "2-digit",
+                                                            day: "2-digit",
+                                                        }
+                                                    )}
+                                                </td>
+                                                <td className="border border-slate-300 px-2 py-2 text-center">
+                                                    <EditButton
+                                                        onClick={() =>
+                                                            todoEditForm(
+                                                                todo.id,
+                                                                todo.title,
+                                                                todo.description,
+                                                                todo.is_completed
+                                                            )
+                                                        }
+                                                        disabled={processing}
+                                                    >
+                                                        編集
+                                                    </EditButton>
+                                                </td>
+                                                <td className="border border-slate-300 px-2 py-2 text-center">
+                                                    <DangerButton
+                                                        onClick={() =>
+                                                            deleteTodo(todo.id)
+                                                        }
+                                                        disabled={processing}
+                                                    >
+                                                        削除
+                                                    </DangerButton>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            ) : (
+                                <p className="text-center">
+                                    表示できるTodoデータがありません
+                                    <span className="text-green-600 text-xl">
+                                        &#x270e;
+                                    </span>
+                                    Todoを作成してください
+                                </p>
+                            )}
                         </div>
                     </div>
                 </div>
