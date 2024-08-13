@@ -25,8 +25,16 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Todoのルーティングを設定
-    Route::get('/Todo/Index', [TodoController::class, 'index'])->name('todo.index')->middleware('auth');
-    Route::post('/Todo/store', [TodoController::class, 'store'])->name('todo.store')->middleware('auth');
+    // 一覧
+    Route::get('/Todo/Index', [TodoController::class, 'index'])->name('todo.index');
+    // 作成
+    Route::post('/Todo/store', [TodoController::class, 'store'])->name('todo.store');
+    // 詳細
+    Route::get('/Todo/Detail/{id}', [TodoController::class, 'show'])->name('todo.detail');
+    // 編集
+    Route::put('/Todo/update/{id}', [TodoController::class, 'update'])->name('todo.update');
+    // 削除
+    Route::delete('Todo/destroy/{id}', [TodoController::class, 'destroy'])->name('todo.destroy');
 });
 
 require __DIR__ . '/auth.php';

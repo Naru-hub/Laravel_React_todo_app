@@ -3,20 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Todo\StoreRequest;
+use App\Http\Requests\Todo\UpdateRequest;
 use App\Models\Todo;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 
 class TodoController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Todo一覧
      */
     public function index()
     {
-        // todoを全て取得
-        $todos = Todo::all();
-        // 取得した全てのtodoを返却
+        // ログインしたユーザーのTodoのみを取得
+        $user = Auth::user();
+        $todos = Todo::where('user_id', $user->id)->get();
+
+        // 取得したTodoを返却
         return Inertia::render('Todo/Index', [
             'todos' => $todos,
             'message' => session('message')
@@ -24,17 +27,20 @@ class TodoController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Todo作成・保存
      */
     public function store(StoreRequest $request)
     {
         // 新規のTodoモデルを作成
         $todo = new Todo();
-        // todoの各項目をTodoモデルに設定
+
+        // Todoの各項目をTodoモデルに設定
+        // user_idをログインしているuserに設定
         $userId = \Illuminate\Support\Facades\Auth::id();
         $todo->user_id = $userId;
         $todo->title = $request->get('title');
         $todo->description = $request->get('description');
+
         // DBにデータを登録
         $todo->save();
         return redirect('Todo/Index')->with([
@@ -43,34 +49,47 @@ class TodoController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Todo詳細
      */
-    public function show(Todo $todo)
+    public function show($id)
     {
-        //
+        // Todo一覧のリンクから選択したTodoの詳細情報を取得
+        $todo = Todo::find($id);
+        return Inertia::render('Todo/Detail', ['todo' => $todo]);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Todo編集・保存
      */
-    public function edit(Todo $todo)
+    public function update(UpdateRequest $request, $id)
     {
-        //
+        // IDに紐づくTodoを取得
+        $todo = Todo::find($id);
+
+        // Todoの各項目をTodoモデルに設定
+        $todo->title = $request->get('title');
+        $todo->description = $request->get('description');
+        $todo->is_completed = $request->get('is_completed');
+
+        // DBのTodoの値を更新
+        $todo->save();
+        return redirect('Todo/Index')->with([
+            'message' => 'Todoを保存しました'
+        ]);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Todo削除
      */
-    public function update(Request $request, Todo $todo)
+    public function destroy($id)
     {
-        //
-    }
+        //  IDに紐づくTodoを取得
+        $todo = Todo::find($id);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Todo $todo)
-    {
-        //
+        // Todoを削除
+        $todo->delete();
+        return redirect('Todo/Index')->with([
+            'message' => 'Todoを削除しました'
+        ]);
     }
 }
