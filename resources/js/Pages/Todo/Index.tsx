@@ -1,18 +1,19 @@
-import { FormEventHandler, useRef, useState } from 'react';
+import { FormEventHandler, useRef, useState } from "react";
 
-import Checkbox from '@/Components/Checkbox';
-import DangerButton from '@/Components/DangerButton';
-import EditButton from '@/Components/EditButton';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import Modal from '@/Components/Modal';
-import PrimaryButton from '@/Components/PrimaryButton';
-import SecondaryButton from '@/Components/SecondaryButton';
-import TextareaInput from '@/Components/TextareaInput';
-import TextInput from '@/Components/TextInput';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { PageProps, Todo } from '@/types';
-import { Head, Link, useForm } from '@inertiajs/react';
+import Checkbox from "@/Components/Checkbox";
+import DangerButton from "@/Components/DangerButton";
+import EditButton from "@/Components/EditButton";
+import InputError from "@/Components/InputError";
+import InputLabel from "@/Components/InputLabel";
+import Modal from "@/Components/Modal";
+import PrimaryButton from "@/Components/PrimaryButton";
+import SecondaryButton from "@/Components/SecondaryButton";
+import TextareaInput from "@/Components/TextareaInput";
+import TextInput from "@/Components/TextInput";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { PageProps, Todo } from "@/types";
+import { Inertia } from "@inertiajs/inertia";
+import { Head, Link, useForm } from "@inertiajs/react";
 
 export default function todoIndex({ auth, todos }: PageProps) {
     const todoLists = todos as Todo[];
@@ -69,6 +70,13 @@ export default function todoIndex({ auth, todos }: PageProps) {
         });
     };
 
+    const deleteTodo = (id: number) => {
+        Inertia.delete(route("todo.destroy", id), {
+            preserveScroll: true,
+            onFinish: () => reset(),
+        });
+    };
+
     const closeModal = () => {
         setTodoCreate(false);
 
@@ -97,6 +105,7 @@ export default function todoIndex({ auth, todos }: PageProps) {
                     <PrimaryButton
                         onClick={confirmTodoCreate}
                         className="mb-5 mx-5"
+                        disabled={processing}
                     >
                         Add
                     </PrimaryButton>
@@ -331,11 +340,21 @@ export default function todoIndex({ auth, todos }: PageProps) {
                                                             todo.is_completed
                                                         )
                                                     }
+                                                    disabled={processing}
                                                 >
                                                     編集
                                                 </EditButton>
                                             </td>
-                                            <td className="border border-slate-300 px-2 py-2"></td>
+                                            <td className="border border-slate-300 px-2 py-2 text-center">
+                                                <DangerButton
+                                                    onClick={() =>
+                                                        deleteTodo(todo.id)
+                                                    }
+                                                    disabled={processing}
+                                                >
+                                                    削除
+                                                </DangerButton>
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>

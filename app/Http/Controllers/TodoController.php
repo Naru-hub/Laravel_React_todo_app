@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Todo\StoreRequest;
 use App\Http\Requests\Todo\UpdateRequest;
 use App\Models\Todo;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class TodoController extends Controller
@@ -62,7 +61,7 @@ class TodoController extends Controller
      */
     public function update(UpdateRequest $request, $id)
     {
-        // IDに紐づくTodoモデルを取得
+        // IDに紐づくTodoを取得
         $todo = Todo::find($id);
 
         // Todoの各項目をTodoモデルに設定
@@ -78,10 +77,17 @@ class TodoController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Todo削除
      */
-    public function destroy(Todo $todo)
+    public function destroy($id)
     {
-        //
+        //  IDに紐づくTodoを取得
+        $todo = Todo::find($id);
+
+        // Todoを削除
+        $todo->delete();
+        return redirect('Todo/Index')->with([
+            'message' => 'Todoを削除しました'
+        ]);
     }
 }
