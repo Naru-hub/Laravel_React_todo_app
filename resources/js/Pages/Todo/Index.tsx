@@ -13,7 +13,7 @@ import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { PageProps, Todo } from "@/types";
 import { Inertia } from "@inertiajs/inertia";
-import { Head, Link, useForm } from "@inertiajs/react";
+import { Head, Link, useForm, usePage } from "@inertiajs/react";
 
 export default function todoIndex({ auth, todos, message }: PageProps) {
     const todoLists = todos as Todo[];
@@ -22,6 +22,9 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
     const titleInput = useRef<HTMLInputElement>(null);
     const descriptionInput = useRef<HTMLInputElement>(null);
     const actionMessage: string = message as string;
+    const { props } = usePage();
+    const errorMsg = props.errorMsg as string;
+    console.log(props);
 
     const { data, setData, post, put, processing, reset, errors } = useForm({
         id: 0,
@@ -65,9 +68,12 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
 
         put(route("todo.update", data.id), {
             preserveScroll: true,
-            onSuccess: () => updateCloseModal(),
+            onSuccess: () => {
+                updateCloseModal();
+                // 成功時のみリセットする
+                reset();
+            },
             onError: () => titleInput.current?.focus(),
-            onFinish: () => reset(),
         });
     };
 
@@ -99,7 +105,7 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
                 </h2>
             }
         >
-            <Head title="Dashboard" />
+            <Head title="Todo" />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -283,11 +289,18 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
                     </Modal>
 
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        {actionMessage && (
-                            <div className="mt-2 text-green-700 bg-green-100 p-3 rounded-lg text-center font-bold">
-                                {actionMessage}
-                            </div>
-                        )}
+                        <div className="py-3 px-6">
+                            {actionMessage && (
+                                <div className="mt-2 text-green-700 bg-green-100 p-2 rounded-lg text-center font-bold">
+                                    {actionMessage}
+                                </div>
+                            )}
+                            {errorMsg && (
+                                <div className="mt-2 text-red-700 bg-red-100 p-2 rounded-lg text-center font-bold">
+                                    {errorMsg}
+                                </div>
+                            )}
+                        </div>
                         <div className="p-6 text-gray-900">
                             {todoLists.length > 0 ? (
                                 <table className="w-full border-separate border border-slate-400">
