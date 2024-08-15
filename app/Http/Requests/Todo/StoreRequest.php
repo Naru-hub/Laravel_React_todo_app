@@ -22,8 +22,8 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required | string | max:255',
-            'description' => 'nullable | string'
+            'title' => 'required | string | max:50',
+            'description' => 'nullable | string | max:250'
         ];
     }
 
@@ -37,8 +37,9 @@ class StoreRequest extends FormRequest
         return [
             'title.required' => 'タイトルは必須です。',
             'title.string' => 'タイトルは文字列である必要があります。',
-            'title.max' => 'タイトルは255文字以内で入力してください。',
+            'title.max' => 'タイトルは50文字以内で入力してください。',
             'description.string' => 'デスクリプションは文字列である必要があります。',
+            'description.max' => 'デスクリプションは250文字以内で入力してください。',
         ];
     }
 }
