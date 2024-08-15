@@ -1,42 +1,51 @@
-import { FormEventHandler, useRef, useState } from "react";
+import { FormEventHandler, useEffect, useRef, useState } from 'react';
 
-import Checkbox from "@/Components/Checkbox";
-import DangerButton from "@/Components/DangerButton";
-import EditButton from "@/Components/EditButton";
-import InputError from "@/Components/InputError";
-import InputLabel from "@/Components/InputLabel";
-import Modal from "@/Components/Modal";
-import PrimaryButton from "@/Components/PrimaryButton";
-import SecondaryButton from "@/Components/SecondaryButton";
-import TextareaInput from "@/Components/TextareaInput";
-import TextInput from "@/Components/TextInput";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { PageProps, Todo } from "@/types";
-import { Inertia } from "@inertiajs/inertia";
-import { Head, Link, useForm, usePage } from "@inertiajs/react";
+import Checkbox from '@/Components/Checkbox';
+import DangerButton from '@/Components/DangerButton';
+import EditButton from '@/Components/EditButton';
+import InputError from '@/Components/InputError';
+import InputLabel from '@/Components/InputLabel';
+import Modal from '@/Components/Modal';
+import PrimaryButton from '@/Components/PrimaryButton';
+import SecondaryButton from '@/Components/SecondaryButton';
+import TextareaInput from '@/Components/TextareaInput';
+import TextInput from '@/Components/TextInput';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { PageProps, Todo } from '@/types';
+import { Inertia } from '@inertiajs/inertia';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 
 export default function todoIndex({ auth, todos, message }: PageProps) {
+    // Todo一覧の型宣言
     const todoLists = todos as Todo[];
+    // Todos作成・編集のステータス
     const [todoCreate, setTodoCreate] = useState(false);
     const [todoUpdate, setTodoUpdate] = useState(false);
+    // formの変数
     const titleInput = useRef<HTMLInputElement>(null);
     const descriptionInput = useRef<HTMLInputElement>(null);
+    // フラッシュメッセージの型宣言
     const actionMessage: string = message as string;
     const { props } = usePage();
     const errorMsg = props.errorMsg as string;
-    console.log(props);
+    // フラッシュメッセージの出現ステータス
+    const [showActionMessage, setShowActionMessage] = useState(!!actionMessage);
+    const [showErrorMessage, setShowErrorMessage] = useState(!!errorMsg);
 
     const { data, setData, post, put, processing, reset, errors } = useForm({
+        // formの初期値を設定
         id: 0,
         title: "",
         description: "",
         is_completed: false,
     });
 
+    // ADDボタン押下時
     const confirmTodoCreate = () => {
         setTodoCreate(true);
     };
 
+    // 編集ボタン押下時
     const todoEditForm = (
         id: number,
         title: string,
@@ -52,6 +61,7 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
         setTodoUpdate(true);
     };
 
+    // Saveボタン押下時(Todo作成)
     const todoStore: FormEventHandler = (e) => {
         e.preventDefault();
 
@@ -63,6 +73,7 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
         });
     };
 
+    // Saveボタン押下時(Todo編集)
     const todoUpdateStore: FormEventHandler = (e) => {
         e.preventDefault();
 
@@ -77,6 +88,7 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
         });
     };
 
+    // 削除ボタン押下時
     const deleteTodo = (id: number) => {
         Inertia.delete(route("todo.destroy", id), {
             preserveScroll: true,
@@ -84,17 +96,42 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
         });
     };
 
+    // Todo作成モーダルのキャンセルボタン押下時
     const closeModal = () => {
         setTodoCreate(false);
 
         reset();
     };
 
+    // Todo編集モーダルのキャンセルボタン押下時
     const updateCloseModal = () => {
         setTodoUpdate(false);
 
         reset();
     };
+
+    // フラッシュメッセージの表示・非表示
+    useEffect(() => {
+        if (actionMessage) {
+            setShowActionMessage(true);
+            const timer = setTimeout(() => {
+                setShowActionMessage(false);
+            }, 3000); // 3秒後にメッセージを非表示にする
+
+            return () => clearTimeout(timer); // タイマーをリセット
+        }
+    }, [actionMessage]);
+
+    useEffect(() => {
+        if (errorMsg) {
+            setShowErrorMessage(true);
+            const timer = setTimeout(() => {
+                setShowErrorMessage(false);
+            }, 3000); // 3秒後にエラーメッセージを非表示にする
+
+            return () => clearTimeout(timer); // タイマーをリセット
+        }
+    }, [errorMsg]);
 
     return (
         <AuthenticatedLayout
@@ -290,12 +327,12 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
 
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="py-3 px-6">
-                            {actionMessage && (
+                            {showActionMessage && actionMessage && (
                                 <div className="mt-2 text-green-700 bg-green-100 p-2 rounded-lg text-center font-bold">
                                     {actionMessage}
                                 </div>
                             )}
-                            {errorMsg && (
+                            {showErrorMessage && errorMsg && (
                                 <div className="mt-2 text-red-700 bg-red-100 p-2 rounded-lg text-center font-bold">
                                     {errorMsg}
                                 </div>
