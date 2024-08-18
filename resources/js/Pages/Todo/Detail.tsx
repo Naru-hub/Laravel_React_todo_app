@@ -1,11 +1,31 @@
+import { useEffect, useState } from "react";
+
 import SecondaryButton from "@/Components/SecondaryButton";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { PageProps, Todo } from "@/types";
 import { Inertia } from "@inertiajs/inertia";
-import { Head } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
 
 export default function TodoDetail({ auth, todo }: PageProps) {
+    // Todoデータの型宣言
     const todoData = todo as Todo;
+    const { props } = usePage();
+    // フラッシュメッセージの型宣言
+    const errorMsg = props.errorMsg as string;
+    // フラッシュメッセージの出現ステータス
+    const [showErrorMessage, setShowErrorMessage] = useState(!!errorMsg);
+
+    // フラッシュメッセージの表示・非表示
+    useEffect(() => {
+        if (errorMsg) {
+            setShowErrorMessage(true);
+            const timer = setTimeout(() => {
+                setShowErrorMessage(false);
+            }, 3000); // 3秒後にエラーメッセージを非表示にする
+
+            return () => clearTimeout(timer); // タイマーをリセット
+        }
+    }, [errorMsg]);
 
     const handleBack = () => {
         // 一覧画面のルートにリダイレクト
@@ -25,6 +45,13 @@ export default function TodoDetail({ auth, todo }: PageProps) {
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+                    <div className="py-3 px-6">
+                        {showErrorMessage && errorMsg && (
+                            <div className="mt-2 text-red-700 bg-red-100 p-2 rounded-lg text-center font-bold">
+                                {errorMsg}
+                            </div>
+                        )}
+                    </div>
                     <div className="px-4 py-6 sm:px-0">
                         <div className="bg-white shadow overflow-hidden sm:rounded-lg">
                             <div className="px-4 py-5 sm:px-6">

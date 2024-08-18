@@ -1,94 +1,179 @@
-import { FormEventHandler, useRef, useState } from "react";
+import { FormEventHandler, useEffect, useRef, useState } from "react";
 
-import Checkbox from "@/Components/Checkbox";
 import DangerButton from "@/Components/DangerButton";
 import EditButton from "@/Components/EditButton";
-import InputError from "@/Components/InputError";
-import InputLabel from "@/Components/InputLabel";
 import Modal from "@/Components/Modal";
 import PrimaryButton from "@/Components/PrimaryButton";
-import SecondaryButton from "@/Components/SecondaryButton";
-import TextareaInput from "@/Components/TextareaInput";
-import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { PageProps, Todo } from "@/types";
 import { Inertia } from "@inertiajs/inertia";
-import { Head, Link, useForm } from "@inertiajs/react";
+import { Head, Link, useForm, usePage } from "@inertiajs/react";
+
+import TodoForm from "./Modal/TodoForm";
 
 export default function todoIndex({ auth, todos, message }: PageProps) {
+    // Todo一覧の型宣言
     const todoLists = todos as Todo[];
+    // Todo作成・編集のステータス
     const [todoCreate, setTodoCreate] = useState(false);
     const [todoUpdate, setTodoUpdate] = useState(false);
+
+    // form要素の状態を管理
     const titleInput = useRef<HTMLInputElement>(null);
-    const descriptionInput = useRef<HTMLInputElement>(null);
-    const actionMessage: string = message as string;
+    const descriptionInput = useRef<HTMLTextAreaElement>(null);
+
+    // フラッシュメッセージの型宣言
+    let actionMessage: string = message as string;
+    const { props } = usePage();
+    let errorMessage = props.errorMsg as string;
+    // フラッシュメッセージの出現ステータス
+    const [showActionMessage, setShowActionMessage] = useState(!!actionMessage);
+    const [showErrorMessage, setShowErrorMessage] = useState(!!errorMessage);
 
     const { data, setData, post, put, processing, reset, errors } = useForm({
+        // formの初期値を設定
         id: 0,
         title: "",
         description: "",
         is_completed: false,
     });
 
+    // ADDボタン押下時
     const confirmTodoCreate = () => {
+        reset();
+        // バリデーションエラーメッセージをクリア
+        errors.title = "";
+        errors.description = "";
         setTodoCreate(true);
     };
 
+    // 編集ボタン押下時
     const todoEditForm = (
         id: number,
         title: string,
         description: string,
         is_completed: boolean
     ) => {
+        reset();
         setData({
             id: id,
             title: title,
             description: description,
             is_completed: is_completed,
         });
+        // バリデーションエラーメッセージをクリア
+        errors.title = "";
+        errors.description = "";
         setTodoUpdate(true);
     };
 
+    // Saveボタン押下時(Todo作成)
     const todoStore: FormEventHandler = (e) => {
         e.preventDefault();
 
         post(route("todo.store"), {
             preserveScroll: true,
-            onSuccess: () => closeModal(),
-            onError: () => titleInput.current?.focus(),
-            onFinish: () => reset(),
+            onSuccess: () => {
+                // 成功時にリセット
+                reset();
+                closeModal();
+            },
+            onError: () => {
+                if (errors.title && titleInput.current) {
+                    // titleにエラーがある場合、titleInputにフォーカスを移す
+                    titleInput.current.focus();
+                } else if (errors.description && descriptionInput.current) {
+                    // descriptionにエラーがある場合、descriptionInputにフォーカスを移す
+                    descriptionInput.current.focus();
+                }
+            },
         });
     };
 
+    // Saveボタン押下時(Todo編集)
     const todoUpdateStore: FormEventHandler = (e) => {
         e.preventDefault();
 
         put(route("todo.update", data.id), {
             preserveScroll: true,
-            onSuccess: () => updateCloseModal(),
-            onError: () => titleInput.current?.focus(),
-            onFinish: () => reset(),
+            onSuccess: () => {
+                // 成功時のみリセットする
+                reset();
+                updateCloseModal();
+            },
+            onError: () => {
+                if (errors.title && titleInput.current) {
+                    // titleにエラーがある場合、titleInputにフォーカスを移す
+                    titleInput.current.focus();
+                } else if (errors.description && descriptionInput.current) {
+                    // descriptionにエラーがある場合、descriptionInputにフォーカスを移す
+                    descriptionInput.current.focus();
+                }
+            },
         });
     };
 
+    // 削除ボタン押下時
     const deleteTodo = (id: number) => {
         Inertia.delete(route("todo.destroy", id), {
+            // リクエスト後にページのスクロール位置を保持
             preserveScroll: true,
             onFinish: () => reset(),
         });
     };
 
+    // Todo作成モーダルのキャンセルボタン押下時
     const closeModal = () => {
+        reset();
         setTodoCreate(false);
-
-        reset();
+        setData({
+            id: 0,
+            title: "",
+            description: "",
+            is_completed: false,
+        });
+        // バリデーションエラーメッセージをクリア
+        errors.title = "";
+        errors.description = "";
     };
 
+    // Todo編集モーダルのキャンセルボタン押下時
     const updateCloseModal = () => {
-        setTodoUpdate(false);
-
         reset();
+        setTodoUpdate(false);
+        setData({
+            id: 0,
+            title: "",
+            description: "",
+            is_completed: false,
+        });
+        // バリデーションエラーメッセージをクリア
+        errors.title = "";
+        errors.description = "";
     };
+
+    // フラッシュメッセージの表示・非表示
+    useEffect(() => {
+        if (actionMessage) {
+            setShowActionMessage(true);
+            const timer = setTimeout(() => {
+                setShowActionMessage(false);
+            }, 3000); // 3秒後にメッセージを非表示
+
+            return () => clearTimeout(timer); // タイマーをリセット
+        }
+    }, [actionMessage]);
+
+    useEffect(() => {
+        if (errorMessage) {
+            setShowErrorMessage(true);
+            const timer = setTimeout(() => {
+                setShowErrorMessage(false);
+            }, 3000); // 3秒後にエラーメッセージを非表示
+
+            return () => clearTimeout(timer); // タイマーをリセット
+        }
+    }, [errorMessage]);
 
     return (
         <AuthenticatedLayout
@@ -99,7 +184,7 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
                 </h2>
             }
         >
-            <Head title="Dashboard" />
+            <Head title="Todo" />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -112,182 +197,61 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
                     </PrimaryButton>
 
                     <Modal show={todoCreate} onClose={closeModal}>
-                        <form onSubmit={todoStore} className="p-6">
-                            <h2 className="text-lg text-gray-900 font-bold">
-                                Todo 作成
-                            </h2>
-
-                            <div className="mt-6">
-                                <InputLabel
-                                    htmlFor="title"
-                                    value="title"
-                                    className="ml-2"
-                                />
-
-                                <TextInput
-                                    id="title"
-                                    type="text"
-                                    name="title"
-                                    ref={titleInput}
-                                    value={data.title}
-                                    onChange={(e) =>
-                                        setData("title", e.target.value)
-                                    }
-                                    className="mt-1 block w-3/4"
-                                    isFocused
-                                    placeholder="todoを入力"
-                                />
-
-                                <InputError
-                                    message={errors.title}
-                                    className="mt-2"
-                                />
-                            </div>
-                            <div className="mt-6">
-                                <InputLabel
-                                    htmlFor="description"
-                                    value="description"
-                                    className="ml-2"
-                                />
-
-                                <TextareaInput
-                                    id="description"
-                                    name="description"
-                                    ref={descriptionInput}
-                                    value={data.description ?? ""}
-                                    onChange={(e) =>
-                                        setData("description", e.target.value)
-                                    }
-                                    className="mt-1 block w-3/4"
-                                    placeholder="詳細を入力"
-                                />
-
-                                <InputError
-                                    message={errors.description}
-                                    className="mt-2"
-                                />
-                            </div>
-
-                            <div className="mt-6 flex justify-end">
-                                <SecondaryButton onClick={closeModal}>
-                                    Cancel
-                                </SecondaryButton>
-
-                                <PrimaryButton
-                                    className="ms-3"
-                                    disabled={processing}
-                                >
-                                    Save
-                                </PrimaryButton>
-                            </div>
-                        </form>
+                        <TodoForm
+                            data={data}
+                            errors={errors}
+                            processing={processing}
+                            onChange={(e) =>
+                                setData(
+                                    e.target.name as keyof typeof data,
+                                    e.target.value
+                                )
+                            }
+                            onSubmit={todoStore}
+                            onCancel={closeModal}
+                            isEditing={false}
+                            titleInputRef={titleInput}
+                            descriptionInputRef={descriptionInput}
+                        />
                     </Modal>
 
                     <Modal show={todoUpdate} onClose={updateCloseModal}>
-                        <form onSubmit={todoUpdateStore} className="p-6">
-                            <h2 className="text-lg text-gray-900 font-bold">
-                                Todo 編集
-                            </h2>
-
-                            <div className="mt-6">
-                                <InputLabel
-                                    htmlFor="title"
-                                    value="title"
-                                    className="ml-2"
-                                />
-
-                                <TextInput
-                                    id="title"
-                                    type="text"
-                                    name="title"
-                                    ref={titleInput}
-                                    value={data.title}
-                                    onChange={(e) =>
-                                        setData("title", e.target.value)
-                                    }
-                                    className="mt-1 block w-3/4"
-                                    isFocused
-                                    placeholder="todoを入力"
-                                />
-
-                                <InputError
-                                    message={errors.title}
-                                    className="mt-2"
-                                />
-                            </div>
-                            <div className="mt-6">
-                                <InputLabel
-                                    htmlFor="description"
-                                    value="description"
-                                    className="ml-2"
-                                />
-
-                                <TextareaInput
-                                    id="description"
-                                    name="description"
-                                    ref={descriptionInput}
-                                    value={data.description ?? ""}
-                                    onChange={(e) =>
-                                        setData("description", e.target.value)
-                                    }
-                                    className="mt-1 block w-3/4"
-                                    placeholder="詳細を入力"
-                                />
-
-                                <InputError
-                                    message={errors.description}
-                                    className="mt-2"
-                                />
-                            </div>
-
-                            <div className="mt-6">
-                                <InputLabel
-                                    htmlFor="is_completed"
-                                    value="is_completed"
-                                    className="ml-2"
-                                />
-
-                                <Checkbox
-                                    id="is_completed"
-                                    name="is_completed"
-                                    type="checkbox"
-                                    checked={data.is_completed}
-                                    onChange={(e) =>
-                                        setData(
-                                            "is_completed",
-                                            !data.is_completed
-                                        )
-                                    }
-                                    className="mt-1 ml-1 block w-5"
-                                />
-
-                                <InputError
-                                    message={errors.is_completed}
-                                    className="mt-2"
-                                />
-                            </div>
-
-                            <div className="mt-6 flex justify-end">
-                                <SecondaryButton onClick={updateCloseModal}>
-                                    Cancel
-                                </SecondaryButton>
-
-                                <PrimaryButton
-                                    className="ms-3"
-                                    disabled={processing}
-                                >
-                                    Save
-                                </PrimaryButton>
-                            </div>
-                        </form>
+                        <TodoForm
+                            data={data}
+                            errors={errors}
+                            processing={processing}
+                            onChange={(e) => {
+                                const target = e.target as HTMLInputElement;
+                                const value =
+                                    target.type === "checkbox"
+                                        ? target.checked
+                                        : target.value;
+                                setData(
+                                    e.target.name as keyof typeof data,
+                                    value
+                                );
+                            }}
+                            onSubmit={todoUpdateStore}
+                            onCancel={updateCloseModal}
+                            isEditing={true}
+                            titleInputRef={titleInput}
+                            descriptionInputRef={descriptionInput}
+                        />
                     </Modal>
 
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        {actionMessage && (
-                            <div className="mt-2 text-green-700 bg-green-100 p-3 rounded-lg text-center font-bold">
-                                {actionMessage}
-                            </div>
-                        )}
+                        <div className="py-3 px-6">
+                            {showActionMessage && actionMessage && (
+                                <div className="mt-2 text-green-700 bg-green-100 p-2 rounded-lg text-center font-bold">
+                                    {actionMessage}
+                                </div>
+                            )}
+                            {showErrorMessage && errorMessage && (
+                                <div className="mt-2 text-red-700 bg-red-100 p-2 rounded-lg text-center font-bold">
+                                    {errorMessage}
+                                </div>
+                            )}
+                        </div>
                         <div className="p-6 text-gray-900">
                             {todoLists.length > 0 ? (
                                 <table className="w-full border-separate border border-slate-400">
