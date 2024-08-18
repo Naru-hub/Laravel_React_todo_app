@@ -1,10 +1,28 @@
+import { useEffect, useState } from 'react';
+
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { PageProps } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 
 export default function Dashboard({ auth }: PageProps) {
     const { props } = usePage();
+    // フラッシュメッセージの型宣言
     const errorMsg = props.errorMsg as string;
+    // フラッシュメッセージの出現ステータス
+    const [showErrorMessage, setShowErrorMessage] = useState(!!errorMsg);
+
+    // フラッシュメッセージの表示・非表示
+    useEffect(() => {
+        if (errorMsg) {
+            setShowErrorMessage(true);
+            const timer = setTimeout(() => {
+                setShowErrorMessage(false);
+            }, 3000); // 3秒後にエラーメッセージを非表示にする
+
+            return () => clearTimeout(timer); // タイマーをリセット
+        }
+    }, [errorMsg]);
+
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -18,13 +36,13 @@ export default function Dashboard({ auth }: PageProps) {
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                        <div className="py-3 px-6">
-                            {errorMsg && (
-                                <div className="mt-2 text-red-700 bg-red-100 p-2 rounded-lg text-center font-bold">
-                                    {errorMsg}
-                                </div>
-                            )}
-                        </div>
+                    <div className="py-3 px-6">
+                        {showErrorMessage && errorMsg && (
+                            <div className="mt-2 text-red-700 bg-red-100 p-2 rounded-lg text-center font-bold">
+                                {errorMsg}
+                            </div>
+                        )}
+                    </div>
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
                             {auth.user.name}さん、こんにちは！
