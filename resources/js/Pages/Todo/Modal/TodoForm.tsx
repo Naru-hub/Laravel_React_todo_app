@@ -1,15 +1,13 @@
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
-import Checkbox from "@/Components/Checkbox";
-import InputError from "@/Components/InputError";
-import InputLabel from "@/Components/InputLabel";
-import PrimaryButton from "@/Components/PrimaryButton";
-import SecondaryButton from "@/Components/SecondaryButton";
-import TextareaInput from "@/Components/TextareaInput";
-import TextInput from "@/Components/TextInput";
-import { TodoFormProps } from "@/types";
-
-// import { useForm } from '@inertiajs/react';
+import Checkbox from '@/Components/Checkbox';
+import InputError from '@/Components/InputError';
+import InputLabel from '@/Components/InputLabel';
+import PrimaryButton from '@/Components/PrimaryButton';
+import SecondaryButton from '@/Components/SecondaryButton';
+import TextareaInput from '@/Components/TextareaInput';
+import TextInput from '@/Components/TextInput';
+import { TodoFormProps } from '@/types';
 
 const TodoForm = ({
     errors,

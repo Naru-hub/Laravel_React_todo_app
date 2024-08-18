@@ -1,66 +1,80 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel + React + TypeScript + Inertia を使用したTodoアプリ
+<img width="1440" alt="スクリーンショット 2024-08-18 19 33 57" src="https://github.com/user-attachments/assets/3f1e9d41-df1f-4157-bbfe-a82a90deb8f8">
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## 主な機能
+- ログイン機能
+<details><summary>ログイン機能</summary>
 
-## About Laravel
+  ### ユーザーのログインが可能
+  <img width="1440" alt="スクリーンショット 2024-08-18 19 51 02" src="https://github.com/user-attachments/assets/1e4f4271-e925-4665-b9ab-5155e5d45d5e">
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+  <img width="1440" alt="スクリーンショット 2024-08-18 19 58 58" src="https://github.com/user-attachments/assets/54b00625-a585-49f5-a3b9-af3db6d14919">
+  </details>
+  <details><summary>ユーザーの新規登録機能</summary>
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+  ### ユーザーの新規登録が可能
+ <img width="1437" alt="スクリーンショット 2024-08-18 19 53 29" src="https://github.com/user-attachments/assets/014e947e-812c-448f-ba55-534a47463457">
+  </details>
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- todo一覧表示
+<details><summary>todo一覧表示</summary>
 
-## Learning Laravel
+  ### ユーザーが作成したTodoを一覧にて確認可能
+  <img width="1440" alt="スクリーンショット 2024-08-18 21 55 05" src="https://github.com/user-attachments/assets/7151084a-6bf4-4001-ab13-568506280bd3">
+  </details>
+  <details><summary>一覧に表示するTodoデータがない場合の表示</summary>
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+  ### Todoデータがない場合
+  <img width="1434" alt="スクリーンショット 2024-08-18 20 00 59" src="https://github.com/user-attachments/assets/69bdf90b-9dd7-4492-8a5c-f82eaffb0c63">
+  </details>
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- CRUD機能
+<details><summary>Todo新規作成</summary>
 
-## Laravel Sponsors
+  ### TodoをTodo作成モーダルにて作成することが可能
+  <img width="1440" alt="スクリーンショット 2024-08-18 20 05 22" src="https://github.com/user-attachments/assets/b17caf46-7737-4466-8bdc-6f694cbf9b97">
+  <img width="1440" alt="スクリーンショット 2024-08-18 20 09 33" src="https://github.com/user-attachments/assets/fe7dee1a-954c-4e0b-afbc-79b8151d9896">
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+  </details>
+  <details><summary>TODO詳細表示</summary>
 
-### Premium Partners
+  ### 一覧からTodoのタイトルを押下、詳細ページにてTodo詳細を確認することが可能
+  <img width="1440" alt="スクリーンショット 2024-08-18 20 12 15" src="https://github.com/user-attachments/assets/eb86f446-80a6-4245-a74b-b9760eaabde3">
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+  </details>
+  <details><summary>Todo編集機能</summary>
 
-## Contributing
+  ### Todoを編集フォームにて編集することが可能
+  <img width="1440" alt="スクリーンショット 2024-08-18 20 18 12" src="https://github.com/user-attachments/assets/6ed9def8-7eae-4023-9b21-c5c0dd63ed2f">
+  <img width="1440" alt="スクリーンショット 2024-08-18 20 18 46" src="https://github.com/user-attachments/assets/036ae238-cd45-4bd0-ad88-311b1e99668e">
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+  </details>
+  <details><summary>TODO削除機能</summary>
 
-## Code of Conduct
+  ### Todoを削除することが可能
+  <img width="1437" alt="スクリーンショット 2024-08-18 21 50 35" src="https://github.com/user-attachments/assets/e0fd7129-1967-45eb-9f6f-55e2dac07144">
+  <img width="1440" alt="スクリーンショット 2024-08-18 21 50 59" src="https://github.com/user-attachments/assets/c56a429d-5ffe-4915-9446-f0b62eb657a0">
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+  </details>
 
-## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- その他
+<details><summary>フラッシュメッセージ</summary>
 
-## License
+  ### 例外時
+  <img width="1437" alt="スクリーンショット 2024-08-18 22 08 51" src="https://github.com/user-attachments/assets/55242c57-07d0-4181-9d84-8db2ca0697ce">
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+  ### 処理成功時
+  <img width="1440" alt="スクリーンショット 2024-08-18 21 46 53" src="https://github.com/user-attachments/assets/b6770fcf-b296-4e59-9fcb-6657e386c421">
+
+  </details>
+  ### Todo作成・編集時のバリデーション処理
+  <img width="1436" alt="スクリーンショット 2024-08-18 22 31 30" src="https://github.com/user-attachments/assets/f5557edd-97b7-4de4-8974-4f1630350dcf">
+
+  </details>
+
+
+## ER図
+![スクリーンショット 2024-08-18 22 02 23](https://github.com/user-attachments/assets/18fda5e9-bb7e-493f-a086-0218f19cc8d9)
+
