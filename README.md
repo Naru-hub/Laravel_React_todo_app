@@ -16,8 +16,8 @@
  <img width="1437" alt="スクリーンショット 2024-08-18 19 53 29" src="https://github.com/user-attachments/assets/014e947e-812c-448f-ba55-534a47463457">
   </details>
 
-- todo一覧表示
-<details><summary>todo一覧表示</summary>
+- Todo一覧表示
+<details><summary>Todo一覧表示</summary>
 
   ### ユーザーが作成したTodoを一覧にて確認可能
   <img width="1440" alt="スクリーンショット 2024-08-18 21 55 05" src="https://github.com/user-attachments/assets/7151084a-6bf4-4001-ab13-568506280bd3">
@@ -37,7 +37,7 @@
   <img width="1440" alt="スクリーンショット 2024-08-18 20 09 33" src="https://github.com/user-attachments/assets/fe7dee1a-954c-4e0b-afbc-79b8151d9896">
 
   </details>
-  <details><summary>TODO詳細表示</summary>
+  <details><summary>Todo詳細表示</summary>
 
   ### 一覧からTodoのタイトルを押下、詳細ページにてTodo詳細を確認することが可能
   <img width="1440" alt="スクリーンショット 2024-08-18 20 12 15" src="https://github.com/user-attachments/assets/eb86f446-80a6-4245-a74b-b9760eaabde3">
@@ -50,7 +50,7 @@
   <img width="1440" alt="スクリーンショット 2024-08-18 20 18 46" src="https://github.com/user-attachments/assets/036ae238-cd45-4bd0-ad88-311b1e99668e">
 
   </details>
-  <details><summary>TODO削除機能</summary>
+  <details><summary>Todo削除機能</summary>
 
   ### Todoを削除することが可能
   <img width="1437" alt="スクリーンショット 2024-08-18 21 50 35" src="https://github.com/user-attachments/assets/e0fd7129-1967-45eb-9f6f-55e2dac07144">
@@ -69,6 +69,8 @@
   <img width="1440" alt="スクリーンショット 2024-08-18 21 46 53" src="https://github.com/user-attachments/assets/b6770fcf-b296-4e59-9fcb-6657e386c421">
 
   </details>
+  <details><summary>バリデーション</summary>
+      
   ### Todo作成・編集時のバリデーション処理
   <img width="1436" alt="スクリーンショット 2024-08-18 22 31 30" src="https://github.com/user-attachments/assets/f5557edd-97b7-4de4-8974-4f1630350dcf">
 
