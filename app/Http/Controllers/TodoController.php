@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Todo\StoreRequest;
 use App\Http\Requests\Todo\UpdateRequest;
 use App\Models\Todo;
-use Exception;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
