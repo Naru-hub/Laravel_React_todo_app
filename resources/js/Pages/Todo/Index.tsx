@@ -201,7 +201,7 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
                         className="mb-5 mx-5"
                         disabled={processing}
                     >
-                        Add
+                        追加
                     </PrimaryButton>
 
                     <Modal show={todoCreate} onClose={closeModal}>
@@ -266,13 +266,13 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
                                     <thead className="bg-cyan-500">
                                         <tr>
                                             <th className="border border-slate-300 text-white px-2 py-2">
-                                                todo
+                                                タイトル
                                             </th>
                                             <th className="border border-slate-300 text-white px-2 py-2">
-                                                is_completed
+                                                ステータス
                                             </th>
                                             <th className="border border-slate-300 text-white px-2 py-2">
-                                                created_at
+                                                作成日
                                             </th>
                                             <th className="border border-slate-300 text-white px-2 py-2"></th>
                                             <th className="border border-slate-300 text-white px-2 py-2"></th>

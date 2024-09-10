@@ -39,8 +39,8 @@ class UpdateRequest extends FormRequest
             'title.required' => 'タイトルは必須です。',
             'title.string' => 'タイトルは文字列である必要があります。',
             'title.max' => 'タイトルは50文字以内で入力してください。',
-            'description.string' => 'デスクリプションは文字列である必要があります。',
-            'description.max' => 'デスクリプションは250文字以内で入力してください。',
+            'description.string' => '詳細は文字列である必要があります。',
+            'description.max' => '詳細は250文字以内で入力してください。',
         ];
     }
 }

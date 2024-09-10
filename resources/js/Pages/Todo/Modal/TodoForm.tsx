@@ -39,7 +39,7 @@ const TodoForm = ({
             </h2>
 
             <div className="mt-6">
-                <InputLabel htmlFor="title" value="title" className="ml-2" />
+                <InputLabel htmlFor="title" value="タイトル" className="ml-2" />
 
                 <TextInput
                     id="title"
@@ -59,7 +59,7 @@ const TodoForm = ({
             <div className="mt-6">
                 <InputLabel
                     htmlFor="description"
-                    value="description"
+                    value="詳細"
                     className="ml-2"
                 />
 
@@ -80,7 +80,7 @@ const TodoForm = ({
                 <div className="mt-6">
                     <InputLabel
                         htmlFor="is_completed"
-                        value="is_completed"
+                        value="ステータス(完了)"
                         className="ml-2"
                     />
 

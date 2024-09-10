@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { PageProps, Todo } from '@/types';
-import { Inertia } from '@inertiajs/inertia';
 import { Head, Link, usePage } from '@inertiajs/react';
 
 export default function TodoDetail({ auth, todo }: PageProps) {
@@ -57,7 +56,7 @@ export default function TodoDetail({ auth, todo }: PageProps) {
                                 <dl>
                                     <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                         <dt className="text-sm font-medium text-gray-500">
-                                            Title
+                                            タイトル
                                         </dt>
                                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                             {todoData.title}
@@ -65,7 +64,7 @@ export default function TodoDetail({ auth, todo }: PageProps) {
                                     </div>
                                     <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                         <dt className="text-sm font-medium text-gray-500">
-                                            Description
+                                            詳細
                                         </dt>
                                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                             {todoData.description}
@@ -73,7 +72,7 @@ export default function TodoDetail({ auth, todo }: PageProps) {
                                     </div>
                                     <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                         <dt className="text-sm font-medium text-gray-500">
-                                            Status
+                                            ステータス
                                         </dt>
                                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                             {todoData.is_completed
