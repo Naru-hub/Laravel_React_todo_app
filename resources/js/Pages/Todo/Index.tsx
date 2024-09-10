@@ -1,15 +1,14 @@
-import { FormEventHandler, useEffect, useRef, useState } from "react";
+import { FormEventHandler, useEffect, useRef, useState } from 'react';
 
-import DangerButton from "@/Components/DangerButton";
-import EditButton from "@/Components/EditButton";
-import Modal from "@/Components/Modal";
-import PrimaryButton from "@/Components/PrimaryButton";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { PageProps, Todo } from "@/types";
-import { Inertia } from "@inertiajs/inertia";
-import { Head, Link, useForm, usePage } from "@inertiajs/react";
+import DangerButton from '@/Components/DangerButton';
+import EditButton from '@/Components/EditButton';
+import Modal from '@/Components/Modal';
+import PrimaryButton from '@/Components/PrimaryButton';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { PageProps, Todo } from '@/types';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 
-import TodoForm from "./Modal/TodoForm";
+import TodoForm from './Modal/TodoForm';
 
 export default function todoIndex({ auth, todos, message }: PageProps) {
     // Todo一覧の型宣言
@@ -30,7 +29,16 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
     const [showActionMessage, setShowActionMessage] = useState(!!actionMessage);
     const [showErrorMessage, setShowErrorMessage] = useState(!!errorMessage);
 
-    const { data, setData, post, put, processing, reset, errors } = useForm({
+    const {
+        data,
+        setData,
+        post,
+        put,
+        delete: destroy,
+        processing,
+        reset,
+        errors,
+    } = useForm({
         // formの初期値を設定
         id: 0,
         title: "",
@@ -115,7 +123,7 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
 
     // 削除ボタン押下時
     const deleteTodo = (id: number) => {
-        Inertia.delete(route("todo.destroy", id), {
+        destroy(route("todo.destroy", id), {
             // リクエスト後にページのスクロール位置を保持
             preserveScroll: true,
             onFinish: () => reset(),
@@ -283,6 +291,7 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
                                                     <Link
                                                         href={`/Todo/Detail/${todo.id}`}
                                                         method="get"
+                                                        className="underline decoration-solid"
                                                     >
                                                         {todo.title}
                                                     </Link>
