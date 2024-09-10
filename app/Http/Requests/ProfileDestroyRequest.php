@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Todo;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreRequest extends FormRequest
+class ProfileDestroyRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,7 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required | string | max:50',
-            'description' => 'nullable | string | max:250'
+            'password' => ['required', 'current_password']
         ];
     }
 
@@ -35,11 +34,8 @@ class StoreRequest extends FormRequest
     public function messages()
     {
         return [
-            'title.required' => 'タイトルは必須です。',
-            'title.string' => 'タイトルは文字列である必要があります。',
-            'title.max' => 'タイトルは50文字以内で入力してください。',
-            'description.string' => '詳細は文字列である必要があります。',
-            'description.max' => '詳細は250文字以内で入力してください。',
+            'password.required' => 'パスワードは必須です。',
+            'password.current_password' => 'パスワードが違います',
         ];
     }
 }
