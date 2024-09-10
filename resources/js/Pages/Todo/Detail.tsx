@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-import SecondaryButton from "@/Components/SecondaryButton";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { PageProps, Todo } from "@/types";
-import { Inertia } from "@inertiajs/inertia";
-import { Head, usePage } from "@inertiajs/react";
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { PageProps, Todo } from '@/types';
+import { Inertia } from '@inertiajs/inertia';
+import { Head, Link, usePage } from '@inertiajs/react';
 
 export default function TodoDetail({ auth, todo }: PageProps) {
     // Todoデータの型宣言
@@ -26,11 +25,6 @@ export default function TodoDetail({ auth, todo }: PageProps) {
             return () => clearTimeout(timer); // タイマーをリセット
         }
     }, [errorMsg]);
-
-    const handleBack = () => {
-        // 一覧画面のルートにリダイレクト
-        Inertia.get("/Todo/Index");
-    };
 
     return (
         <AuthenticatedLayout
@@ -90,11 +84,15 @@ export default function TodoDetail({ auth, todo }: PageProps) {
                                     <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                         <dt className="text-sm font-medium text-gray-500"></dt>
                                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                            <SecondaryButton
-                                                onClick={handleBack}
+                                            <Link
+                                                href="/Todo/Index/"
+                                                method="get"
+                                                as="button"
+                                                type="button"
+                                                className="bg-gray-400 text-white font-semibold py-2 px-4 rounded"
                                             >
                                                 一覧へ戻る
-                                            </SecondaryButton>
+                                            </Link>
                                         </dd>
                                     </div>
                                 </dl>
