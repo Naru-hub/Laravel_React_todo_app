@@ -36,24 +36,22 @@ export default function Edit({ auth, mustVerifyEmail, status, message }: PagePro
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-                        <div className="py-3 px-6">
-                            {showActionMessage && actionMessage && (
-                                <div className="mt-2 text-green-700 bg-green-100 p-2 rounded-lg text-center font-bold">
-                                    {actionMessage}
-                                </div>
-                            )}
-                        </div>
-
                     <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                         <UpdateProfileInformationForm
                             mustVerifyEmail={mustVerifyEmail}
                             status={status}
+                            actionMessage={actionMessage}
+                            showActionMessage={showActionMessage}
                             className="max-w-xl"
                         />
                     </div>
 
                     <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                        <UpdatePasswordForm className="max-w-xl" />
+                        <UpdatePasswordForm  
+                            actionMessage={actionMessage}
+                            showActionMessage={showActionMessage} 
+                            className="max-w-xl"
+                        />
                     </div>
 
                     <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">

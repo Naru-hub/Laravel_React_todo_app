@@ -7,6 +7,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Redirect;
+use App\Http\Controllers\ProfileController;
 
 class PasswordController extends Controller
 {
@@ -24,6 +26,8 @@ class PasswordController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        return back();
+        return Redirect::route('profile.edit')->with([
+            'message' => 'パスワードを更新しました'
+        ]);
     }
 }
