@@ -44,4 +44,5 @@ export type PageProps<
     auth: {
         user: User;
     };
+    message?: string; 
 };

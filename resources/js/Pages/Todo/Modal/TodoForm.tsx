@@ -101,10 +101,10 @@ const TodoForm = ({
             )}
 
             <div className="mt-6 flex justify-end">
-                <SecondaryButton onClick={onCancel}>Cancel</SecondaryButton>
+                <SecondaryButton onClick={onCancel}>キャンセル</SecondaryButton>
 
                 <PrimaryButton className="ms-3" disabled={processing}>
-                    Save
+                    保存
                 </PrimaryButton>
             </div>
         </form>
