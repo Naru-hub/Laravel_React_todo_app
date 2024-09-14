@@ -44,5 +44,6 @@ export type PageProps<
     auth: {
         user: User;
     };
-    message?: string; 
+    message?: string;
+    isFlgMsg?: boolean | undefined;
 };

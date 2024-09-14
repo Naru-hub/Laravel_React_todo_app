@@ -27,7 +27,8 @@ class PasswordController extends Controller
         ]);
 
         return Redirect::route('profile.edit')->with([
-            'message' => 'パスワードを更新しました'
+            'message' => 'パスワードを更新しました',
+            'isFlgMsg' => false,
         ]);
     }
 }
