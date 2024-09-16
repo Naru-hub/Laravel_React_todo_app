@@ -23,6 +23,7 @@ class ProfileController extends Controller
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
             'message' => session('message'),
+            'isFlgMsg' => session('isFlgMsg'),
         ]);
     }
 
@@ -40,7 +41,8 @@ class ProfileController extends Controller
         $request->user()->save();
 
         return Redirect::route('profile.edit')->with([
-            'message' => 'ユーザー情報を更新しました'
+            'message' => 'ユーザー情報を更新しました',
+            'isFlgMsg' => true,
         ]);
     }
 
