@@ -13,6 +13,8 @@ export interface Todo {
     title: string;
     description: string;
     is_completed: boolean;
+    start_date: Date;
+    due_date: Date;
     created_at: Date;
     updated_at: Date;
 }

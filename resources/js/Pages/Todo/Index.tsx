@@ -11,6 +11,8 @@ import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import TodoForm from './Modal/TodoForm';
 
 export default function todoIndex({ auth, todos, message }: PageProps) {
+    console.log(todos);
+
     // Todo一覧の型宣言
     const todoLists = todos as Todo[];
     // Todo作成・編集のステータス
@@ -272,6 +274,12 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
                                                 ステータス
                                             </th>
                                             <th className="border border-slate-300 text-white px-2 py-2">
+                                                開始日
+                                            </th>
+                                            <th className="border border-slate-300 text-white px-2 py-2">
+                                                期限日
+                                            </th>
+                                            <th className="border border-slate-300 text-white px-2 py-2">
                                                 作成日
                                             </th>
                                             <th className="border border-slate-300 text-white px-2 py-2"></th>
@@ -300,6 +308,30 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
                                                     {todo.is_completed
                                                         ? "完了"
                                                         : "未完了"}
+                                                </td>
+                                                <td className="border border-slate-300 px-2 py-2">
+                                                    {new Date(
+                                                        todo.start_date
+                                                    ).toLocaleDateString(
+                                                        "ja-JP",
+                                                        {
+                                                            year: "numeric",
+                                                            month: "2-digit",
+                                                            day: "2-digit",
+                                                        }
+                                                    )}
+                                                </td>
+                                                <td className="border border-slate-300 px-2 py-2">
+                                                    {new Date(
+                                                        todo.due_date
+                                                    ).toLocaleDateString(
+                                                        "ja-JP",
+                                                        {
+                                                            year: "numeric",
+                                                            month: "2-digit",
+                                                            day: "2-digit",
+                                                        }
+                                                    )}
                                                 </td>
                                                 <td className="border border-slate-300 px-2 py-2">
                                                     {new Date(
