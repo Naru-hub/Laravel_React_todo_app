@@ -11,7 +11,6 @@ import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import TodoForm from './Modal/TodoForm';
 
 export default function todoIndex({ auth, todos, message }: PageProps) {
-    console.log(todos);
 
     // Todo一覧の型宣言
     const todoLists = todos as Todo[];
@@ -46,6 +45,8 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
         title: "",
         description: "",
         is_completed: false,
+        start_date: new Date(),
+        due_date: new Date(),
     });
 
     // ADDボタン押下時
@@ -62,7 +63,9 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
         id: number,
         title: string,
         description: string,
-        is_completed: boolean
+        is_completed: boolean,
+        start_date: Date,
+        due_date: Date,
     ) => {
         reset();
         setData({
@@ -70,6 +73,8 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
             title: title,
             description: description,
             is_completed: is_completed,
+            start_date: start_date, 
+            due_date: due_date, 
         });
         // バリデーションエラーメッセージをクリア
         errors.title = "";
@@ -141,6 +146,8 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
             title: "",
             description: "",
             is_completed: false,
+            start_date: new Date(),
+            due_date: new Date(),
         });
         // バリデーションエラーメッセージをクリア
         errors.title = "";
@@ -156,6 +163,8 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
             title: "",
             description: "",
             is_completed: false,
+            start_date: new Date(),
+            due_date: new Date(),
         });
         // バリデーションエラーメッセージをクリア
         errors.title = "";
@@ -352,7 +361,9 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
                                                                 todo.id,
                                                                 todo.title,
                                                                 todo.description,
-                                                                todo.is_completed
+                                                                todo.is_completed,
+                                                                todo.start_date,
+                                                                todo.due_date
                                                             )
                                                         }
                                                         disabled={processing}

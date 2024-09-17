@@ -25,11 +25,15 @@ export interface TodoFormProps {
         title: string;
         description: string;
         is_completed: boolean;
+        start_date: Date;
+        due_date: Date;
     };
     errors: {
         title?: string;
         description?: string;
         is_completed?: string;
+        start_date?: string;
+        due_date?: string;
     };
     processing: boolean;
     onChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
@@ -38,6 +42,14 @@ export interface TodoFormProps {
     isEditing: boolean;
     titleInputRef: React.RefObject<HTMLInputElement>;
     descriptionInputRef: React.RefObject<HTMLTextAreaElement>;
+}
+
+export interface DateInputProps {
+    id?: string;
+    name?: string; 
+    selected?: Date;
+    onChange: (date: Date | null) => void;
+    className?: string;
 }
 
 export type PageProps<
