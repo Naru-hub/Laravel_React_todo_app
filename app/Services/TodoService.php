@@ -36,7 +36,7 @@ class TodoService
             // 新規のTodoモデルを作成
             $todo = new Todo();
 
-            // リクエストデータから日付を取得し、MySQL の DATETIME 形式に変換
+            // リクエストデータから日付を取得し、MySQLのDATETIME形式に変換
             $start_date_format = isset($request->start_date) ? Carbon::parse($request->start_date)->format('Y-m-d H:i:s') : null;
             $due_date_format = isset($request->due_date) ? Carbon::parse($request->due_date)->format('Y-m-d H:i:s') : null;
 

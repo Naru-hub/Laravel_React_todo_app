@@ -93,8 +93,7 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
                 reset();
                 closeModal();
             },
-            onError: (errors) => {
-                console.log('Error Response:', errors); // エラー内容をログ出力
+            onError: () => {
                 if (errors.title && titleInput.current) {
                     // titleにエラーがある場合、titleInputにフォーカスを移す
                     titleInput.current.focus();
