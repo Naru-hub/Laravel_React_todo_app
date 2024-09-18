@@ -23,7 +23,7 @@ class UpdateRequest extends FormRequest
     {
         return [
             'title' => 'required | string | max:50',
-            'description' => 'nullable | string | max:250',
+            'description' => 'nullable | string | max:255',
             'is_completed' => 'boolean',
             'start_date' => 'required|date',
             'due_date' => 'required|date|after_or_equal:start_date',
@@ -42,7 +42,7 @@ class UpdateRequest extends FormRequest
             'title.string' => 'タイトルは文字列である必要があります。',
             'title.max' => 'タイトルは50文字以内で入力してください。',
             'description.string' => '詳細は文字列である必要があります。',
-            'description.max' => '詳細は250文字以内で入力してください。',
+            'description.max' => '詳細は255文字以内で入力してください。',
             'start_date.required' => '開始日は必須です。',
             'start_date.date' => '開始日は有効な日付である必要があります。',
             'due_date.required' => '期限日は必須です。',

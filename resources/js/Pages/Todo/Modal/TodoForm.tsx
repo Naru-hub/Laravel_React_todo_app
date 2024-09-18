@@ -45,7 +45,7 @@ const TodoForm = ({
     // 期限日の変更処理
     const handleDueDateChange = (date: Date | null) => {
         if (date && startDate && date < startDate) {
-            alert('終了日は開始日より後に設定してください');
+            alert('期限日は開始日より後に設定してください');
             return;
         }
         setDueDate(date ?? undefined);
