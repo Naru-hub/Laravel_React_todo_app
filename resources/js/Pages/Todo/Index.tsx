@@ -1,17 +1,16 @@
-import { FormEventHandler, useEffect, useRef, useState } from 'react';
+import { FormEventHandler, useEffect, useRef, useState } from "react";
 
-import DangerButton from '@/Components/DangerButton';
-import EditButton from '@/Components/EditButton';
-import Modal from '@/Components/Modal';
-import PrimaryButton from '@/Components/PrimaryButton';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { PageProps, Todo } from '@/types';
-import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import DangerButton from "@/Components/DangerButton";
+import EditButton from "@/Components/EditButton";
+import Modal from "@/Components/Modal";
+import PrimaryButton from "@/Components/PrimaryButton";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { PageProps, Todo } from "@/types";
+import { Head, Link, useForm, usePage } from "@inertiajs/react";
 
-import TodoForm from './Modal/TodoForm';
+import TodoForm from "./Modal/TodoForm";
 
 export default function todoIndex({ auth, todos, message }: PageProps) {
-
     // Todo一覧の型宣言
     const todoLists = todos as Todo[];
     // Todo作成・編集のステータス
@@ -65,7 +64,7 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
         description: string,
         is_completed: boolean,
         start_date: Date,
-        due_date: Date,
+        due_date: Date
     ) => {
         reset();
         setData({
@@ -73,8 +72,8 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
             title: title,
             description: description,
             is_completed: is_completed,
-            start_date: start_date, 
-            due_date: due_date, 
+            start_date: start_date,
+            due_date: due_date,
         });
         // バリデーションエラーメッセージをクリア
         errors.title = "";
@@ -152,6 +151,8 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
         // バリデーションエラーメッセージをクリア
         errors.title = "";
         errors.description = "";
+        errors.start_date = "";
+        errors.due_date = "";
     };
 
     // Todo編集モーダルのキャンセルボタン押下時
@@ -169,6 +170,8 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
         // バリデーションエラーメッセージをクリア
         errors.title = "";
         errors.description = "";
+        errors.start_date = "";
+        errors.due_date = "";
     };
 
     // フラッシュメッセージの表示・非表示
