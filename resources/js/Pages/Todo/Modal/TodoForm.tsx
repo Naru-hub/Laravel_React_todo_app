@@ -14,6 +14,7 @@ const TodoForm = ({
     errors,
     processing,
     data,
+    setData,
     onSubmit,
     onChange,
     onCancel,
@@ -24,6 +25,12 @@ const TodoForm = ({
     titleInputRef: React.RefObject<HTMLInputElement>;
     descriptionInputRef: React.RefObject<HTMLTextAreaElement>;
 }) => {
+    // DateInputの選択基準日
+    const Today = new Date();
+
+    // 作成時に作成日・編集時にTodo作成日を設定
+    const createdDate = data.created_at ? new Date(data.created_at) : Today;
+
     // 開始日・期限日のステータス
     const [startDate, setStartDate] = useState<Date | undefined>(data.start_date ? new Date(data.start_date) : undefined);
     const [dueDate, setDueDate] = useState<Date | undefined>(data.due_date ? new Date(data.due_date) : undefined);
@@ -39,16 +46,21 @@ const TodoForm = ({
 
     // 開始日の変更処理
     const handleStartDateChange = (date: Date | null) => {
-        setStartDate(date ?? undefined ?? undefined);
+         // stateを更新
+        setStartDate(date ?? undefined);
+        // stateが変更されるたびにsetDataも更新
+        setData('start_date', date ? new Date(date) : undefined); 
     };
 
     // 期限日の変更処理
     const handleDueDateChange = (date: Date | null) => {
         if (date && startDate && date < startDate) {
-            alert('期限日は開始日より後に設定してください');
+            alert('期限日は開始日と同じか後に設定してください');
             return;
         }
         setDueDate(date ?? undefined);
+        // stateが変更されるたびにsetDataも更新
+        setData('due_date', date ? new Date(date) : undefined); 
     };
 
 
@@ -128,6 +140,7 @@ const TodoForm = ({
                     name="start_date"
                     selected={startDate}
                     onChange={handleStartDateChange}
+                    minDate={createdDate}
                     className="mt-1 block w-3/4"
                 />
 
@@ -142,6 +155,7 @@ const TodoForm = ({
                     name="due_date"
                     selected={dueDate}
                     onChange={handleDueDateChange}
+                    minDate={createdDate}
                     className="mt-1 block w-3/4"
                 />
 

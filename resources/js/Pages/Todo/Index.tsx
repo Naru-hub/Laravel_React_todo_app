@@ -93,7 +93,8 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
                 reset();
                 closeModal();
             },
-            onError: () => {
+            onError: (errors) => {
+                console.log('Error Response:', errors); // エラー内容をログ出力
                 if (errors.title && titleInput.current) {
                     // titleにエラーがある場合、titleInputにフォーカスを移す
                     titleInput.current.focus();
@@ -218,6 +219,7 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
                     <Modal show={todoCreate} onClose={closeModal}>
                         <TodoForm
                             data={data}
+                            setData={setData}
                             errors={errors}
                             processing={processing}
                             onChange={(e) =>
@@ -237,6 +239,7 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
                     <Modal show={todoUpdate} onClose={updateCloseModal}>
                         <TodoForm
                             data={data}
+                            setData={setData}
                             errors={errors}
                             processing={processing}
                             onChange={(e) => {

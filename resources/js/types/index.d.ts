@@ -19,15 +19,18 @@ export interface Todo {
     updated_at: Date;
 }
 
+export interface TodoFormData {
+    id: number;
+    title: string;
+    description: string;
+    is_completed: boolean;
+    start_date: Date;
+    due_date: Date;
+    created_at?: Date;
+}
+
 export interface TodoFormProps {
-    data: {
-        id: number;
-        title: string;
-        description: string;
-        is_completed: boolean;
-        start_date: Date;
-        due_date: Date;
-    };
+    data: TodoFormData;
     errors: {
         title?: string;
         description?: string;
@@ -42,6 +45,7 @@ export interface TodoFormProps {
     isEditing: boolean;
     titleInputRef: React.RefObject<HTMLInputElement>;
     descriptionInputRef: React.RefObject<HTMLTextAreaElement>;
+    setData: (name: keyof TodoFormData, value: any) => void;
 }
 
 export interface DateInputProps {
@@ -49,6 +53,7 @@ export interface DateInputProps {
     name?: string; 
     selected?: Date;
     onChange: (date: Date | null) => void;
+    minDate: Date;
     className?: string;
 }
 
