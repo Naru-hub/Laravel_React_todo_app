@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Todo;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Carbon\Carbon;
 
 class TodoService
 {
@@ -35,10 +36,16 @@ class TodoService
             // 新規のTodoモデルを作成
             $todo = new Todo();
 
+            // リクエストデータから日付を取得し、MySQLのDATETIME形式に変換
+            $start_date_format = isset($request->start_date) ? Carbon::parse($request->start_date)->format('Y-m-d H:i:s') : null;
+            $due_date_format = isset($request->due_date) ? Carbon::parse($request->due_date)->format('Y-m-d H:i:s') : null;
+
             // Todoの各項目をTodoモデルに設定
             $todo->user_id = Auth::id(); // ログインしているuser_idを設定
             $todo->title = $request->title;
             $todo->description = $request->description;
+            $todo->start_date =  $start_date_format;
+            $todo->due_date = $due_date_format;
 
             // DBにデータを登録
             $todo->save();
@@ -76,10 +83,16 @@ class TodoService
             // IDに紐づくTodoを取得
             $todo = Todo::findOrFail($id);
 
+            // リクエストデータから日付を取得し、MySQLのDATETIME形式に変換
+            $start_date_format = isset($request->start_date) ? Carbon::parse($request->start_date)->format('Y-m-d H:i:s') : null;
+            $due_date_format = isset($request->due_date) ? Carbon::parse($request->due_date)->format('Y-m-d H:i:s') : null;
+
             // Todoの各項目をTodoモデルに設定
             $todo->title = $request->title;
             $todo->description = $request->description;
             $todo->is_completed = $request->is_completed;
+            $todo->start_date = $start_date_format;
+            $todo->due_date = $due_date_format;
 
             // DBのTodoの値を更新
             $todo->save();

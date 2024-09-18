@@ -24,6 +24,8 @@
         "vite": "^5.0"
     },
     "dependencies": {
-        "@inertiajs/inertia-react": "^0.8.1"
+        "@inertiajs/inertia-react": "^0.8.1",
+        "date-fns": "^4.1.0",
+        "react-datepicker": "^7.3.0"
     }
 }
