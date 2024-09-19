@@ -1,10 +1,18 @@
 import { useEffect, useState } from 'react';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { PageProps } from '@/types';
+import { PageProps, Todo } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
+import { format } from 'date-fns';
 
-export default function Dashboard({ auth }: PageProps) {
+export default function Dashboard({ auth, todayTodos }: PageProps) {
+     // 本日のTodo一覧の型宣言
+    const todayTodoList = todayTodos as Todo[];
+
+    // 本日の日付を取得,フォーマットを変換
+    const Today = new Date();
+    const formattedToday = format(Today, 'yyyy-MM-dd');
+
     const { props } = usePage();
     // フラッシュメッセージの型宣言
     const errorMsg = props.errorMsg as string;
@@ -47,6 +55,34 @@ export default function Dashboard({ auth }: PageProps) {
                         <div className="p-6 text-gray-900">
                             {auth.user.name}さん、こんにちは！
                         </div>
+                        <h2 className="p-6 text-2xl font-semibold text-black dark:text-white">
+                            本日の予定
+                        </h2>
+                        {todayTodoList.length > 0 ? (
+                                <div className="pl-6">
+                                    <ul className="pl-6 mb-6 list-disc">
+                                        {todayTodoList.map((todo) => {
+                                            // "YYYY-MM-DD"形式のstring型に変換
+                                            const dueDateString = format(todo.due_date, 'yyyy-MM-dd'); 
+
+                                            return (
+                                                <li 
+                                                    key={todo.id} 
+                                                    className={dueDateString === formattedToday ? "mb-2 text-red-500" : "mb-3"}
+                                                >
+                                                    {todo.title}
+                                                </li>
+                                            );
+                                        })}
+                                    </ul>
+                                </div>
+                        ) : (
+                            <div className="pl-6">
+                                <p className="pl-6 mb-10">
+                                    なし
+                                </p>
+                            </div>
+                            )}
                     </div>
                 </div>
             </div>

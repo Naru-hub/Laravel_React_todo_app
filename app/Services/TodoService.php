@@ -126,4 +126,25 @@ class TodoService
             throw new \Exception('Todoの削除中にエラーが発生しました');
         }
     }
+
+    /**
+     * dashboardのTodo一覧(本日の予定)を取得
+     */
+    public function getTodayTodoList()
+    {
+        try {
+            // ログインしたユーザーのTodoのみを取得
+            $user = Auth::user();
+            $today = Carbon::today();
+            $todayTodoList = Todo::where('user_id', $user->id)
+                ->where('start_date', '<=', $today)
+                ->where('due_date', '>=', $today)
+                ->get();
+            return $todayTodoList;
+        } catch (\Exception $e) {
+            // エラーメッセージをログに記録
+            Log::error($e->getMessage());
+            throw new \Exception('今日の予定のTodoの一覧取得中にエラーが発生しました');
+        }
+    }
 }

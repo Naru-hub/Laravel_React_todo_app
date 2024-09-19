@@ -18,8 +18,8 @@ class TodosTableSeeder extends Seeder
             'title' => 'ジムに行く',
             'description' => 'ジムで運動してストレスと運動不足を解消する',
             'is_completed' => false,
-            'start_date' => now()->startOfDay(),
-            'due_date' => now()->addDays(2)->endOfDay(),
+            'start_date' => now()->subDays(2)->startOfDay(),
+            'due_date' => now()->subDays(1)->endOfDay(),
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -64,6 +64,17 @@ class TodosTableSeeder extends Seeder
             'is_completed' => false,
             'start_date' => now()->startOfDay(),
             'due_date' => now()->addDays(5)->endOfDay(),
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        DB::table('todos')->insert([
+            'user_id' => 1,
+            'title' => '買い物に行く',
+            'description' => '日用品を買いに行く',
+            'is_completed' => false,
+            'start_date' => now()->subDays(3)->startOfDay(),
+            'due_date' => now()->subDays(3)->endOfDay(),
             'created_at' => now(),
             'updated_at' => now()
         ]);
