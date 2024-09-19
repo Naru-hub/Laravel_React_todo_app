@@ -97,4 +97,22 @@ class TodoController extends Controller
             ]);
         }
     }
+
+    /**
+     * dashboardのTodo一覧(本日の予定)
+     */
+    public function dashboardIndex(TodoService $todoService)
+    {
+        try {
+            $todayTodoList = $todoService->getTodayTodoList();
+            // 取得したTodo一覧を返却
+            return Inertia::render('Dashboard', [
+                'todayTodos' => $todayTodoList,
+                'message' => session('message')
+            ]);
+        } catch (\Exception $e) {
+            // エラーメッセージをセッションに保存して、ユーザーに通知
+            return redirect()->back()->with('errorMsg', 'Todoの取得中にエラーが発生しました。');
+        }
+    }
 }
