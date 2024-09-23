@@ -1,9 +1,9 @@
+import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { PageProps, Todo } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
-import { format } from 'date-fns';
 
 export default function Dashboard({ auth, todayTodos }: PageProps) {
      // 本日のTodo一覧の型宣言
@@ -58,16 +58,16 @@ export default function Dashboard({ auth, todayTodos }: PageProps) {
                         <h2 className="p-6 text-2xl font-semibold text-black dark:text-white">
                             本日の予定
                         </h2>
-                        {todayTodoList.length > 0 ? (
+                        {todayTodoList && todayTodoList.length > 0 ? (
                                 <div className="pl-6">
                                     <ul className="pl-6 mb-6 list-disc">
                                         {todayTodoList.map((todo) => {
                                             // "YYYY-MM-DD"形式のstring型に変換
-                                            const dueDateString = format(todo.due_date, 'yyyy-MM-dd'); 
+                                            const dueDateString = format(todo.due_date, 'yyyy-MM-dd');
 
                                             return (
-                                                <li 
-                                                    key={todo.id} 
+                                                <li
+                                                    key={todo.id}
                                                     className={dueDateString === formattedToday ? "mb-2 text-red-500" : "mb-3"}
                                                 >
                                                     {todo.title}

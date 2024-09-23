@@ -23,7 +23,7 @@ class TodoService
         } catch (\Exception $e) {
             // エラーメッセージをログに記録
             Log::error($e->getMessage());
-            throw new \Exception('Todoの一覧取得中にエラーが発生しました');
+            throw new \Exception();
         }
     }
 
@@ -52,7 +52,7 @@ class TodoService
         } catch (\Exception $e) {
             // エラーメッセージをログに記録
             Log::error($e->getMessage());
-            throw new \Exception('Todoの作成中にエラーが発生しました');
+            throw new \Exception();
         }
     }
 
@@ -139,12 +139,13 @@ class TodoService
             $todayTodoList = Todo::where('user_id', $user->id)
                 ->where('start_date', '<=', $today)
                 ->where('due_date', '>=', $today)
+                ->where('is_completed', false)
                 ->get();
             return $todayTodoList;
         } catch (\Exception $e) {
             // エラーメッセージをログに記録
             Log::error($e->getMessage());
-            throw new \Exception('今日の予定のTodoの一覧取得中にエラーが発生しました');
+            throw new \Exception();
         }
     }
 }
