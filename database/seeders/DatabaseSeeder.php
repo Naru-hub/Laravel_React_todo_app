@@ -15,10 +15,13 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        // 管理者アカウントの作成
+        User::factory()->create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'password' => bcrypt('password'),
+            'is_admin' => true, // 管理者権限
+        ]);
 
         $this->call(TodosTableSeeder::class);
     }
