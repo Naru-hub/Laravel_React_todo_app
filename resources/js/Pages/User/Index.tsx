@@ -4,6 +4,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { PageProps, User } from "@/types";
 import { Head, useForm, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
+import DeleteConfirmForm from "./Modal/DeleteConfirmForm";
 
 
 export default function userIndex({ auth, message, users }: PageProps) {
@@ -14,6 +15,7 @@ export default function userIndex({ auth, message, users }: PageProps) {
     let actionMessage: string = message as string;
     const { props } = usePage();
     let errorMessage = props.errorMsg as string;
+
     // フラッシュメッセージの出現ステータス
     const [showActionMessage, setShowActionMessage] = useState(!!actionMessage);
     const [showErrorMessage, setShowErrorMessage] = useState(!!errorMessage);
@@ -38,20 +40,34 @@ export default function userIndex({ auth, message, users }: PageProps) {
         // due_date: new Date(),
     });
 
-    // 削除ボタン押下時
-    // const deleteTodo = (id: number) => {
-    //     destroy(route("user.destroy", id), {
-    //         // リクエスト後にページのスクロール位置を保持
-    //         preserveScroll: true,
-    //         onFinish: () => reset(),
-    //     });
-    // };
-    const deleteTodo = (id: number) => {
-        destroy(route("user.destroy", id), {
-            // リクエスト後にページのスクロール位置を保持
+    // 削除確認フォームの表示状態
+    const [confirmingDeletion, setConfirmingDeletion] = useState(false);
+    const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+
+    // 削除確認フォームを表示
+    const confirmDelete = (userId: number) => {
+        setSelectedUserId(userId);
+        setConfirmingDeletion(true);
+    };
+
+    // 削除処理
+    const deleteUser = (userId: number) => {
+        // 実際の削除処理
+        destroy(route("user.destroy", userId), {
             preserveScroll: true,
-            onFinish: () => reset(),
+            onSuccess: () => {
+                setConfirmingDeletion(false);
+                // 削除後にIDをリセット
+                setSelectedUserId(null); 
+            },
+            onError: () => {},
         });
+    };
+
+    // キャンセル時にフォームを閉じる
+    const cancelDelete = () => {
+        setConfirmingDeletion(false);
+        setSelectedUserId(null);
     };
 
     // フラッシュメッセージの表示・非表示
@@ -192,12 +208,7 @@ export default function userIndex({ auth, message, users }: PageProps) {
                                                 </EditButton>
                                             </td> 
                                             <td className="border border-slate-300 px-2 py-2 text-center">
-                                                <DangerButton
-                                                    onClick={() =>
-                                                        deleteTodo(user.id)
-                                                    }
-                                                    disabled={processing}
-                                                >
+                                                <DangerButton onClick={() => confirmDelete(user.id)} disabled={processing}>
                                                     削除
                                                 </DangerButton>
                                             </td>
@@ -214,5 +225,13 @@ export default function userIndex({ auth, message, users }: PageProps) {
                 </div>
             </div>
         </div>
+        {/* 削除確認モーダル */}
+        {confirmingDeletion && selectedUserId !== null && (
+            <DeleteConfirmForm
+                userId={selectedUserId}
+                onConfirm={deleteUser}
+                onCancel={cancelDelete}
+            />
+        )}
     </AuthenticatedLayout>
 )}
