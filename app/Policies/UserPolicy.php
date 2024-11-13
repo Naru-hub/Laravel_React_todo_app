@@ -11,4 +11,10 @@ class UserPolicy
     {
         return $user->is_admin;
     }
+
+    // 管理者のみ削除を許可
+    public function delete(User $user)
+    {
+        return $user->is_admin;
+    }
 }
