@@ -20,10 +20,30 @@ class UserController extends Controller
             $users = $userService->getUserList();
             return Inertia::render('User/Index', [
                 'users' => $users,
+                'message' => session('message')
             ]);
         } catch (\Exception $e) {
             // エラーメッセージをセッションに保存して、ユーザーに通知
             return redirect()->back()->with('errorMsg', 'User一覧を取得中にエラーが発生しました。');
+        }
+    }
+
+
+    /**
+     * User削除
+     */
+    public function destroy($id, UserService $userService)
+    {
+        try {
+            $userService->deleteUser($id);
+            return redirect('users')->with([
+                'message' => 'ユーザーを削除しました'
+            ]);
+        } catch (\Exception $e) {
+            // エラーメッセージをセッションに保存して、ユーザーに通知
+            return redirect()->back()->with([
+                'errorMsg' => $e->getMessage()
+            ]);
         }
     }
 }

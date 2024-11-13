@@ -19,8 +19,12 @@ Route::get('/', function () {
 Route::get('Dashboard', [TodoController::class, 'dashboardIndex'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    // 管理者用
+    // 管理者用(ユーザー操作のルーティングを設定)
+
+    // 一覧
     Route::get('/users', [UserController::class, 'index'])->name('user.index');
+    // 削除
+    Route::delete('/user/destroy/{id}', [UserController::class, 'destroy'])->name('user.destroy');
 
     // ユーザー用
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

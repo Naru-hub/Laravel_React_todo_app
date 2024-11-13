@@ -114,20 +114,20 @@ class UserService
     /**
      * Userを削除
      */
-    // public function deleteTodo($id)
-    // {
-    //     try {
-    //         //  IDに紐づくTodoを取得
-    //         $todo = Todo::findOrFail($id);
+    public function deleteUser($id)
+    {
+        try {
+            // IDに紐づくUserを取得
+            $user = User::findOrFail($id);
 
-    //         // Todoを削除
-    //         $todo->delete();
-    //     } catch (ModelNotFoundException $e) {
-    //         Log::error($e->getMessage());
-    //         throw new \Exception('指定されたTodoが見つかりませんでした');
-    //     } catch (\Exception $e) {
-    //         Log::error($e->getMessage());
-    //         throw new \Exception('Todoの削除中にエラーが発生しました');
-    //     }
-    // }
+            // Userを削除
+            $user->delete();
+        } catch (ModelNotFoundException $e) {
+            Log::error($e->getMessage());
+            throw new \Exception('指定されたユーザーが見つかりませんでした');
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            throw new \Exception('ユーザーの削除中にエラーが発生しました');
+        }
+    }
 }
