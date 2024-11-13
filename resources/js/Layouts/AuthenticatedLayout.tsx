@@ -39,8 +39,18 @@ export default function Authenticated({
                                     href={route("todo.index")}
                                     active={route().current("todo.index")}
                                 >
-                                    todo
+                                    Todo
                                 </NavLink>
+                                {
+                                    user.is_admin ? (
+                                    <NavLink
+                                        href={route("user.index")}
+                                        active={route().current("user.index")}
+                                    >
+                                        User
+                                    </NavLink>)
+                                    : null
+                                } 
                             </div>
                         </div>
 

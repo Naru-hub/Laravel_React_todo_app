@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
+use App\Services\UserService;
+
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Gate;
+
 
 
 class UserController extends Controller
@@ -13,16 +14,16 @@ class UserController extends Controller
     /**
      * ユーザー一覧
      */
-    public function index()
+    public function index(UserService $userService)
     {
-
-        // ユーザーの閲覧権限を確認
-        Gate::authorize('viewAny', User::class);
-
-        // 全ユーザーを取得
-        $users = User::all();
-        return Inertia::render('Todo/Index', [
-            'users' => $users,
-        ]);
+        try {
+            $users = $userService->getUserList();
+            return Inertia::render('User/Index', [
+                'users' => $users,
+            ]);
+        } catch (\Exception $e) {
+            // エラーメッセージをセッションに保存して、ユーザーに通知
+            return redirect()->back()->with('errorMsg', 'User一覧を取得中にエラーが発生しました。');
+        }
     }
 }

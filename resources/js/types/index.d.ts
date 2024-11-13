@@ -5,6 +5,9 @@ export interface User {
     name: string;
     email: string;
     email_verified_at: string;
+    created_at: Date;
+    updated_at: Date;
+    is_admin: boolean;
 }
 
 export interface Todo {

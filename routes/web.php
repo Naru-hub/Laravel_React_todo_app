@@ -20,7 +20,7 @@ Route::get('Dashboard', [TodoController::class, 'dashboardIndex'])->middleware([
 
 Route::middleware('auth')->group(function () {
     // 管理者用
-    Route::get('users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users', [UserController::class, 'index'])->name('user.index');
 
     // ユーザー用
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -37,7 +37,7 @@ Route::middleware('auth')->group(function () {
     // 編集
     Route::put('/Todo/update/{id}', [TodoController::class, 'update'])->name('todo.update');
     // 削除
-    Route::delete('Todo/destroy/{id}', [TodoController::class, 'destroy'])->name('todo.destroy');
+    Route::delete('/Todo/destroy/{id}', [TodoController::class, 'destroy'])->name('todo.destroy');
 });
 
 require __DIR__ . '/auth.php';
