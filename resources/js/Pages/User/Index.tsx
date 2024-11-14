@@ -2,9 +2,10 @@ import DangerButton from "@/Components/DangerButton";
 import EditButton from "@/Components/EditButton";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { PageProps, User } from "@/types";
-import { Head, useForm, usePage } from "@inertiajs/react";
+import { Head, useForm, usePage, router } from "@inertiajs/react";
 import { useEffect, useState } from "react";
-import DeleteConfirmForm from "./Modal/DeleteConfirmForm";
+import PrimaryButton from "@/Components/PrimaryButton";
+import DeleteUserConfirmForm from "./Modal/DeleteUserConfirmForm";
 
 
 export default function userIndex({ auth, message, users }: PageProps) {
@@ -20,10 +21,15 @@ export default function userIndex({ auth, message, users }: PageProps) {
     const [showActionMessage, setShowActionMessage] = useState(!!actionMessage);
     const [showErrorMessage, setShowErrorMessage] = useState(!!errorMessage);
 
+    // 削除確認フォームの表示状態
+    const [confirmingDeletion, setConfirmingDeletion] = useState(false);
+    const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+
     // フォームの設定
     const {
         data,
         setData,
+        get,
         post,
         put,
         delete: destroy,
@@ -40,9 +46,11 @@ export default function userIndex({ auth, message, users }: PageProps) {
         // due_date: new Date(),
     });
 
-    // 削除確認フォームの表示状態
-    const [confirmingDeletion, setConfirmingDeletion] = useState(false);
-    const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+    // ユーザー登録フォームを表示
+    const ShowUserCreateForm = () => {
+        router.get(route('user.create'));
+    }
+
 
     // 削除確認フォームを表示
     const confirmDelete = (userId: number) => {
@@ -93,21 +101,27 @@ export default function userIndex({ auth, message, users }: PageProps) {
         }
     }, [errorMessage]);
 
-
-
     return (
         <AuthenticatedLayout
-        user={auth.user}
-        header={
-            <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                User
-            </h2>
-        }
-    >
+            user={auth.user}
+            header={
+                <h2 className="font-semibold text-xl text-gray-800 leading-tight">
+                    User
+                </h2>
+            }
+        >
         <div className="py-12">
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
             <Head title="User" />
+
+            <PrimaryButton
+                onClick={ShowUserCreateForm}
+                className="mb-5 mx-5"
+                disabled={processing}
+            >
+                ユーザー登録
+            </PrimaryButton>
 
             <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div className="py-3 px-6">
@@ -128,6 +142,9 @@ export default function userIndex({ auth, message, users }: PageProps) {
                                 <thead className="bg-cyan-500">
                                     <tr>
                                         <th className="border border-slate-300 text-white px-2 py-2">
+                                            ID
+                                        </th>
+                                        <th className="border border-slate-300 text-white px-2 py-2">
                                             名前
                                         </th>
                                         <th className="border border-slate-300 text-white px-2 py-2">
@@ -144,11 +161,15 @@ export default function userIndex({ auth, message, users }: PageProps) {
                                         </th>
                                         <th className="border border-slate-300 text-white px-2 py-2"></th>
                                         <th className="border border-slate-300 text-white px-2 py-2"></th>
+                                        <th className="border border-slate-300 text-white px-2 py-2"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {userList.map((user: User) => (
                                         <tr key={user.id}>
+                                            <td className="border border-slate-300 px-2 py-2">
+                                                {user.id}
+                                            </td>
                                             <td className="border border-slate-300 px-2 py-2">
                                                 {/* <Link
                                                     href={`/Todo/Detail/${todo.id}`}
@@ -191,6 +212,26 @@ export default function userIndex({ auth, message, users }: PageProps) {
                                                 )}
                                             </td>
                                             <td className="border border-slate-300 px-2 py-2 text-center">
+                                            {user.is_admin ?  null : (
+                                                <PrimaryButton
+                                                    // onClick={() =>
+                                                    //     todoEditForm(
+                                                    //         todo.id,
+                                                    //         todo.title,
+                                                    //         todo.description,
+                                                    //         todo.is_completed,
+                                                    //         todo.start_date,
+                                                    //         todo.due_date
+                                                    //     )
+                                                    // }
+                                                    // disabled={processing}
+                                                >
+                                                    チーム登録
+                                                </PrimaryButton>
+                                            )}
+                                            </td> 
+                                            <td className="border border-slate-300 px-2 py-2 text-center">
+                                            {user.is_admin ?  null : (
                                                 <EditButton
                                                     // onClick={() =>
                                                     //     todoEditForm(
@@ -204,13 +245,16 @@ export default function userIndex({ auth, message, users }: PageProps) {
                                                     // }
                                                     // disabled={processing}
                                                 >
-                                                    編集
+                                                    チーム編集
                                                 </EditButton>
+                                            )}
                                             </td> 
                                             <td className="border border-slate-300 px-2 py-2 text-center">
+                                            {user.is_admin ?  null : (
                                                 <DangerButton onClick={() => confirmDelete(user.id)} disabled={processing}>
-                                                    削除
+                                                    ユーザー削除
                                                 </DangerButton>
+                                            )}
                                             </td>
                                         </tr>
                                     ))}
@@ -227,7 +271,7 @@ export default function userIndex({ auth, message, users }: PageProps) {
         </div>
         {/* 削除確認モーダル */}
         {confirmingDeletion && selectedUserId !== null && (
-            <DeleteConfirmForm
+            <DeleteUserConfirmForm
                 userId={selectedUserId}
                 onConfirm={deleteUser}
                 onCancel={cancelDelete}

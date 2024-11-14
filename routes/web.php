@@ -20,10 +20,12 @@ Route::get('Dashboard', [TodoController::class, 'dashboardIndex'])->middleware([
 
 Route::middleware('auth')->group(function () {
     // 管理者用(ユーザー操作のルーティングを設定)
-
-    // 一覧
+    // ユーザー一覧
     Route::get('/users', [UserController::class, 'index'])->name('user.index');
-    // 削除
+    // ユーザー作成
+    Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
+    Route::post('/users', [UserController::class, 'store'])->name('user.store');
+    // ユーザー削除
     Route::delete('/user/destroy/{id}', [UserController::class, 'destroy'])->name('user.destroy');
 
     // ユーザー用

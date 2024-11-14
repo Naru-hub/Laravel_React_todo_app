@@ -7,8 +7,6 @@ use App\Services\UserService;
 
 use Inertia\Inertia;
 
-
-
 class UserController extends Controller
 {
     /**
@@ -26,6 +24,14 @@ class UserController extends Controller
             // エラーメッセージをセッションに保存して、ユーザーに通知
             return redirect()->back()->with('errorMsg', 'User一覧を取得中にエラーが発生しました。');
         }
+    }
+
+    /**
+     * ユーザー作成フォームを表示
+     */
+    public function create()
+    {
+        return inertia('User/UserRegister');
     }
 
 

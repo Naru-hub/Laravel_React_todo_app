@@ -51,6 +51,7 @@ export interface TodoFormProps {
     setData: (name: keyof TodoFormData, value: any) => void;
 }
 
+
 interface DeleteConfirmFormProps {
     userId: number;
     onConfirm: (userId: number) => void;
@@ -65,6 +66,14 @@ export interface DateInputProps {
     onChange: (date: Date | null) => void;
     minDate: Date;
     className?: string;
+}
+
+export interface UserFormData {
+    name: string;
+    email: string;
+    password: string;
+    password_confirmation: string,
+    is_admin: boolean;
 }
 
 export type PageProps<

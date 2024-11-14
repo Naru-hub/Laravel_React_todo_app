@@ -1,4 +1,4 @@
-import { useState, FormEventHandler } from 'react';
+import { FormEventHandler } from 'react';
 import DangerButton from '@/Components/DangerButton';
 import Modal from '@/Components/Modal';
 import SecondaryButton from '@/Components/SecondaryButton';
@@ -13,12 +13,7 @@ export default function DeleteConfirmForm({
 }: DeleteConfirmFormProps) {
 
     const {
-        data,
-        setData,
-        delete: destroy,
         processing,
-        reset,
-        errors,
     } = useForm({
     });
 
@@ -33,7 +28,7 @@ export default function DeleteConfirmForm({
             <Modal show={true} onClose={onCancel}>
                 <form onSubmit={deleteUser} className="p-6">
                     <h2 className="text-lg font-medium text-gray-900">
-                        ユーザーを削除してもよろしいですか?
+                        ID：{userId}のユーザーを削除してもよろしいですか?
                     </h2>
 
                     <p className="mt-1 text-sm text-red-600">
