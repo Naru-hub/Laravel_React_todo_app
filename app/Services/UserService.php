@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
@@ -34,31 +34,26 @@ class UserService
     /**
      * Userを作成
      */
-    // public function createTodo($request)
-    // {
-    //     try {
-    //         // 新規のTodoモデルを作成
-    //         $todo = new Todo();
+    public function createUser($request)
+    {
+        try {
+            // 新規のユーザーモデルを作成
+            $user = new User();
 
-    //         // リクエストデータから日付を取得し、MySQLのDATETIME形式に変換
-    //         $start_date_format = isset($request->start_date) ? Carbon::parse($request->start_date)->format('Y-m-d H:i:s') : null;
-    //         $due_date_format = isset($request->due_date) ? Carbon::parse($request->due_date)->format('Y-m-d H:i:s') : null;
+            // Userの各項目をUserモデルに設定
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = Hash::make($request->password);
+            $user->is_admin = $request->is_admin ?? false;
 
-    //         // Todoの各項目をTodoモデルに設定
-    //         $todo->user_id = Auth::id(); // ログインしているuser_idを設定
-    //         $todo->title = $request->title;
-    //         $todo->description = $request->description;
-    //         $todo->start_date =  $start_date_format;
-    //         $todo->due_date = $due_date_format;
-
-    //         // DBにデータを登録
-    //         $todo->save();
-    //     } catch (\Exception $e) {
-    //         // エラーメッセージをログに記録
-    //         Log::error($e->getMessage());
-    //         throw new \Exception();
-    //     }
-    // }
+            // DBにデータを登録
+            $user->save();
+        } catch (\Exception $e) {
+            // エラーメッセージをログに記録
+            Log::error($e->getMessage());
+            throw new \Exception();
+        }
+    }
 
     /**
      * Userの詳細を取得

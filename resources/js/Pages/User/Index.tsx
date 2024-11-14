@@ -250,7 +250,7 @@ export default function userIndex({ auth, message, users }: PageProps) {
                                             )}
                                             </td> 
                                             <td className="border border-slate-300 px-2 py-2 text-center">
-                                            {user.is_admin ?  null : (
+                                            {user.is_admin && user.id == 1 ?  null : (
                                                 <DangerButton onClick={() => confirmDelete(user.id)} disabled={processing}>
                                                     ユーザー削除
                                                 </DangerButton>

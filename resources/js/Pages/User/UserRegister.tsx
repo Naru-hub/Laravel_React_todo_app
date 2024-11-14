@@ -24,10 +24,28 @@ export default function UserRegister({ auth, message }: PageProps) {
         router.get(route('user.index'));
     }
 
+    // ユーザー登録処理
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        post(route("register"), {
+        // post(route("user.store"), {
+        //     onFinish: () => reset("password", "password_confirmation"),
+        // });
+        post(route("user.store"), {
+            preserveScroll: true,
+            onSuccess: () => {
+                // 成功時にリセット
+                reset();
+            },
+            onError: () => {
+                // if (errors.name && nameInput.current) {
+                //     // titleにエラーがある場合、titleInputにフォーカスを移す
+                //     titleInput.current.focus();
+                // } else if (errors.description && descriptionInput.current) {
+                //     // descriptionにエラーがある場合、descriptionInputにフォーカスを移す
+                //     descriptionInput.current.focus();
+                // }
+            },
             onFinish: () => reset("password", "password_confirmation"),
         });
     };

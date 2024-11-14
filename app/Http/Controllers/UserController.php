@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\User\UserStoreRequest;
 use Illuminate\Http\Request;
 use App\Services\UserService;
 
@@ -32,6 +33,24 @@ class UserController extends Controller
     public function create()
     {
         return inertia('User/UserRegister');
+    }
+
+    /**
+     * Todo作成・保存
+     */
+    public function store(UserStoreRequest $request, UserService $userService)
+    {
+        try {
+            $userService->createUser($request);
+            return redirect('users')->with([
+                'message' => 'ユーザーを作成しました'
+            ]);
+        } catch (\Exception $e) {
+            // エラーメッセージをセッションに保存して、ユーザーに通知
+            return redirect()->back()->with([
+                'errorMsg' => 'ユーザーの作成中にエラーが発生しました'
+            ]);
+        }
     }
 
 
