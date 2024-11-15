@@ -6,15 +6,14 @@ use App\Models\User;
 
 class UserPolicy
 {
-    // 管理者のみ一覧を閲覧可能
-    public function viewAny(User $user)
+    // 管理者のみ操作可能
+    public function isAdmin(User $user)
     {
-        return $user->is_admin;
-    }
+        if (!$user->is_admin) {
+            // 管理者権限がない場合は403エラーを返す
+            abort(403, '管理者権限がありません。');
+        }
 
-    // 管理者のみ削除を許可
-    public function delete(User $user)
-    {
-        return $user->is_admin;
+        return true;
     }
 }

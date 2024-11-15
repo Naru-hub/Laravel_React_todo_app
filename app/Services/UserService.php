@@ -17,10 +17,6 @@ class UserService
     public function getUserList()
     {
         try {
-
-            // ユーザーの閲覧権限を確認
-            Gate::authorize('viewAny', User::class);
-
             // 全ユーザーを取得
             $users = User::all();
             return $users;
@@ -112,9 +108,6 @@ class UserService
     public function deleteUser($id)
     {
         try {
-            // 現在のユーザーの削除権限を確認
-            Gate::authorize('delete', Auth::user());
-
             // IDに紐づくUserを取得
             $user = User::findOrFail($id);
 

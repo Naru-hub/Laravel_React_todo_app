@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\User\UserStoreRequest;
 use Illuminate\Http\Request;
 use App\Services\UserService;
+use Illuminate\Support\Facades\Gate;
 
 use Inertia\Inertia;
 
@@ -16,7 +17,12 @@ class UserController extends Controller
     public function index(UserService $userService)
     {
         try {
+            // 管理者権限がない場合は操作を拒否
+            Gate::authorize('isAdmin');
+
+            // ユーザー一覧情報を取得
             $users = $userService->getUserList();
+
             return Inertia::render('User/Index', [
                 'users' => $users,
                 'message' => session('message')
@@ -32,6 +38,9 @@ class UserController extends Controller
      */
     public function create()
     {
+        // 管理者権限がない場合はアクセス拒否
+        Gate::authorize('isAdmin');
+
         return inertia('User/UserRegister');
     }
 
@@ -41,7 +50,12 @@ class UserController extends Controller
     public function store(UserStoreRequest $request, UserService $userService)
     {
         try {
+            // 管理者権限がない場合は操作を拒否
+            Gate::authorize('isAdmin');
+
+            // ユーザー作成処理
             $userService->createUser($request);
+
             return redirect('users')->with([
                 'message' => 'ユーザーを作成しました'
             ]);
@@ -60,7 +74,12 @@ class UserController extends Controller
     public function destroy($id, UserService $userService)
     {
         try {
+            // 管理者権限がない場合は操作を拒否
+            Gate::authorize('isAdmin');
+
+            // ユーザーを削除
             $userService->deleteUser($id);
+
             return redirect('users')->with([
                 'message' => 'ユーザーを削除しました'
             ]);

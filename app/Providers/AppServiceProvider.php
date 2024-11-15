@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Gate;
+use App\Policies\UserPolicy;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -31,5 +33,8 @@ class AppServiceProvider extends ServiceProvider
                 return Session::get('errorMsg');
             },
         ]);
+
+        // 管理者のみ許可するGateの定義
+        Gate::define('isAdmin', [UserPolicy::class, 'isAdmin']);
     }
 }
