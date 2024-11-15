@@ -161,7 +161,6 @@ export default function userIndex({ auth, message, users }: PageProps) {
                                         </th>
                                         <th className="border border-slate-300 text-white px-2 py-2"></th>
                                         <th className="border border-slate-300 text-white px-2 py-2"></th>
-                                        <th className="border border-slate-300 text-white px-2 py-2"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -211,25 +210,6 @@ export default function userIndex({ auth, message, users }: PageProps) {
                                                     }
                                                 )}
                                             </td>
-                                            <td className="border border-slate-300 px-2 py-2 text-center">
-                                            {user.is_admin ?  null : (
-                                                <PrimaryButton
-                                                    // onClick={() =>
-                                                    //     todoEditForm(
-                                                    //         todo.id,
-                                                    //         todo.title,
-                                                    //         todo.description,
-                                                    //         todo.is_completed,
-                                                    //         todo.start_date,
-                                                    //         todo.due_date
-                                                    //     )
-                                                    // }
-                                                    // disabled={processing}
-                                                >
-                                                    チーム登録
-                                                </PrimaryButton>
-                                            )}
-                                            </td> 
                                             <td className="border border-slate-300 px-2 py-2 text-center">
                                             {user.is_admin ?  null : (
                                                 <EditButton
