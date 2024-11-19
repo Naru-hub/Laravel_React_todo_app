@@ -45,7 +45,7 @@ class UserController extends Controller
     }
 
     /**
-     * Todo作成・保存
+     * ユーザー登録
      */
     public function store(UserStoreRequest $request, UserService $userService)
     {
@@ -53,11 +53,11 @@ class UserController extends Controller
             // 管理者権限がない場合は操作を拒否
             Gate::authorize('isAdmin');
 
-            // ユーザー作成処理
+            // ユーザー登録処理
             $userService->createUser($request);
 
             return redirect('users')->with([
-                'message' => 'ユーザーを作成しました'
+                'message' => 'ユーザーを登録しました'
             ]);
         } catch (\Exception $e) {
             // エラーメッセージをセッションに保存して、ユーザーに通知
