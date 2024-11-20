@@ -6,11 +6,9 @@ import { Head, useForm, usePage, router } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import PrimaryButton from "@/Components/PrimaryButton";
 import DeleteUserConfirmForm from "./Modal/DeleteUserConfirmForm";
-import { Inertia } from '@inertiajs/inertia';
-
 
 export default function userIndex({ auth, message, users }: PageProps) {
-     // User一覧の型宣言
+    // User一覧の型宣言
     const userList = users as User[];
 
     // フラッシュメッセージの型宣言

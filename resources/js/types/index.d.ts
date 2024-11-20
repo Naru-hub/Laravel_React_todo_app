@@ -76,6 +76,33 @@ export interface UserFormData {
     is_admin: boolean;
 }
 
+// チーム情報の型
+export interface Team {
+    id: number;
+    name: string;
+    // ISO 8601 形式の日付文字列
+    created_at: string; 
+    updated_at: string; 
+    pivot: {
+        user_id: number;
+        team_id: number;
+    };
+}
+
+// ユーザーと所属チーム情報の型
+export interface UserInTeamInfo {
+    id: number;
+    name: string;
+    email: string;
+    email_verified_at: string | null; 
+    // ISO 8601 形式の日付文字列
+    created_at: string; 
+    updated_at: string; 
+    is_admin: number; 
+    // チーム情報の配列
+    teams: Team[]; 
+}
+
 export type PageProps<
     T extends Record<string, unknown> = Record<string, unknown>
 > = T & {

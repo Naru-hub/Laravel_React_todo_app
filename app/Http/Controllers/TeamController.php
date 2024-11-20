@@ -15,13 +15,12 @@ class TeamController extends Controller
         // 管理者権限がない場合は操作を拒否
         Gate::authorize('isAdmin');
 
-        // $userTeamInfo = User::with('teams')->findOrFail($userId);
-        // dd($userId);
+        // 対象ユーザーの所属チームを情報を取得
+        $userTeamInfo = User::with('teams')->findOrFail($userId);
 
         return Inertia::render('User/ListAndEditTeamsForm', [
-            'userId' => $userId
-            // 'userTeamInfo' => $userTeamInfo,
-            // 'message' => session('message')
+            'userTeamInfo' => $userTeamInfo,
+            'message' => session('message')
         ]);
     }
 }
