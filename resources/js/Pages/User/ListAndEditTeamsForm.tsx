@@ -1,21 +1,80 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import DangerButton from "@/Components/DangerButton";
 import { PageProps, Team, UserInTeamInfo} from "@/types";
+import { useForm } from "@inertiajs/react";
+import { useState } from "react";
 
-export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo }: PageProps) {
-    // User・User所属チーム情報の型宣言
+export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, allTeamList }: PageProps) {
+    // フォームの設定
+    const {
+        delete: destroy,
+        processing,
+    } = useForm({
+        // formの初期値を設定
+        id: 0,
+        user_id: 1,
+        team_id: 1,
+        // is_completed: false,
+        // start_date: new Date(),
+        // due_date: new Date(),
+    });
+
+    // セレクトボックス用のチーム一覧の型宣言
+    const selectAllTeamList = allTeamList as Team[];
+    // User情報・所属チーム情報の型宣言
     const userIncludeTeamInfo = userTeamInfo as UserInTeamInfo;
     // User所属チーム一覧情報の型宣言
     const userTeamList = userIncludeTeamInfo.teams;
-    
+
+    // 選択されたIDを保持するstate
+    const [selectedId, setSelectedId] = useState<number | null>(null);
+
+    // 削除確認フォームを表示
+    const confirmDelete = (teamId: number) => {
+    };
+
+    // セレクトボックスの値が変わったときに実行される関数
+    const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedId(Number(event.target.value));
+    };
+
+    // チーム登録処理
+    const handleSubmit = () => {
+        if (selectedId !== null) {
+
+        
+        }
+    };
+
     return (
         <AuthenticatedLayout user={auth.user}>
-            <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">            
-                    <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                        ユーザー所属チーム一覧
-                    </h2>
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                            <div className="py-3 px-6">
+            <div className="pt-8">
+                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+                        {/* ユーザー情報セクション */}
+                        <section className="pl-10">
+                            <h2 className="text-2xl font-bold text-gray-800 text-center mb-4">
+                                ユーザー情報
+                            </h2>
+                            <dl className="space-y-4">
+                                <div className="flex">
+                                    <dt className="text-lg font-medium text-gray-500">ユーザーID：</dt>
+                                    <dd className="ml-3 text-lg text-gray-900">{userIncludeTeamInfo.id}</dd>
+                                </div>
+                                <div className="flex">
+                                    <dt className="text-lg font-medium text-gray-500">ユーザー名：</dt>
+                                    <dd className="ml-3 text-lg text-gray-900">{userIncludeTeamInfo.name}</dd>
+                                </div>
+                                <div className="flex">
+                                    <dt className="text-lg font-medium text-gray-500">メールアドレス：</dt>
+                                    <dd className="ml-3 text-lg text-gray-900">{userIncludeTeamInfo.email}</dd>
+                                </div>
+                            </dl>
+                        
+                            <div className="pt-6">
+                                <h2 className="text-l font-bold text-gray-700">
+                                    ユーザー所属チーム一覧
+                                </h2>
                                 {/* {showActionMessage && actionMessage && (
                                     <div className="mt-2 text-green-700 bg-green-100 p-2 rounded-lg text-center font-bold">
                                         {actionMessage}
@@ -27,7 +86,7 @@ export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo }: P
                                     </div>
                                 )} */}
                             </div>
-                            <div className="p-6 text-gray-900">
+                            <div className="text-gray-900">
                                 { userTeamList.length > 0 ? (
                                     <table className="w-2/4 border-separate border border-slate-400">
                                         <thead className="bg-emerald-500">
@@ -40,6 +99,8 @@ export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo }: P
                                                 </th>
                                                 <th className="border border-slate-300 text-white px-2 py-2">
                                                     チーム所属開始日
+                                                </th>
+                                                <th className="border border-slate-300 text-white px-2 py-2">
                                                 </th>
                                             </tr>
                                         </thead>
@@ -64,6 +125,13 @@ export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo }: P
                                                             }
                                                         )}
                                                     </td>
+                                                    <td className="border border-slate-300 px-2 py-2 text-center">
+                                                        {!auth.user.is_admin && auth.user.id != 1 ?  null : (
+                                                            <DangerButton onClick={() => confirmDelete(team.id)} disabled={processing}>
+                                                                チーム脱退
+                                                            </DangerButton>
+                                                        )}
+                                                    </td>
                                                 </tr>
                                             ))}
                                         </tbody>
@@ -73,23 +141,42 @@ export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo }: P
                                         表示できるユーザー所属チームデータがありません
                                     </p>
                                 )}
-                        </div>
+                            </div>
+                        </section>
                     </div>
                 </div>
             </div>
     
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                        ユーザー所属チーム編集フォーム
-                    </h2>
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-
+                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg py-6">
+                        <h2 className="text-2xl font-bold text-gray-800 text-center mb-4">
+                            チーム登録
+                        </h2>
+                        <div className="flex items-center justify-center w-3/6 mx-auto space-x-4">
+                            <select 
+                                onChange={handleChange} 
+                                value={selectedId ?? ''}
+                                className="w-3/4 px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500"
+                            >
+                                <option value="" disabled>選択してください</option>
+                                {selectAllTeamList.map(option => (
+                                    <option key={option.id} value={option.id}>
+                                        {option.name}
+                                    </option>
+                                ))}
+                            </select>
+                            <button 
+                                onClick={handleSubmit} 
+                                disabled={selectedId === null}
+                                className="w-1/4 px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                チームに登録する
+                            </button>
+                        </div>
                     </div>
                 </div>               
             </div>
         </AuthenticatedLayout>
-        
-        
     );
 }
