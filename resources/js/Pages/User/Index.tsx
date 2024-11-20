@@ -6,6 +6,7 @@ import { Head, useForm, usePage, router } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import PrimaryButton from "@/Components/PrimaryButton";
 import DeleteUserConfirmForm from "./Modal/DeleteUserConfirmForm";
+import { Inertia } from '@inertiajs/inertia';
 
 
 export default function userIndex({ auth, message, users }: PageProps) {
@@ -47,10 +48,16 @@ export default function userIndex({ auth, message, users }: PageProps) {
     });
 
     // ユーザー登録フォームを表示
-    const ShowUserCreateForm = () => {
+    const showUserCreateForm = () => {
         router.get(route('user.create'));
     }
 
+    // ユーザー所属チーム一覧・編集ページ表示
+    const showUserInTeamList = (userId: number) => {
+
+        // ユーザーIDを渡してチーム編集ページに遷移
+        router.get(route('team.index',  {id: userId}));
+    }
 
     // 削除確認フォームを表示
     const confirmDelete = (userId: number) => {
@@ -116,7 +123,7 @@ export default function userIndex({ auth, message, users }: PageProps) {
             <Head title="User" />
 
             <PrimaryButton
-                onClick={ShowUserCreateForm}
+                onClick={showUserCreateForm}
                 className="mb-5 mx-5"
                 disabled={processing}
             >
@@ -213,17 +220,8 @@ export default function userIndex({ auth, message, users }: PageProps) {
                                             <td className="border border-slate-300 px-2 py-2 text-center">
                                             {user.is_admin ?  null : (
                                                 <EditButton
-                                                    // onClick={() =>
-                                                    //     todoEditForm(
-                                                    //         todo.id,
-                                                    //         todo.title,
-                                                    //         todo.description,
-                                                    //         todo.is_completed,
-                                                    //         todo.start_date,
-                                                    //         todo.due_date
-                                                    //     )
-                                                    // }
-                                                    // disabled={processing}
+                                                    onClick={() => showUserInTeamList(user.id)}
+                                                    disabled={processing}
                                                 >
                                                     チーム編集
                                                 </EditButton>

@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TodoController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TeamController;
+use App\Models\Team;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -27,6 +29,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/user/store', [UserController::class, 'store'])->name('user.store');
     // ユーザー削除
     Route::delete('/user/destroy/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+
+    // チーム一覧
+    Route::get('/user/{id}/teams', [TeamController::class, 'show'])->name('team.index');
+
 
     // ユーザー用
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
