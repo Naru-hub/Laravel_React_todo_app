@@ -28,9 +28,6 @@ export default function UserRegister({ auth, message }: PageProps) {
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        // post(route("user.store"), {
-        //     onFinish: () => reset("password", "password_confirmation"),
-        // });
         post(route("user.store"), {
             preserveScroll: true,
             onSuccess: () => {

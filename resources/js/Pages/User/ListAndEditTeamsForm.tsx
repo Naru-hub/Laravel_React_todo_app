@@ -2,13 +2,15 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import DangerButton from "@/Components/DangerButton";
 import { PageProps, Team, UserInTeamInfo} from "@/types";
 import { useForm } from "@inertiajs/react";
-import { useState } from "react";
+import { FormEventHandler, useState } from "react";
 
 export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, allTeamList }: PageProps) {
     // フォームの設定
     const {
         delete: destroy,
         processing,
+        post,
+        reset
     } = useForm({
         // formの初期値を設定
         id: 0,
@@ -39,10 +41,26 @@ export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, all
     };
 
     // チーム登録処理
-    const handleSubmit = () => {
-        if (selectedId !== null) {
+    const submit: FormEventHandler = (e) => {
+        e.preventDefault();
 
-        
+        if (selectedId !== null) {
+            post(route("team.store"), {
+                preserveScroll: true,
+                onSuccess: () => {
+                    // 成功時にリセット
+                    reset();
+                },
+                // onError: () => {
+                //     // if (errors.name && nameInput.current) {
+                //     //     // titleにエラーがある場合、titleInputにフォーカスを移す
+                //     //     titleInput.current.focus();
+                //     // } else if (errors.description && descriptionInput.current) {
+                //     //     // descriptionにエラーがある場合、descriptionInputにフォーカスを移す
+                //     //     descriptionInput.current.focus();
+                //     // }
+                // },
+            });
         }
     };
 
@@ -71,10 +89,6 @@ export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, all
                                 </div>
                             </dl>
                         
-                            <div className="pt-6">
-                                <h2 className="text-l font-bold text-gray-700">
-                                    ユーザー所属チーム一覧
-                                </h2>
                                 {/* {showActionMessage && actionMessage && (
                                     <div className="mt-2 text-green-700 bg-green-100 p-2 rounded-lg text-center font-bold">
                                         {actionMessage}
@@ -85,6 +99,12 @@ export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, all
                                         {errorMessage}
                                     </div>
                                 )} */}
+                            <div className="pt-6">
+                                { userTeamList.length > 0 ? (
+                                    <h2 className="text-l font-bold text-gray-700">
+                                        ユーザー所属チーム一覧
+                                    </h2>
+                                ) : (null)}
                             </div>
                             <div className="text-gray-900">
                                 { userTeamList.length > 0 ? (
@@ -136,11 +156,7 @@ export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, all
                                             ))}
                                         </tbody>
                                     </table>
-                                ) : (
-                                    <p className="text-center">
-                                        表示できるユーザー所属チームデータがありません
-                                    </p>
-                                )}
+                                ) : ( null )}
                             </div>
                         </section>
                     </div>
@@ -153,7 +169,7 @@ export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, all
                         <h2 className="text-2xl font-bold text-gray-800 text-center mb-4">
                             チーム登録
                         </h2>
-                        <div className="flex items-center justify-center w-3/6 mx-auto space-x-4">
+                        <form onSubmit={submit} className="flex items-center justify-center w-4/5 mx-auto space-x-4">
                             <select 
                                 onChange={handleChange} 
                                 value={selectedId ?? ''}
@@ -166,14 +182,13 @@ export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, all
                                     </option>
                                 ))}
                             </select>
-                            <button 
-                                onClick={handleSubmit} 
+                            <button
                                 disabled={selectedId === null}
                                 className="w-1/4 px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 チームに登録する
                             </button>
-                        </div>
+                        </form>
                     </div>
                 </div>               
             </div>

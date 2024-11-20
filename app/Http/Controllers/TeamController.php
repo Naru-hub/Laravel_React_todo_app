@@ -28,4 +28,27 @@ class TeamController extends Controller
             'message' => session('message')
         ]);
     }
+
+    /**
+     * チーム登録
+     */
+    public function store()
+    {
+        try {
+            // 管理者権限がない場合は操作を拒否
+            Gate::authorize('isAdmin');
+
+            // ユーザーのチーム登録処理
+            // $userService->createUser($request);
+
+            return redirect('team.index')->with([
+                'message' => 'ユーザーをチームに登録しました'
+            ]);
+        } catch (\Exception $e) {
+            // エラーメッセージをセッションに保存して、ユーザーに通知
+            return redirect()->back()->with([
+                'errorMsg' => 'ユーザーのチーム登録中にエラーが発生しました'
+            ]);
+        }
+    }
 }

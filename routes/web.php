@@ -24,7 +24,7 @@ Route::middleware('auth')->group(function () {
     // 管理者用(ユーザー操作のルーティングを設定)
     // ユーザー一覧
     Route::get('/users', [UserController::class, 'index'])->name('user.index');
-    // ユーザー作成
+    // ユーザー登録
     Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
     Route::post('/user/store', [UserController::class, 'store'])->name('user.store');
     // ユーザー削除
@@ -32,6 +32,8 @@ Route::middleware('auth')->group(function () {
 
     // チーム一覧
     Route::get('/user/{id}/teams', [TeamController::class, 'show'])->name('team.index');
+    // チーム登録
+    Route::get('/user/team/store', [TeamController::class, 'store'])->name('team.store');
 
 
     // ユーザー用
