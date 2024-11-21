@@ -33,6 +33,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/{id}/teams', [TeamController::class, 'show'])->name('team.index');
     // チーム登録
     Route::post('/user/{id}/team/store', [TeamController::class, 'store'])->name('team.store');
+    // チーム削除
+    Route::delete('/user/team/remove', [TeamController::class, 'destroy'])->name('team.destroy');
 
 
     // ユーザー用

@@ -3,6 +3,7 @@ import DangerButton from "@/Components/DangerButton";
 import { PageProps, Team, UserInTeamInfo} from "@/types";
 import { useForm, usePage } from "@inertiajs/react";
 import { FormEventHandler, useEffect, useState } from "react";
+import { Inertia } from '@inertiajs/inertia';
 
 export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, allTeamList }: PageProps) {
     // セレクトボックス用のチーム一覧の型宣言
@@ -34,8 +35,11 @@ export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, all
         team_id: null, 
     });
 
-    // 削除確認フォームを表示
-    const confirmDelete = (team_id: number) => {
+    // ユーザーをチームから削除（脱退）する処理
+    const deleteUserFromTeam = (teamId: number) => {
+        if (window.confirm('本当にこのユーザーをチームから削除しますか？')) {
+            Inertia.delete(route('team.destroy', { team_id: teamId, user_id: data.user_id }));
+        }
     };
 
     // ユーザーがすでに所属しているチームのIDリストを作成
@@ -173,7 +177,7 @@ export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, all
                                                         </td>
                                                         <td className="border border-slate-300 px-2 py-2 text-center">
                                                             {!auth.user.is_admin && auth.user.id != 1 ?  null : (
-                                                                <DangerButton onClick={() => confirmDelete(team.id)} disabled={processing}>
+                                                                <DangerButton onClick={() => deleteUserFromTeam(team.id)} disabled={processing}>
                                                                     チーム脱退
                                                                 </DangerButton>
                                                             )}

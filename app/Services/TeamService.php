@@ -58,6 +58,7 @@ class TeamService
             // DBにデータを登録
             $user->teams()->syncWithoutDetaching($request->team_id);
 
+            // ユーザーIDを返す
             return $user->id;
         } catch (\Exception $e) {
             // エラーメッセージをログに記録
@@ -69,20 +70,24 @@ class TeamService
     /**
      * Teamからuserを削除(脱退処理)
      */
-    public function removeUserFromTeam($id)
+    public function removeUserFromTeam($request)
     {
-        // try {
-        //     // IDに紐づくUserを取得
-        //     $user = User::findOrFail($id);
+        try {
+            // ユーザーとチームを取得
+            $user = User::findOrFail($request->user_id);
+            $team = Team::findOrFail($request->team_id);
 
-        //     // Userを削除
-        //     $user->delete();
-        // } catch (ModelNotFoundException $e) {
-        //     Log::error($e->getMessage());
-        //     throw new \Exception('指定されたユーザーが見つかりませんでした');
-        // } catch (\Exception $e) {
-        //     Log::error($e->getMessage());
-        //     throw new \Exception('ユーザーの削除中にエラーが発生しました');
-        // }
+            // チームからユーザーを削除
+            $team->users()->detach($user->id);
+
+            // ユーザーIDを返す
+            return $user->id;
+        } catch (ModelNotFoundException $e) {
+            Log::error($e->getMessage());
+            throw new \Exception('指定されたユーザーまたはチームが見つかりませんでした');
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            throw new \Exception('チームからユーザーを削除中にエラーが発生しました');
+        }
     }
 }
