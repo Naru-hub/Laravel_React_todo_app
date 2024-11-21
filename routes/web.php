@@ -4,7 +4,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TodoController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TeamController;
-use App\Models\Team;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -33,7 +32,7 @@ Route::middleware('auth')->group(function () {
     // チーム一覧
     Route::get('/user/{id}/teams', [TeamController::class, 'show'])->name('team.index');
     // チーム登録
-    Route::get('/user/team/store', [TeamController::class, 'store'])->name('team.store');
+    Route::post('/user/{id}/team/store', [TeamController::class, 'store'])->name('team.store');
 
 
     // ユーザー用

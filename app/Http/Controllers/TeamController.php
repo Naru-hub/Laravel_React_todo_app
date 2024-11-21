@@ -2,25 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\Team\TeamStoreRequest;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Gate;
-use App\Models\User;
-use App\Models\Team;
+use App\Services\TeamService;
 
 class TeamController extends Controller
 {
     // ユーザー所属チーム一覧・編集ページを表示
-    public function show($userId)
+    public function show($userId, TeamService $teamService)
     {
         // 管理者権限がない場合は操作を拒否
         Gate::authorize('isAdmin');
 
         // チームリストを取得
-        $allTeamList = Team::all();
+        $allTeamList = $teamService->getTeamList();
 
-        // 対象ユーザーの所属チームを情報を取得
-        $userTeamInfo = User::with('teams')->findOrFail($userId);
+        // 対象ユーザーの所属チーム情報を取得
+        $userTeamInfo = $teamService->getUserInTeamList($userId);
 
         return Inertia::render('User/ListAndEditTeamsForm', [
             'allTeamList' => $allTeamList,
@@ -32,16 +31,16 @@ class TeamController extends Controller
     /**
      * チーム登録
      */
-    public function store()
+    public function store(TeamStoreRequest $request, TeamService $teamService)
     {
         try {
             // 管理者権限がない場合は操作を拒否
             Gate::authorize('isAdmin');
 
             // ユーザーのチーム登録処理
-            // $userService->createUser($request);
+            $userId = $teamService->addUserToTeam($request);
 
-            return redirect('team.index')->with([
+            return redirect()->route('team.index', ['id' => $userId])->with([
                 'message' => 'ユーザーをチームに登録しました'
             ]);
         } catch (\Exception $e) {

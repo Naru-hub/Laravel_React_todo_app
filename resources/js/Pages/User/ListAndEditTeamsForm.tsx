@@ -1,68 +1,92 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import DangerButton from "@/Components/DangerButton";
 import { PageProps, Team, UserInTeamInfo} from "@/types";
-import { useForm } from "@inertiajs/react";
-import { FormEventHandler, useState } from "react";
+import { useForm, usePage } from "@inertiajs/react";
+import { FormEventHandler, useEffect, useState } from "react";
 
 export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, allTeamList }: PageProps) {
-    // フォームの設定
-    const {
-        delete: destroy,
-        processing,
-        post,
-        reset
-    } = useForm({
-        // formの初期値を設定
-        id: 0,
-        user_id: 1,
-        team_id: 1,
-        // is_completed: false,
-        // start_date: new Date(),
-        // due_date: new Date(),
-    });
-
     // セレクトボックス用のチーム一覧の型宣言
     const selectAllTeamList = allTeamList as Team[];
     // User情報・所属チーム情報の型宣言
     const userIncludeTeamInfo = userTeamInfo as UserInTeamInfo;
     // User所属チーム一覧情報の型宣言
-    const userTeamList = userIncludeTeamInfo.teams;
+    const userTeamList = userIncludeTeamInfo.teams as Team[];
 
-    // 選択されたIDを保持するstate
-    const [selectedId, setSelectedId] = useState<number | null>(null);
+    // フラッシュメッセージの型宣言
+    let actionMessage: string = message as string;
+    const { props } = usePage();
+    let errorMessage = props.errorMsg as string;
+
+    // フラッシュメッセージの出現ステータス
+    const [showActionMessage, setShowActionMessage] = useState(!!actionMessage);
+    const [showErrorMessage, setShowErrorMessage] = useState(!!errorMessage);
+
+    // フォームの設定
+    const { data, setData, post, reset, delete: destroy, processing } = useForm<{
+        id: number;
+        user_id: number;
+        team_id: number | null;
+    }>({
+        // formの初期値を設定
+        id: 0,
+        user_id: userIncludeTeamInfo.id,
+        // 初期値はnull
+        team_id: null, 
+    });
 
     // 削除確認フォームを表示
-    const confirmDelete = (teamId: number) => {
+    const confirmDelete = (team_id: number) => {
     };
 
-    // セレクトボックスの値が変わったときに実行される関数
+    // ユーザーがすでに所属しているチームのIDリストを作成
+    const userTeamIds = userTeamList.map(team => team.id);
+
+    // セレクトボックスで表示するチームリストをフィルタリング
+    const availableTeamList = selectAllTeamList.filter(team => !userTeamIds.includes(team.id));
+
+    // セレクトボックスの値の変更を検知する関数
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedId(Number(event.target.value));
+        // selectの値をuseFormで管理しているチームIDにセット
+        setData('team_id', Number(event.target.value));
     };
 
     // チーム登録処理
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        if (selectedId !== null) {
-            post(route("team.store"), {
+        if (data.team_id !== null) {
+            post(route("team.store", { id: data.user_id }), {
                 preserveScroll: true,
                 onSuccess: () => {
                     // 成功時にリセット
                     reset();
                 },
-                // onError: () => {
-                //     // if (errors.name && nameInput.current) {
-                //     //     // titleにエラーがある場合、titleInputにフォーカスを移す
-                //     //     titleInput.current.focus();
-                //     // } else if (errors.description && descriptionInput.current) {
-                //     //     // descriptionにエラーがある場合、descriptionInputにフォーカスを移す
-                //     //     descriptionInput.current.focus();
-                //     // }
-                // },
             });
         }
     };
+
+    // フラッシュメッセージの表示・非表示
+    useEffect(() => {
+        if (actionMessage) {
+            setShowActionMessage(true);
+            const timer = setTimeout(() => {
+                setShowActionMessage(false);
+            }, 3000); // 3秒後にメッセージを非表示
+
+            return () => clearTimeout(timer); // タイマーをリセット
+        }
+    }, [actionMessage]);
+
+    useEffect(() => {
+        if (errorMessage) {
+            setShowErrorMessage(true);
+            const timer = setTimeout(() => {
+                setShowErrorMessage(false);
+            }, 3000); // 3秒後にエラーメッセージを非表示
+
+            return () => clearTimeout(timer); // タイマーをリセット
+        }
+    }, [errorMessage]);
 
     return (
         <AuthenticatedLayout user={auth.user}>
@@ -88,8 +112,7 @@ export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, all
                                     <dd className="ml-3 text-lg text-gray-900">{userIncludeTeamInfo.email}</dd>
                                 </div>
                             </dl>
-                        
-                                {/* {showActionMessage && actionMessage && (
+                                {showActionMessage && actionMessage && (
                                     <div className="mt-2 text-green-700 bg-green-100 p-2 rounded-lg text-center font-bold">
                                         {actionMessage}
                                     </div>
@@ -98,7 +121,7 @@ export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, all
                                     <div className="mt-2 text-red-700 bg-red-100 p-2 rounded-lg text-center font-bold">
                                         {errorMessage}
                                     </div>
-                                )} */}
+                                )}
                             <div className="pt-6">
                                 { userTeamList.length > 0 ? (
                                     <h2 className="text-l font-bold text-gray-700">
@@ -125,34 +148,37 @@ export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, all
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            { userTeamList.map((team: Team) => (
-                                                <tr key={team.id}>
-                                                    <td className="border border-slate-300 px-2 py-2">
-                                                        {team.id}
-                                                    </td>
-                                                    <td className="border border-slate-300 px-2 py-2">
-                                                        {team.name}
-                                                    </td>
-                                                    <td className="border border-slate-300 px-2 py-2">
-                                                        {new Date(
-                                                            team.created_at
-                                                        ).toLocaleDateString(
-                                                            "ja-JP",
-                                                            {
-                                                                year: "numeric",
-                                                                month: "2-digit",
-                                                                day: "2-digit",
-                                                            }
-                                                        )}
-                                                    </td>
-                                                    <td className="border border-slate-300 px-2 py-2 text-center">
-                                                        {!auth.user.is_admin && auth.user.id != 1 ?  null : (
-                                                            <DangerButton onClick={() => confirmDelete(team.id)} disabled={processing}>
-                                                                チーム脱退
-                                                            </DangerButton>
-                                                        )}
-                                                    </td>
-                                                </tr>
+                                            { userTeamList
+                                                // チームid順にソート
+                                                .sort((a, b) => a.id - b.id) 
+                                                .map((team: Team) => (
+                                                    <tr key={team.id}>
+                                                        <td className="border border-slate-300 px-2 py-2">
+                                                            {team.id}
+                                                        </td>
+                                                        <td className="border border-slate-300 px-2 py-2">
+                                                            {team.name}
+                                                        </td>
+                                                        <td className="border border-slate-300 px-2 py-2">
+                                                            {new Date(
+                                                                team.created_at
+                                                            ).toLocaleDateString(
+                                                                "ja-JP",
+                                                                {
+                                                                    year: "numeric",
+                                                                    month: "2-digit",
+                                                                    day: "2-digit",
+                                                                }
+                                                            )}
+                                                        </td>
+                                                        <td className="border border-slate-300 px-2 py-2 text-center">
+                                                            {!auth.user.is_admin && auth.user.id != 1 ?  null : (
+                                                                <DangerButton onClick={() => confirmDelete(team.id)} disabled={processing}>
+                                                                    チーム脱退
+                                                                </DangerButton>
+                                                            )}
+                                                        </td>
+                                                    </tr>
                                             ))}
                                         </tbody>
                                     </table>
@@ -172,18 +198,18 @@ export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, all
                         <form onSubmit={submit} className="flex items-center justify-center w-4/5 mx-auto space-x-4">
                             <select 
                                 onChange={handleChange} 
-                                value={selectedId ?? ''}
+                                value={data.team_id ?? ''} 
                                 className="w-3/4 px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500"
                             >
                                 <option value="" disabled>選択してください</option>
-                                {selectAllTeamList.map(option => (
+                                {availableTeamList.map(option => (
                                     <option key={option.id} value={option.id}>
                                         {option.name}
                                     </option>
                                 ))}
                             </select>
                             <button
-                                disabled={selectedId === null}
+                                disabled={data.team_id === null}
                                 className="w-1/4 px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 チームに登録する
