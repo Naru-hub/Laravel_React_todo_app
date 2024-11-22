@@ -3,7 +3,6 @@ import DangerButton from "@/Components/DangerButton";
 import { PageProps, Team, UserInTeamInfo} from "@/types";
 import { useForm, usePage } from "@inertiajs/react";
 import { FormEventHandler, useEffect, useState } from "react";
-import { Inertia } from '@inertiajs/inertia';
 
 export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, allTeamList }: PageProps) {
     // セレクトボックス用のチーム一覧の型宣言
@@ -35,12 +34,40 @@ export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, all
         team_id: null, 
     });
 
-    // ユーザーをチームから削除（脱退）する処理
+    //削除処理かどうかのフラグ
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    // ユーザーをチームから削除（脱退）する処理の値をセット
     const deleteUserFromTeam = (teamId: number) => {
         if (window.confirm('本当にこのユーザーをチームから削除しますか？')) {
-            Inertia.delete(route('team.destroy', { team_id: teamId, user_id: data.user_id }));
+             // 削除処理中のフラグを立てる
+            setIsDeleting(true);
+
+            setData((prevData) => ({
+                ...prevData,
+                // team_idを引数のteamIdで設定
+                team_id: teamId,  
+            }));
         }
     };
+
+    // ユーザーをチームから削除（脱退）する処理
+    useEffect(() => {
+        if (isDeleting && data.team_id !== null) {
+            destroy(route('team.destroy', { team_id: data.team_id, user_id: data.user_id }), {
+                preserveScroll: true,
+                onSuccess: () => {
+                    // 削除が成功したらフラグをリセット
+                    setIsDeleting(false);
+                },
+                onError: () => {
+                    // 削除が失敗したらフラグをリセット
+                    setIsDeleting(false); 
+                },
+            });
+        }
+        // data.team_idが更新されたときに実行 
+    }, [data.team_id, isDeleting]);  
 
     // ユーザーがすでに所属しているチームのIDリストを作成
     const userTeamIds = userTeamList.map(team => team.id);
@@ -59,6 +86,9 @@ export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, all
         e.preventDefault();
 
         if (data.team_id !== null) {
+            // 登録処理中は削除処理フラグをリセット
+            setIsDeleting(false); 
+
             post(route("team.store", { id: data.user_id }), {
                 preserveScroll: true,
                 onSuccess: () => {
