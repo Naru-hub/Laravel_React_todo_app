@@ -41,6 +41,12 @@ export default function Authenticated({
                                 >
                                     Todo
                                 </NavLink>
+                                <NavLink
+                                    href={route("team.users.todos.index")}
+                                    active={route().current("team.users.todos.index")}
+                                >
+                                    TeamUserTodo
+                                </NavLink>
                                 {
                                     user.is_admin ? (
                                     <NavLink

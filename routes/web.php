@@ -36,6 +36,9 @@ Route::middleware('auth')->group(function () {
     // チーム削除
     Route::delete('/user/team/remove', [TeamController::class, 'destroy'])->name('team.destroy');
 
+    // チームユーザーTodo一覧
+    Route::get('/team/users/todos', [TeamController::class, 'TeamUserTodoIndex'])->name('team.users.todos.index');
+
 
     // ユーザー用
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

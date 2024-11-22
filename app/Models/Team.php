@@ -16,4 +16,12 @@ class Team extends Model
     {
         return $this->belongsToMany(User::class)->withTimestamps();
     }
+
+    /**
+     * チーム内のユーザーのTODOを取得するリレーション
+     */
+    public function todos()
+    {
+        return $this->hasManyThrough(Todo::class, User::class);
+    }
 }

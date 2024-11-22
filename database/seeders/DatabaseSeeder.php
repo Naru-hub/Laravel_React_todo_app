@@ -23,8 +23,8 @@ class DatabaseSeeder extends Seeder
             'is_admin' => true, // 管理者権限
         ]);
 
-        $this->call(TodosTableSeeder::class);
         $this->call(UserTableSeeder::class);
+        $this->call(TodosTableSeeder::class);
         $this->call(TeamsTableSeeder::class);
         $this->call(Team_UserTableSeeder::class);
     }

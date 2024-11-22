@@ -4,14 +4,15 @@ namespace App\Services;
 
 use App\Models\Team;
 use App\Models\User;
+use App\Models\Todo;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\Hash;
 
 class TeamService
 {
     /**
-     * ユーザー所属チーム一覧を取得
+     * ユーザー情報及び所属チーム一覧を取得
      */
     public function getUserInTeamList($userId)
     {
@@ -89,5 +90,40 @@ class TeamService
             Log::error($e->getMessage());
             throw new \Exception('チームからユーザーを削除中にエラーが発生しました');
         }
+    }
+
+    /**
+     * ユーザー所属チーム内の他ユーザーのTodo一覧を取得する
+     */
+    public function getTeamTodos()
+    {
+        // 現在の認証ユーザーを取得
+        $user = Auth::user();
+
+        // ユーザーが所属するチーム情報を取得
+        $userTeamInfo = $this->getUserInTeamList($user->id);
+        $teams = $userTeamInfo->teams;
+
+        // チーム別に他ユーザーのTodoを格納する
+        $todosByTeam = [];
+
+        foreach ($teams as $team) {
+            // 各チームごとに所属ユーザーのTODOを取得（自分のTodoは除外）
+            $todos = Todo::whereIn('user_id', function ($query) use ($team) {
+                // チームに所属するユーザーを取得
+                $query->select('user_id')
+                    ->from('team_user')
+                    ->where('team_id', $team->id);
+            })
+                // 現在のユーザーを除外
+                ->where('user_id', '!=', $user->id)
+                ->get();
+
+            // チームIDをキーにしてTODOを格納
+            $todosByTeam[$team->id] = $todos;
+        }
+
+        // ユーザー所属のチーム別に他ユーザーのTodoを返す
+        return $todosByTeam;
     }
 }
