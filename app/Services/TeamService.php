@@ -97,33 +97,36 @@ class TeamService
      */
     public function getTeamTodos()
     {
-        // 現在の認証ユーザーを取得
-        $user = Auth::user();
+        try {
+            // 現在の認証ユーザーを取得
+            $user = Auth::user();
 
-        // ユーザーが所属するチーム情報を取得
-        $userTeamInfo = $this->getUserInTeamList($user->id);
-        $teams = $userTeamInfo->teams;
+            // チーム内の他ユーザーのTodoを取得
+            $todos = Todo::query()
+                ->join('team_user as tu', 'todos.user_id', '=', 'tu.user_id')
+                ->join('teams', 'tu.team_id', '=', 'teams.id')
+                ->join('users', 'todos.user_id', '=', 'users.id')
+                ->whereIn('tu.team_id', function ($query) use ($user) {
+                    $query->select('team_id')
+                        ->from('team_user')
+                        ->where('user_id', $user->id); // ログインユーザーの所属するチームを取得
+                })
+                ->where('todos.user_id', '!=', $user->id) // ログインユーザー自身のTodoは除外
+                ->select(
+                    'todos.*',
+                    'teams.id as team_id', // チームID
+                    'teams.name as team_name', // チーム名
+                    'users.name as user_name' // 他ユーザーの名前
+                )
+                ->get()
+                ->groupBy('team_id'); // チームIDでグループ化
 
-        // チーム別に他ユーザーのTodoを格納する
-        $todosByTeam = [];
-
-        foreach ($teams as $team) {
-            // 各チームごとに所属ユーザーのTODOを取得（自分のTodoは除外）
-            $todos = Todo::whereIn('user_id', function ($query) use ($team) {
-                // チームに所属するユーザーを取得
-                $query->select('user_id')
-                    ->from('team_user')
-                    ->where('team_id', $team->id);
-            })
-                // 現在のユーザーを除外
-                ->where('user_id', '!=', $user->id)
-                ->get();
-
-            // チームIDをキーにしてTODOを格納
-            $todosByTeam[$team->id] = $todos;
+            // ユーザー所属のチーム別に他ユーザーのTodoを返す
+            return $todos;
+        } catch (\Exception $e) {
+            // エラーメッセージをログに記録
+            Log::error($e->getMessage());
+            throw new \Exception();
         }
-
-        // ユーザー所属のチーム別に他ユーザーのTodoを返す
-        return $todosByTeam;
     }
 }

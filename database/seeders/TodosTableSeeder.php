@@ -73,8 +73,8 @@ class TodosTableSeeder extends Seeder
             'title' => '買い物に行く',
             'description' => '日用品を買いに行く',
             'is_completed' => false,
-            'start_date' => now()->subDays(3)->startOfDay(),
-            'due_date' => now()->subDays(3)->endOfDay(),
+            'start_date' => now(),
+            'due_date' => now()->copy()->addDays(2)->addDays(3)->endOfDay(), // 開始日から3日後
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -84,8 +84,8 @@ class TodosTableSeeder extends Seeder
             'title' => '打ち合わせ',
             'description' => '打ち合わせに行く',
             'is_completed' => false,
-            'start_date' => now()->subDays(3)->startOfDay(),
-            'due_date' => now()->subDays(3)->endOfDay(),
+            'start_date' => now(),
+            'due_date' => now()->copy()->addDays(2)->addDays(3)->endOfDay(), // 開始日から3日後
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -95,8 +95,8 @@ class TodosTableSeeder extends Seeder
             'title' => '会議',
             'description' => '会議に行く',
             'is_completed' => false,
-            'start_date' => now()->subDays(3)->startOfDay(),
-            'due_date' => now()->subDays(3)->endOfDay(),
+            'start_date' => now(),
+            'due_date' => now()->copy()->addDays(2)->addDays(3)->endOfDay(), // 開始日から3日後
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -106,8 +106,8 @@ class TodosTableSeeder extends Seeder
             'title' => 'プレゼン資料の作成',
             'description' => 'プレゼン資料の作成をする',
             'is_completed' => false,
-            'start_date' => now()->subDays(3)->startOfDay(),
-            'due_date' => now()->subDays(3)->endOfDay(),
+            'start_date' => now(),
+            'due_date' => now()->copy()->addDays(2)->addDays(3)->endOfDay(), // 開始日から3日後
             'created_at' => now(),
             'updated_at' => now()
         ]);

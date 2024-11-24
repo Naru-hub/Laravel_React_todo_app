@@ -41,22 +41,32 @@ export default function Authenticated({
                                 >
                                     Todo
                                 </NavLink>
-                                <NavLink
-                                    href={route("team.users.todos.index")}
-                                    active={route().current("team.users.todos.index")}
-                                >
-                                    TeamUserTodo
-                                </NavLink>
-                                {
-                                    user.is_admin ? (
+                                {user.is_admin ? /** 管理者の場合、チーム一覧を表示 */
+                                // <NavLink
+                                //     href={route("team.index")}
+                                //     active={route().current("team.index")}
+                                // >
+                                //     Team
+                                // </NavLink>
+                                null : (
+                                    /** 一般ユーザーの場合、所属チームの他ユーザーのTodo一覧を表示 */
+                                    <NavLink
+                                        href={route("team.users.todos.index")}
+                                        active={route().current(
+                                            "team.users.todos.index"
+                                        )}
+                                    >
+                                        TeamUserTodo
+                                    </NavLink>
+                                )}
+                                {user.is_admin ? (
                                     <NavLink
                                         href={route("user.index")}
                                         active={route().current("user.index")}
                                     >
                                         User
-                                    </NavLink>)
-                                    : null
-                                } 
+                                    </NavLink>
+                                ) : null}
                             </div>
                         </div>
 

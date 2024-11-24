@@ -1,18 +1,17 @@
-import { format } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { format } from "date-fns";
+import { useEffect, useState } from "react";
 
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { PageProps, Todo } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { anotherUserTodo, PageProps, sameTeamAnotherUserTodos } from "@/types";
+import { Head, usePage } from "@inertiajs/react";
 
-export default function TeamUserTodoIndex({ auth, anotherUserTodoListByTeam }: PageProps) {
-    console.log(anotherUserTodoListByTeam);
-    //  // 本日のTodo一覧の型宣言
-    // const todayTodoList = anotherUserTodoListByTeam as [];
-
-    // // 本日の日付を取得,フォーマットを変換
-    // const Today = new Date();
-    // const formattedToday = format(Today, 'yyyy-MM-dd');
+export default function TeamUserTodoIndex({
+    auth,
+    anotherUserTodoListByTeam,
+}: PageProps) {
+    // ユーザー所属チームの他ユーザーのTodo一覧の型宣言
+    const anotherUserTodoList =
+        anotherUserTodoListByTeam as sameTeamAnotherUserTodos;
 
     const { props } = usePage();
     // フラッシュメッセージの型宣言
@@ -29,6 +28,8 @@ export default function TeamUserTodoIndex({ auth, anotherUserTodoListByTeam }: P
             }, 3000); // 3秒後にエラーメッセージを非表示にする
 
             return () => clearTimeout(timer); // タイマーをリセット
+        } else {
+            setShowErrorMessage(false); // エラーメッセージがなくなった場合も対応
         }
     }, [errorMsg]);
 
@@ -45,42 +46,101 @@ export default function TeamUserTodoIndex({ auth, anotherUserTodoListByTeam }: P
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="py-3 px-6">
+                    <div className="px-6">
                         {showErrorMessage && errorMsg && (
                             <div className="mt-2 text-red-700 bg-red-100 p-2 rounded-lg text-center font-bold">
                                 {errorMsg}
                             </div>
                         )}
                     </div>
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <h2 className="p-6 text-2xl font-semibold text-black dark:text-white">
+                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+                        <h2 className="px-6 text-2xl font-semibold text-black dark:text-white">
                             所属チーム他ユーザーTodo一覧
                         </h2>
-                        {/* {todayTodoList && todayTodoList.length > 0 ? (
-                                <div className="pl-6">
-                                    <ul className="pl-6 mb-6 list-disc">
-                                        {todayTodoList.map((todo) => {
-                                            // "YYYY-MM-DD"形式のstring型に変換
-                                            const dueDateString = format(todo.due_date, 'yyyy-MM-dd');
 
-                                            return (
-                                                <li
-                                                    key={todo.id}
-                                                    className={dueDateString === formattedToday ? "mb-2 text-red-500" : "mb-3"}
-                                                >
-                                                    {todo.title}
-                                                </li>
-                                            );
-                                        })}
-                                    </ul>
-                                </div>
+                        {Object.keys(anotherUserTodoList).length === 0 ? (
+                            <p className="text-gray-500 py-3 px-6">
+                                チームに所属していないか、他ユーザーのTodoが存在しません。
+                            </p>
                         ) : (
-                            <div className="pl-6">
-                                <p className="pl-6 mb-10">
-                                    なし
-                                </p>
-                            </div>
-                            )} */}
+                            Object.entries(anotherUserTodoList).map(
+                                ([teamId, todos]) => (
+                                    <div key={teamId} className="my-6">
+                                        <h3 className="px-6 text-xl font-bold mb-4">
+                                            {todos[0]?.team_name ||
+                                                "不明なチーム"}
+                                        </h3>
+                                        <table className="min-w-full border-collapse border border-gray-200">
+                                            <thead className="bg-gray-100">
+                                                <tr>
+                                                    <th className="border border-gray-300 px-4 py-2 w-[120px]">
+                                                        ユーザー名
+                                                    </th>
+                                                    <th className="border border-gray-300 px-4 py-2 w-1/4">
+                                                        タイトル
+                                                    </th>
+                                                    <th className="border border-gray-300 px-4 py-2 w-1/3">
+                                                        説明
+                                                    </th>
+                                                    <th className="border border-gray-300 px-4 py-2 w-[130px]">
+                                                        完了状況
+                                                    </th>
+                                                    <th className="border border-gray-300 px-4 py-2 w-[150px] whitespace-nowrap">
+                                                        開始日
+                                                    </th>
+                                                    <th className="border border-gray-300 px-4 py-2 w-[150px] whitespace-nowrap">
+                                                        期限日
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {todos.map(
+                                                    (todo: anotherUserTodo) => (
+                                                        <tr
+                                                            key={todo.id}
+                                                            className="hover:bg-gray-50"
+                                                        >
+                                                            <td className="border border-gray-300 px-4 py-2 text-center whitespace-nowrap">
+                                                                {todo.user_name}
+                                                            </td>
+                                                            <td className="border border-gray-300 px-4 py-2 break-words">
+                                                                {todo.title}
+                                                            </td>
+                                                            <td className="border border-gray-300 px-4 py-2 break-words">
+                                                                {
+                                                                    todo.description
+                                                                }
+                                                            </td>
+                                                            <td className="border border-gray-300 px-4 py-2 text-center">
+                                                                {todo.is_completed
+                                                                    ? "完了"
+                                                                    : "未完了"}
+                                                            </td>
+                                                            <td className="border border-gray-300 px-4 py-2 text-center whitespace-nowrap">
+                                                                {format(
+                                                                    new Date(
+                                                                        todo.start_date
+                                                                    ),
+                                                                    "yyyy-MM-dd"
+                                                                )}
+                                                            </td>
+                                                            <td className="border border-gray-300 px-4 py-2 text-center whitespace-nowrap">
+                                                                {format(
+                                                                    new Date(
+                                                                        todo.due_date
+                                                                    ),
+                                                                    "yyyy-MM-dd"
+                                                                )}
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                )
+                            )
+                        )}
                     </div>
                 </div>
             </div>

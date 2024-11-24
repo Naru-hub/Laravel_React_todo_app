@@ -51,8 +51,7 @@ export interface TodoFormProps {
     setData: (name: keyof TodoFormData, value: any) => void;
 }
 
-
-interface DeleteConfirmFormProps {
+export interface DeleteConfirmFormProps {
     userId: number;
     onConfirm: (userId: number) => void;
     onCancel: () => void;
@@ -61,7 +60,7 @@ interface DeleteConfirmFormProps {
 
 export interface DateInputProps {
     id?: string;
-    name?: string; 
+    name?: string;
     selected?: Date;
     onChange: (date: Date | null) => void;
     minDate: Date;
@@ -72,7 +71,7 @@ export interface UserFormData {
     name: string;
     email: string;
     password: string;
-    password_confirmation: string,
+    password_confirmation: string;
     is_admin: boolean;
 }
 
@@ -81,8 +80,8 @@ export interface Team {
     id: number;
     name: string;
     // ISO 8601 形式の日付文字列
-    created_at: string; 
-    updated_at: string; 
+    created_at: string;
+    updated_at: string;
     pivot: {
         user_id: number;
         team_id: number;
@@ -94,13 +93,33 @@ export interface UserInTeamInfo {
     id: number;
     name: string;
     email: string;
-    email_verified_at: string | null; 
+    email_verified_at: string | null;
     // ISO 8601 形式の日付文字列
-    created_at: string; 
-    updated_at: string; 
-    is_admin: number; 
+    created_at: string;
+    updated_at: string;
+    is_admin: number;
     // チーム情報の配列
-    teams: Team[]; 
+    teams: Team[];
+}
+
+export interface anotherUserTodo {
+    id: number;
+    user_id: number;
+    title: string;
+    description: string;
+    is_completed: boolean;
+    start_date: Date;
+    due_date: Date;
+    created_at: Date;
+    updated_at: Date;
+    team_id: number;
+    team_name: string;
+    user_name: string;
+}
+
+// ユーザー所属チームの他ユーザーのTodo一覧の型
+export interface sameTeamAnotherUserTodos {
+    [teamId: string]: anotherUserTodo[];
 }
 
 export type PageProps<
