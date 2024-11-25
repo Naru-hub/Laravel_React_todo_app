@@ -2,16 +2,25 @@ import { format } from "date-fns";
 import { useEffect, useState } from "react";
 
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { anotherUserTodo, PageProps, sameTeamAnotherUserTodos } from "@/types";
+import {
+    anotherUserTodo,
+    PageProps,
+    sameTeamAnotherUserTodos,
+    UserInTeamInfo,
+} from "@/types";
 import { Head, usePage } from "@inertiajs/react";
 
 export default function TeamUserTodoIndex({
     auth,
     anotherUserTodoListByTeam,
+    userTeamInfo,
 }: PageProps) {
     // ユーザー所属チームの他ユーザーのTodo一覧の型宣言
     const anotherUserTodoList =
         anotherUserTodoListByTeam as sameTeamAnotherUserTodos;
+
+    // User情報・所属チーム情報の型宣言
+    const userIncludeTeamInfo = userTeamInfo as UserInTeamInfo;
 
     const { props } = usePage();
     // フラッシュメッセージの型宣言
@@ -54,19 +63,36 @@ export default function TeamUserTodoIndex({
                         )}
                     </div>
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                        <h2 className="px-6 text-2xl font-semibold text-black dark:text-white">
+                        <h3 className="text-xl font-semibold text-black dark:text-white">
+                            ユーザー所属チーム
+                        </h3>
+                        {userIncludeTeamInfo.teams.length === 0 ? (
+                            <p className="text-gray-500 py-3">
+                                チームに所属していません。
+                            </p>
+                        ) : (
+                            userIncludeTeamInfo.teams.map((team) => (
+                                <div key={team.id} className="my-2">
+                                    <ul>
+                                        <li className="mx-3">{team.name}</li>
+                                    </ul>
+                                </div>
+                            ))
+                        )}
+                        <h2 className="pt-2 text-xl font-semibold text-black dark:text-white">
                             所属チーム他ユーザーTodo一覧
                         </h2>
 
-                        {Object.keys(anotherUserTodoList).length === 0 ? (
-                            <p className="text-gray-500 py-3 px-6">
-                                チームに所属していないか、他ユーザーのTodoが存在しません。
+                        {Object.keys(anotherUserTodoList).length === 0 &&
+                        userIncludeTeamInfo.teams.length !== 0 ? (
+                            <p className="text-gray-500 py-3 px-3">
+                                他ユーザーのTodoが存在しません。
                             </p>
                         ) : (
                             Object.entries(anotherUserTodoList).map(
                                 ([teamId, todos]) => (
                                     <div key={teamId} className="my-6">
-                                        <h3 className="px-6 text-xl font-bold mb-4">
+                                        <h3 className="px-3 text-l mb-2 text-blue-500">
                                             {todos[0]?.team_name ||
                                                 "不明なチーム"}
                                         </h3>
@@ -82,7 +108,7 @@ export default function TeamUserTodoIndex({
                                                     <th className="border border-gray-300 px-4 py-2 w-1/3">
                                                         説明
                                                     </th>
-                                                    <th className="border border-gray-300 px-4 py-2 w-[130px]">
+                                                    <th className="border border-gray-300 px-4 py-2 w-[140px]">
                                                         完了状況
                                                     </th>
                                                     <th className="border border-gray-300 px-4 py-2 w-[150px] whitespace-nowrap">

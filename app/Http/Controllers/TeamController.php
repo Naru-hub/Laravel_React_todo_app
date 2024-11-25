@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Team\TeamStoreRequest;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Auth;
 use App\Services\TeamService;
 use Illuminate\Http\Request;
 use App\Services\TodoService;
@@ -84,12 +85,16 @@ class TeamController extends Controller
     public function TeamUserTodoIndex(TeamService $teamService)
     {
         try {
+            // 対象ユーザーの所属チーム情報を取得
+            $userTeamInfo = $teamService->getUserInTeamList(Auth::user()->id);
+
             // 所属チーム他ユーザーのTodo一覧を取得
             $anotherUserTodoListByTeam = $teamService->getTeamTodos();
 
             // 取得したTodo一覧を返却
             return Inertia::render('Team/Index', [
                 'anotherUserTodoListByTeam' => $anotherUserTodoListByTeam,
+                'userTeamInfo' => $userTeamInfo,
                 'message' => session('message')
             ]);
         } catch (\Exception $e) {
