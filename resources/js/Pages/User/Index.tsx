@@ -1,10 +1,12 @@
+import { useEffect, useState } from "react";
+
 import DangerButton from "@/Components/DangerButton";
 import EditButton from "@/Components/EditButton";
+import PrimaryButton from "@/Components/PrimaryButton";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { PageProps, User } from "@/types";
-import { Head, useForm, usePage, router } from "@inertiajs/react";
-import { useEffect, useState } from "react";
-import PrimaryButton from "@/Components/PrimaryButton";
+import { Head, router, useForm, usePage } from "@inertiajs/react";
+
 import DeleteUserConfirmForm from "./Modal/DeleteUserConfirmForm";
 
 export default function userIndex({ auth, message, users }: PageProps) {
@@ -25,37 +27,18 @@ export default function userIndex({ auth, message, users }: PageProps) {
     const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
 
     // フォームの設定
-    const {
-        data,
-        setData,
-        get,
-        post,
-        put,
-        delete: destroy,
-        processing,
-        reset,
-        errors,
-    } = useForm({
-        // formの初期値を設定
-        // id: 0,
-        // title: "",
-        // description: "",
-        // is_completed: false,
-        // start_date: new Date(),
-        // due_date: new Date(),
-    });
+    const { delete: destroy, processing } = useForm({});
 
     // ユーザー登録フォームを表示
     const showUserCreateForm = () => {
-        router.get(route('user.create'));
-    }
+        router.get(route("user.create"));
+    };
 
     // ユーザー所属チーム一覧・編集ページ表示
     const showUserInTeamList = (userId: number) => {
-
         // ユーザーIDを渡してチーム編集ページに遷移
-        router.get(route('team.index',  {id: userId}));
-    }
+        router.get(route("team.index", { id: userId }));
+    };
 
     // 削除確認フォームを表示
     const confirmDelete = (userId: number) => {
@@ -71,7 +54,7 @@ export default function userIndex({ auth, message, users }: PageProps) {
             onSuccess: () => {
                 setConfirmingDeletion(false);
                 // 削除後にIDをリセット
-                setSelectedUserId(null); 
+                setSelectedUserId(null);
             },
             onError: () => {},
         });
@@ -115,143 +98,153 @@ export default function userIndex({ auth, message, users }: PageProps) {
                 </h2>
             }
         >
-        <div className="py-12">
-            <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div className="py-12">
+                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                    <Head title="User" />
 
-            <Head title="User" />
+                    <PrimaryButton
+                        onClick={showUserCreateForm}
+                        className="mb-5 mx-5"
+                        disabled={processing}
+                    >
+                        ユーザー登録
+                    </PrimaryButton>
 
-            <PrimaryButton
-                onClick={showUserCreateForm}
-                className="mb-5 mx-5"
-                disabled={processing}
-            >
-                ユーザー登録
-            </PrimaryButton>
-
-            <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div className="py-3 px-6">
-                        {showActionMessage && actionMessage && (
-                            <div className="mt-2 text-green-700 bg-green-100 p-2 rounded-lg text-center font-bold">
-                                {actionMessage}
-                            </div>
-                        )}
-                        {showErrorMessage && errorMessage && (
-                            <div className="mt-2 text-red-700 bg-red-100 p-2 rounded-lg text-center font-bold">
-                                {errorMessage}
-                            </div>
-                        )}
-                    </div>
-                    <div className="p-6 text-gray-900">
-                        {userList.length > 0 ? (
-                            <table className="w-full border-separate border border-slate-400">
-                                <thead className="bg-cyan-500">
-                                    <tr>
-                                        <th className="border border-slate-300 text-white px-2 py-2">
-                                            ID
-                                        </th>
-                                        <th className="border border-slate-300 text-white px-2 py-2">
-                                            名前
-                                        </th>
-                                        <th className="border border-slate-300 text-white px-2 py-2">
-                                            メールアドレス
-                                        </th>
-                                        <th className="border border-slate-300 text-white px-2 py-2">
-                                            管理者フラグ
-                                        </th>
-                                        <th className="border border-slate-300 text-white px-2 py-2">
-                                            作成日
-                                        </th>
-                                        <th className="border border-slate-300 text-white px-2 py-2">
-                                            更新日
-                                        </th>
-                                        <th className="border border-slate-300 text-white px-2 py-2"></th>
-                                        <th className="border border-slate-300 text-white px-2 py-2"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {userList.map((user: User) => (
-                                        <tr key={user.id}>
-                                            <td className="border border-slate-300 px-2 py-2">
-                                                {user.id}
-                                            </td>
-                                            <td className="border border-slate-300 px-2 py-2">
-                                                {/* <Link
-                                                    href={`/Todo/Detail/${todo.id}`}
-                                                    method="get"
-                                                    className="underline decoration-solid"
-                                                > */}
-                                                    {user.name}
-                                                {/* </Link> */}
-                                            </td>
-                                            <td className="border border-slate-300 px-2 py-2">
-                                                {user.email}
-                                            </td>
-                                            <td className="border border-slate-300 px-2 py-2">
-                                                {user.is_admin
-                                                    ? "管理者"
-                                                    : "一般ユーザー"}
-                                            </td>
-                                            <td className="border border-slate-300 px-2 py-2">
-                                                {new Date(
-                                                    user.created_at
-                                                ).toLocaleDateString(
-                                                    "ja-JP",
-                                                    {
-                                                        year: "numeric",
-                                                        month: "2-digit",
-                                                        day: "2-digit",
-                                                    }
-                                                )}
-                                            </td>
-                                            <td className="border border-slate-300 px-2 py-2">
-                                                {new Date(
-                                                    user.updated_at
-                                                ).toLocaleDateString(
-                                                    "ja-JP",
-                                                    {
-                                                        year: "numeric",
-                                                        month: "2-digit",
-                                                        day: "2-digit",
-                                                    }
-                                                )}
-                                            </td>
-                                            <td className="border border-slate-300 px-2 py-2 text-center">
-                                            {user.is_admin ?  null : (
-                                                <EditButton
-                                                    onClick={() => showUserInTeamList(user.id)}
-                                                    disabled={processing}
-                                                >
-                                                    チーム編集
-                                                </EditButton>
-                                            )}
-                                            </td> 
-                                            <td className="border border-slate-300 px-2 py-2 text-center">
-                                            {user.is_admin && user.id == 1 ?  null : (
-                                                <DangerButton onClick={() => confirmDelete(user.id)} disabled={processing}>
-                                                    ユーザー削除
-                                                </DangerButton>
-                                            )}
-                                            </td>
+                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                        <div className="py-3 px-6">
+                            {showActionMessage && actionMessage && (
+                                <div className="mt-2 text-green-700 bg-green-100 p-2 rounded-lg text-center font-bold">
+                                    {actionMessage}
+                                </div>
+                            )}
+                            {showErrorMessage && errorMessage && (
+                                <div className="mt-2 text-red-700 bg-red-100 p-2 rounded-lg text-center font-bold">
+                                    {errorMessage}
+                                </div>
+                            )}
+                        </div>
+                        <div className="p-6 text-gray-900">
+                            {userList.length > 0 ? (
+                                <table className="w-full border-separate border border-slate-400">
+                                    <thead className="bg-cyan-500">
+                                        <tr>
+                                            <th className="border border-slate-300 text-white px-2 py-2">
+                                                ID
+                                            </th>
+                                            <th className="border border-slate-300 text-white px-2 py-2">
+                                                名前
+                                            </th>
+                                            <th className="border border-slate-300 text-white px-2 py-2">
+                                                メールアドレス
+                                            </th>
+                                            <th className="border border-slate-300 text-white px-2 py-2">
+                                                管理者フラグ
+                                            </th>
+                                            <th className="border border-slate-300 text-white px-2 py-2">
+                                                作成日
+                                            </th>
+                                            <th className="border border-slate-300 text-white px-2 py-2">
+                                                更新日
+                                            </th>
+                                            <th className="border border-slate-300 text-white px-2 py-2"></th>
+                                            <th className="border border-slate-300 text-white px-2 py-2"></th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        ) : (
-                            <p className="text-center">
-                                表示できるUserデータがありません
-                            </p>
-                        )}
+                                    </thead>
+                                    <tbody>
+                                        {userList.map((user: User) => (
+                                            <tr key={user.id}>
+                                                <td className="border border-slate-300 px-2 py-2">
+                                                    {user.id}
+                                                </td>
+                                                <td className="border border-slate-300 px-2 py-2">
+                                                    {user.name}
+                                                </td>
+                                                <td className="border border-slate-300 px-2 py-2">
+                                                    {user.email}
+                                                </td>
+                                                <td className="border border-slate-300 px-2 py-2">
+                                                    {user.is_admin
+                                                        ? "管理者"
+                                                        : "一般ユーザー"}
+                                                </td>
+                                                <td className="border border-slate-300 px-2 py-2">
+                                                    {new Date(
+                                                        user.created_at
+                                                    ).toLocaleDateString(
+                                                        "ja-JP",
+                                                        {
+                                                            year: "numeric",
+                                                            month: "2-digit",
+                                                            day: "2-digit",
+                                                        }
+                                                    )}
+                                                </td>
+                                                <td className="border border-slate-300 px-2 py-2">
+                                                    {new Date(
+                                                        user.updated_at
+                                                    ).toLocaleDateString(
+                                                        "ja-JP",
+                                                        {
+                                                            year: "numeric",
+                                                            month: "2-digit",
+                                                            day: "2-digit",
+                                                        }
+                                                    )}
+                                                </td>
+                                                <td className="border border-slate-300 px-2 py-2 text-center">
+                                                    {user.is_admin ? null : (
+                                                        <EditButton
+                                                            onClick={() =>
+                                                                showUserInTeamList(
+                                                                    user.id
+                                                                )
+                                                            }
+                                                            disabled={
+                                                                processing
+                                                            }
+                                                        >
+                                                            チーム編集
+                                                        </EditButton>
+                                                    )}
+                                                </td>
+                                                <td className="border border-slate-300 px-2 py-2 text-center">
+                                                    {user.is_admin &&
+                                                    user.id == 1 ? null : (
+                                                        <DangerButton
+                                                            onClick={() =>
+                                                                confirmDelete(
+                                                                    user.id
+                                                                )
+                                                            }
+                                                            disabled={
+                                                                processing
+                                                            }
+                                                        >
+                                                            ユーザー削除
+                                                        </DangerButton>
+                                                    )}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            ) : (
+                                <p className="text-center">
+                                    表示できるUserデータがありません
+                                </p>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        {/* 削除確認モーダル */}
-        {confirmingDeletion && selectedUserId !== null && (
-            <DeleteUserConfirmForm
-                userId={selectedUserId}
-                onConfirm={deleteUser}
-                onCancel={cancelDelete}
-            />
-        )}
-    </AuthenticatedLayout>
-)}
+            {/* 削除確認モーダル */}
+            {confirmingDeletion && selectedUserId !== null && (
+                <DeleteUserConfirmForm
+                    userId={selectedUserId}
+                    onConfirm={deleteUser}
+                    onCancel={cancelDelete}
+                />
+            )}
+        </AuthenticatedLayout>
+    );
+}
