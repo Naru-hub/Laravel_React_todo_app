@@ -17,6 +17,14 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->boolean('is_completed')->default(false);
+            // 開始日と期限日のカラム
+            $table->date('start_date');
+            $table->date('due_date');
+            $table->foreignId('team_id')
+                ->nullable() // 個人ToDoの場合はnullを許可
+                ->default(null) // デフォルト値をnullに設定
+                ->constrained('teams') // 'teams'テーブルを参照
+                ->onDelete('cascade'); // チーム削除時に関連ToDoを削除
             $table->timestamps();
         });
     }
