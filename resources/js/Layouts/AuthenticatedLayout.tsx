@@ -41,14 +41,17 @@ export default function Authenticated({
                                 >
                                     Todo
                                 </NavLink>
-                                {user.is_admin ? /** 管理者の場合、チーム一覧を表示 */
-                                // <NavLink
-                                //     href={route("team.index")}
-                                //     active={route().current("team.index")}
-                                // >
-                                //     Team
-                                // </NavLink>
-                                null : (
+                                {user.is_admin ? (
+                                    /** 管理者の場合、チームのTodo一覧を表示 */
+                                    <NavLink
+                                        href={route("team.todo.index")}
+                                        active={route().current(
+                                            "team.todo.index"
+                                        )}
+                                    >
+                                        TeamTodo
+                                    </NavLink>
+                                ) : (
                                     /** 一般ユーザーの場合、所属チームの他ユーザーのTodo一覧を表示 */
                                     <NavLink
                                         href={route("team.users.todos.index")}
@@ -60,6 +63,7 @@ export default function Authenticated({
                                     </NavLink>
                                 )}
                                 {user.is_admin ? (
+                                    /** 管理者の場合、ユーザーの一覧を表示 */
                                     <NavLink
                                         href={route("user.index")}
                                         active={route().current("user.index")}

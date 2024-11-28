@@ -129,4 +129,24 @@ class TeamService
             throw new \Exception();
         }
     }
+
+    /**
+     * チームTodo一覧を取得する(管理者)
+     */
+    public function getAllTeamTodos()
+    {
+        try {
+            // team_idがnullでないチームのTodo を取得
+            $allTeamTodos = Todo::whereNotNull('team_id')
+                ->get()
+                ->groupBy('team_id'); // チームIDでグループ化
+
+            // team_id をキーにしてグループ化されたTodo配列のコレクションを返す
+            return $allTeamTodos;
+        } catch (\Exception $e) {
+            // エラーメッセージをログに記録
+            Log::error($e->getMessage());
+            throw new \Exception();
+        }
+    }
 }

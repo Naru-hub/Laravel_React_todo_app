@@ -18,7 +18,8 @@ class TodoService
         try {
             // ログインしたユーザーのTodoのみを取得
             $user = Auth::user();
-            $todos = Todo::where('user_id', $user->id)->get();
+            // team_idがnullの個人ユーザーのタスクだけを取得
+            $todos = Todo::where('user_id', $user->id)->where('team_id', null)->get();
             return $todos;
         } catch (\Exception $e) {
             // エラーメッセージをログに記録
@@ -140,6 +141,8 @@ class TodoService
                 ->where('start_date', '<=', $today)
                 ->where('due_date', '>=', $today)
                 ->where('is_completed', false)
+                // team_idがnullの個人のTodoだけを取得
+                ->whereNull('team_id')
                 ->get();
             return $todayTodoList;
         } catch (\Exception $e) {

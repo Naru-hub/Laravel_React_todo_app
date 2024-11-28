@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
 use App\Services\TeamService;
 use Illuminate\Http\Request;
-use App\Services\TodoService;
 
 class TeamController extends Controller
 {
@@ -100,6 +99,32 @@ class TeamController extends Controller
         } catch (\Exception $e) {
             // エラーメッセージをセッションに保存して、ユーザーに通知
             return redirect()->back()->with('errorMsg', '所属チーム他ユーザーのTodo一覧の取得中にエラーが発生しました。');
+        }
+    }
+
+    /**
+     * チームのTodo一覧ページを表示(管理者)
+     */
+    public function teamTodoIndex(TeamService $teamService)
+    {
+        try {
+            // 管理者権限がない場合は操作を拒否
+            Gate::authorize('isAdmin');
+
+            // 全チームリスト取得
+            $allTeamList = $teamService->getTeamList();
+
+            // チームのTodo情報を取得
+            $allTeamTodos = $teamService->getAllTeamTodos();
+
+            return Inertia::render('Team/Todo/Index', [
+                'allTeamList' => $allTeamList,
+                'allTeamTodos' => $allTeamTodos,
+                'message' => session('message')
+            ]);
+        } catch (\Exception $e) {
+            // エラーメッセージをセッションに保存して、ユーザーに通知
+            return redirect()->back()->with('errorMsg', 'チームのTodo一覧の取得中にエラーが発生しました。');
         }
     }
 }

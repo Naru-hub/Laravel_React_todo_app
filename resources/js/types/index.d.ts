@@ -1,4 +1,4 @@
-import { ChangeEventHandler, FormEventHandler } from "react";
+import { ChangeEventHandler, FormEventHandler } from 'react';
 
 export interface User {
     id: number;
@@ -18,6 +18,7 @@ export interface Todo {
     is_completed: boolean;
     start_date: Date;
     due_date: Date;
+    team_id: number | null;
     created_at: Date;
     updated_at: Date;
 }
@@ -117,9 +118,14 @@ export interface anotherUserTodo {
     user_name: string;
 }
 
-// ユーザー所属チームの他ユーザーのTodo一覧の型
+/** ユーザー所属チームの他ユーザーのTodo一覧の型 */
 export interface sameTeamAnotherUserTodos {
     [teamId: string]: anotherUserTodo[];
+}
+
+/** チームのTodo一覧の型 */
+export interface allTeamTodos {
+    [teamId: string]: Todo[];
 }
 
 export type PageProps<

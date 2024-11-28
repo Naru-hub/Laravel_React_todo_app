@@ -111,5 +111,29 @@ class TodosTableSeeder extends Seeder
             'created_at' => now(),
             'updated_at' => now()
         ]);
+
+        DB::table('todos')->insert([
+            'user_id' => 1,
+            'title' => 'パソコンの環境構築',
+            'description' => 'パソコンの環境構築をする',
+            'is_completed' => false,
+            'start_date' => now(),
+            'due_date' => now()->copy()->addDays(3)->endOfDay(), // 開始日から3日後
+            'team_id' => 1,
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        DB::table('todos')->insert([
+            'user_id' => 1,
+            'title' => 'gatherのコミュニティを作成',
+            'description' => 'gatherのコミュニティを作成',
+            'is_completed' => false,
+            'start_date' => now(),
+            'due_date' => now()->copy()->addDays(3)->endOfDay(), // 開始日から3日後
+            'team_id' => 2,
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
     }
 }

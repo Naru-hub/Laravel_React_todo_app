@@ -79,7 +79,8 @@ export default function TeamUserTodoIndex({
                                 </div>
                             ))
                         )}
-                        <h2 className="pt-2 text-xl font-semibold text-black dark:text-white">
+                        <div className="border-t-2 border-gray-300 mt-5"></div>
+                        <h2 className="pt-5 text-xl font-semibold text-black dark:text-white">
                             所属チーム他ユーザーTodo一覧
                         </h2>
 
@@ -91,7 +92,7 @@ export default function TeamUserTodoIndex({
                         ) : (
                             Object.entries(anotherUserTodoList).map(
                                 ([teamId, todos]) => (
-                                    <div key={teamId} className="my-6">
+                                    <div key={teamId} className="py-3">
                                         <h3 className="px-3 text-l mb-2 text-blue-500">
                                             {todos[0]?.team_name ||
                                                 "不明なチーム"}

@@ -1,8 +1,9 @@
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import DangerButton from "@/Components/DangerButton";
-import { PageProps, Team, UserInTeamInfo} from "@/types";
-import { useForm, usePage } from "@inertiajs/react";
-import { FormEventHandler, useEffect, useState } from "react";
+import { FormEventHandler, useEffect, useState } from 'react';
+
+import DangerButton from '@/Components/DangerButton';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { PageProps, Team, UserInTeamInfo } from '@/types';
+import { useForm, usePage } from '@inertiajs/react';
 
 export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, allTeamList }: PageProps) {
     // セレクトボックス用のチーム一覧の型宣言

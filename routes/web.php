@@ -20,7 +20,9 @@ Route::get('/', function () {
 Route::get('Dashboard', [TodoController::class, 'dashboardIndex'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    // 管理者用(ユーザー操作のルーティングを設定)
+    /**
+     * 管理者用(ルーティングを設定)
+     */
     // ユーザー一覧
     Route::get('/users', [UserController::class, 'index'])->name('user.index');
     // ユーザー登録
@@ -36,11 +38,12 @@ Route::middleware('auth')->group(function () {
     // チーム削除
     Route::delete('/user/team/remove', [TeamController::class, 'destroy'])->name('team.destroy');
 
-    // チームユーザーTodo一覧
-    Route::get('/team/users/todos', [TeamController::class, 'TeamUserTodoIndex'])->name('team.users.todos.index');
+    // チームTodo一覧
+    Route::get('/team/todo/index', [TeamController::class, 'teamTodoIndex'])->name('team.todo.index');
 
-
-    // ユーザー用
+    /**
+     * ユーザー用(ルーティングを設定)
+     */
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -56,6 +59,9 @@ Route::middleware('auth')->group(function () {
     Route::put('/Todo/update/{id}', [TodoController::class, 'update'])->name('todo.update');
     // 削除
     Route::delete('/Todo/destroy/{id}', [TodoController::class, 'destroy'])->name('todo.destroy');
+
+    // チームユーザーTodo一覧
+    Route::get('/team/users/todos', [TeamController::class, 'TeamUserTodoIndex'])->name('team.users.todos.index');
 });
 
 require __DIR__ . '/auth.php';
