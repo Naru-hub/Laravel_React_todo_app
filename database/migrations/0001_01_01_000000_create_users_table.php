@@ -18,6 +18,8 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
+            // 管理者権限カラム
+            $table->boolean('is_admin')->default(false);
             $table->timestamps();
         });
 

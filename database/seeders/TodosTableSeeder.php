@@ -36,7 +36,7 @@ class TodosTableSeeder extends Seeder
         ]);
 
         DB::table('todos')->insert([
-            'user_id' => 1,
+            'user_id' => 2,
             'title' => 'プログラミングの勉強をする',
             'description' => 'PHPとJavaScriptの勉強をする',
             'is_completed' => false,
@@ -47,7 +47,7 @@ class TodosTableSeeder extends Seeder
         ]);
 
         DB::table('todos')->insert([
-            'user_id' => 1,
+            'user_id' => 3,
             'title' => '犬と散歩に行く',
             'description' => 'トリミング前に散歩に連れて行く',
             'is_completed' => false,
@@ -58,7 +58,7 @@ class TodosTableSeeder extends Seeder
         ]);
 
         DB::table('todos')->insert([
-            'user_id' => 1,
+            'user_id' => 4,
             'title' => '友達に電話する',
             'description' => '次の予定の時間を決める',
             'is_completed' => false,
@@ -69,12 +69,69 @@ class TodosTableSeeder extends Seeder
         ]);
 
         DB::table('todos')->insert([
-            'user_id' => 1,
+            'user_id' => 3,
             'title' => '買い物に行く',
             'description' => '日用品を買いに行く',
             'is_completed' => false,
-            'start_date' => now()->subDays(3)->startOfDay(),
-            'due_date' => now()->subDays(3)->endOfDay(),
+            'start_date' => now(),
+            'due_date' => now()->copy()->addDays(2)->addDays(3)->endOfDay(), // 開始日から3日後
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        DB::table('todos')->insert([
+            'user_id' => 2,
+            'title' => '打ち合わせ',
+            'description' => '打ち合わせに行く',
+            'is_completed' => false,
+            'start_date' => now(),
+            'due_date' => now()->copy()->addDays(2)->addDays(3)->endOfDay(), // 開始日から3日後
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        DB::table('todos')->insert([
+            'user_id' => 3,
+            'title' => '会議',
+            'description' => '会議に行く',
+            'is_completed' => false,
+            'start_date' => now(),
+            'due_date' => now()->copy()->addDays(2)->addDays(3)->endOfDay(), // 開始日から3日後
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        DB::table('todos')->insert([
+            'user_id' => 4,
+            'title' => 'プレゼン資料の作成',
+            'description' => 'プレゼン資料の作成をする',
+            'is_completed' => false,
+            'start_date' => now(),
+            'due_date' => now()->copy()->addDays(2)->addDays(3)->endOfDay(), // 開始日から3日後
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        DB::table('todos')->insert([
+            'user_id' => 1,
+            'title' => 'パソコンの環境構築',
+            'description' => 'パソコンの環境構築をする',
+            'is_completed' => false,
+            'start_date' => now(),
+            'due_date' => now()->copy()->addDays(3)->endOfDay(), // 開始日から3日後
+            'team_id' => 1,
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        DB::table('todos')->insert([
+            'user_id' => 1,
+            'title' => 'gatherのコミュニティを作成',
+            'description' => 'gatherのコミュニティを作成',
+            'is_completed' => false,
+            'start_date' => now(),
+            'due_date' => now()->copy()->addDays(3)->endOfDay(), // 開始日から3日後
+            'team_id' => 2,
             'created_at' => now(),
             'updated_at' => now()
         ]);

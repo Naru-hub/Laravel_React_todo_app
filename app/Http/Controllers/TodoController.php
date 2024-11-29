@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Todo\StoreRequest;
 use App\Http\Requests\Todo\UpdateRequest;
+use App\Services\TeamService;
 use Inertia\Inertia;
 use App\Services\TodoService;
 
@@ -99,20 +100,27 @@ class TodoController extends Controller
     }
 
     /**
-     * dashboardのTodo一覧(本日の予定)
+     * dashboardのTodo一覧(本日の予定、チームのTodo)
      */
-    public function dashboardIndex(TodoService $todoService)
+    public function dashboardIndex(TodoService $todoService, TeamService $teamService)
     {
         try {
+            // 今日のTodoを取得
             $todayTodoList = $todoService->getTodayTodoList();
+            // ログインユーザーが所属するチームのTodoを取得
+            $userInTeamTodos =  $teamService->getUserInTeamTodos();
+            // チーム情報のリストを取得
+            $allTeamList = $teamService->getTeamList();
             // 取得したTodo一覧を返却
             return Inertia::render('Dashboard', [
                 'todayTodos' => $todayTodoList,
+                'userInTeamTodos' => $userInTeamTodos,
+                'allTeamList' => $allTeamList,
                 'message' => session('message')
             ]);
         } catch (\Exception $e) {
             // エラーメッセージをセッションに保存して、ユーザーに通知
-            return redirect()->back()->with('errorMsg', '今日の予定のTodoの取得中にエラーが発生しました。');
+            return redirect()->back()->with('errorMsg', $e->getMessage());
         }
     }
 }

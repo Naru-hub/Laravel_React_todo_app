@@ -39,8 +39,38 @@ export default function Authenticated({
                                     href={route("todo.index")}
                                     active={route().current("todo.index")}
                                 >
-                                    todo
+                                    Todo
                                 </NavLink>
+                                {user.is_admin ? (
+                                    /** 管理者の場合、チームのTodo一覧を表示 */
+                                    <NavLink
+                                        href={route("team.todo.index")}
+                                        active={route().current(
+                                            "team.todo.index"
+                                        )}
+                                    >
+                                        TeamTodo
+                                    </NavLink>
+                                ) : (
+                                    /** 一般ユーザーの場合、所属チームの他ユーザーのTodo一覧を表示 */
+                                    <NavLink
+                                        href={route("team.users.todos.index")}
+                                        active={route().current(
+                                            "team.users.todos.index"
+                                        )}
+                                    >
+                                        TeamUserTodo
+                                    </NavLink>
+                                )}
+                                {user.is_admin ? (
+                                    /** 管理者の場合、ユーザーの一覧を表示 */
+                                    <NavLink
+                                        href={route("user.index")}
+                                        active={route().current("user.index")}
+                                    >
+                                        User
+                                    </NavLink>
+                                ) : null}
                             </div>
                         </div>
 

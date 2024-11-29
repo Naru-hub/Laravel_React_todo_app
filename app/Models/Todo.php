@@ -10,8 +10,19 @@ class Todo extends Model
 {
     use HasFactory;
 
+    /**
+     * ユーザーとのリレーション
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * チームとのリレーション
+     */
+    public function team(): BelongsTo
+    {
+        return $this->belongsTo(Team::class);
     }
 }

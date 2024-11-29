@@ -52,4 +52,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Todo::class);
     }
+
+    /**
+     * userとteamの多対多のリレーション
+     */
+    public function teams()
+    {
+        return $this->belongsToMany(Team::class)->withTimestamps();
+    }
 }

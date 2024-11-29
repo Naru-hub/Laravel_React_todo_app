@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('todos', function (Blueprint $table) {
-            // 開始日と期限日のカラムを追加
-            $table->date('start_date');
-            $table->date('due_date');
+        Schema::create('teams', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->timestamps();
         });
     }
 
@@ -23,8 +23,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('todos', function (Blueprint $table) {
-            $table->dropColumn(['start_date', 'due_date']);
-        });
+        Schema::dropIfExists('todos');
+        Schema::dropIfExists('teams');
     }
 };

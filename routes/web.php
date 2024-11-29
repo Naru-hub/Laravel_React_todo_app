@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TodoController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\TeamController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -18,6 +20,30 @@ Route::get('/', function () {
 Route::get('Dashboard', [TodoController::class, 'dashboardIndex'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    /**
+     * 管理者用(ルーティングを設定)
+     */
+    // ユーザー一覧
+    Route::get('/users', [UserController::class, 'index'])->name('user.index');
+    // ユーザー登録
+    Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
+    Route::post('/user/store', [UserController::class, 'store'])->name('user.store');
+    // ユーザー削除
+    Route::delete('/user/destroy/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+
+    // チーム一覧
+    Route::get('/user/{id}/teams', [TeamController::class, 'show'])->name('team.index');
+    // チーム登録
+    Route::post('/user/{id}/team/store', [TeamController::class, 'store'])->name('team.store');
+    // チーム削除
+    Route::delete('/user/team/remove', [TeamController::class, 'destroy'])->name('team.destroy');
+
+    // チームTodo一覧
+    Route::get('/team/todo/index', [TeamController::class, 'teamTodoIndex'])->name('team.todo.index');
+
+    /**
+     * ユーザー用(ルーティングを設定)
+     */
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -32,7 +58,10 @@ Route::middleware('auth')->group(function () {
     // 編集
     Route::put('/Todo/update/{id}', [TodoController::class, 'update'])->name('todo.update');
     // 削除
-    Route::delete('Todo/destroy/{id}', [TodoController::class, 'destroy'])->name('todo.destroy');
+    Route::delete('/Todo/destroy/{id}', [TodoController::class, 'destroy'])->name('todo.destroy');
+
+    // チームユーザーTodo一覧
+    Route::get('/team/users/todos', [TeamController::class, 'TeamUserTodoIndex'])->name('team.users.todos.index');
 });
 
 require __DIR__ . '/auth.php';
