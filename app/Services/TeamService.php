@@ -149,4 +149,33 @@ class TeamService
             throw new \Exception();
         }
     }
+
+    /**
+     * ユーザー所属のチームのTodo一覧を取得する(ユーザー)
+     */
+    public function getUserInTeamTodos()
+    {
+        try {
+            // 現在の認証ユーザーを取得
+            $user = Auth::user();
+
+            // ユーザーが所属しているチームIDを取得
+            $teamIds = $user->teams->pluck('id')->toArray();
+
+            // team_idがnullではなく、ユーザーが所属するチームのTodoを取得
+            $userInTeamTodos = Todo::whereIn('team_id', $teamIds)
+                // team_idがnullでない(TeamのTodo)
+                ->whereNotNull('team_id')
+                ->get()
+                // チームIDでグループ化
+                ->groupBy('team_id');
+
+            // チームごとのTodoを返す
+            return $userInTeamTodos;
+        } catch (\Exception $e) {
+            // エラーメッセージをログに記録
+            Log::error($e->getMessage());
+            throw new \Exception('チームのTodo取得中にエラーが発生しました');
+        }
+    }
 }

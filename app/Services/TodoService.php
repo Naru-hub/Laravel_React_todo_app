@@ -148,7 +148,7 @@ class TodoService
         } catch (\Exception $e) {
             // エラーメッセージをログに記録
             Log::error($e->getMessage());
-            throw new \Exception();
+            throw new \Exception('今日の予定のTodoの取得中にエラーが発生しました。');
         }
     }
 }

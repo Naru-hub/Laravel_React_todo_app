@@ -97,25 +97,25 @@ export default function TeamUserTodoIndex({
                                             {todos[0]?.team_name ||
                                                 "不明なチーム"}
                                         </h3>
-                                        <table className="min-w-full border-collapse border border-gray-200">
-                                            <thead className="bg-gray-100">
+                                        <table className="min-w-full border-separate border border-slate-400">
+                                            <thead className="bg-teal-500">
                                                 <tr>
-                                                    <th className="border border-gray-300 px-4 py-2 w-[120px]">
+                                                    <th className=" text-white border border-slate-300 px-4 w-[120px]">
                                                         ユーザー名
                                                     </th>
-                                                    <th className="border border-gray-300 px-4 py-2 w-1/4">
+                                                    <th className="text-white border border-slate-300 px-4 w-1/4">
                                                         タイトル
                                                     </th>
-                                                    <th className="border border-gray-300 px-4 py-2 w-1/3">
+                                                    <th className="text-white border border-slate-300 px-4 w-1/3">
                                                         説明
                                                     </th>
-                                                    <th className="border border-gray-300 px-4 py-2 w-[140px]">
+                                                    <th className="text-white border border-slate-300 px-4 w-[160px]">
                                                         完了状況
                                                     </th>
-                                                    <th className="border border-gray-300 px-4 py-2 w-[150px] whitespace-nowrap">
+                                                    <th className="text-white border border-slate-300 px-4 w-[150px] whitespace-nowrap">
                                                         開始日
                                                     </th>
-                                                    <th className="border border-gray-300 px-4 py-2 w-[150px] whitespace-nowrap">
+                                                    <th className="text-white border border-slate-300 px-4 py-2 w-[150px] whitespace-nowrap">
                                                         期限日
                                                     </th>
                                                 </tr>
@@ -127,36 +127,36 @@ export default function TeamUserTodoIndex({
                                                             key={todo.id}
                                                             className="hover:bg-gray-50"
                                                         >
-                                                            <td className="border border-gray-300 px-4 py-2 text-center whitespace-nowrap">
+                                                            <td className="border border-slate-300 px-4 py-2 text-center whitespace-nowrap">
                                                                 {todo.user_name}
                                                             </td>
-                                                            <td className="border border-gray-300 px-4 py-2 break-words">
+                                                            <td className="border border-slate-300 px-4 py-2 break-words">
                                                                 {todo.title}
                                                             </td>
-                                                            <td className="border border-gray-300 px-4 py-2 break-words">
+                                                            <td className="border border-slate-300 px-4 py-2 break-words">
                                                                 {
                                                                     todo.description
                                                                 }
                                                             </td>
-                                                            <td className="border border-gray-300 px-4 py-2 text-center">
+                                                            <td className="border border-slate-300 px-4 py-2 text-center">
                                                                 {todo.is_completed
                                                                     ? "完了"
                                                                     : "未完了"}
                                                             </td>
-                                                            <td className="border border-gray-300 px-4 py-2 text-center whitespace-nowrap">
+                                                            <td className="border border-slate-300 px-4 py-2 text-center whitespace-nowrap">
                                                                 {format(
                                                                     new Date(
                                                                         todo.start_date
                                                                     ),
-                                                                    "yyyy-MM-dd"
+                                                                    "yyyy/MM/dd"
                                                                 )}
                                                             </td>
-                                                            <td className="border border-gray-300 px-4 py-2 text-center whitespace-nowrap">
+                                                            <td className="border border-slate-300 px-4 py-2 text-center whitespace-nowrap">
                                                                 {format(
                                                                     new Date(
                                                                         todo.due_date
                                                                     ),
-                                                                    "yyyy-MM-dd"
+                                                                    "yyyy/MM/dd"
                                                                 )}
                                                             </td>
                                                         </tr>
