@@ -144,14 +144,7 @@ class TeamService
             ->orderBy('teams.id')
             ->get()
             ->groupBy('team_id');
-            // Todo::whereNotNull('team_id')
-            //     ->get()
-            //     // チームIDでグループ化
-            //     ->groupBy('team_id')
-            //     // グループ化されたコレクションをチームID順で並べ替え
-            //     ->sortKeys();
 
-            // team_id をキーにしてグループ化されたTodo配列のコレクションを返す
             return $allTeamTodos;
         } catch (\Exception $e) {
             // エラーメッセージをログに記録
