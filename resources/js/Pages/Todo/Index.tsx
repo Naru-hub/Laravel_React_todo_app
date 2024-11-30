@@ -276,7 +276,10 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
                                 </div>
                             )}
                         </div>
-                        <div className="p-6 text-gray-900">
+                        <div className="px-6 pb-6 text-gray-900">
+                            <h2 className="text-2xl font-semibold text-black dark:text-white mb-3">
+                                    Todo一覧
+                            </h2>
                             {todoLists.length > 0 ? (
                                 <table className="w-full border-separate border border-slate-400">
                                     <thead className="bg-cyan-500">

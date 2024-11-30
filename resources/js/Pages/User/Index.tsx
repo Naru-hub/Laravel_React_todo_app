@@ -126,7 +126,7 @@ export default function userIndex({ auth, message, users }: PageProps) {
                         <div className="p-6 text-gray-900">
                             {userList.length > 0 ? (
                                 <table className="w-full border-separate border border-slate-400">
-                                    <thead className="bg-cyan-500">
+                                    <thead className="bg-indigo-400">
                                         <tr>
                                             <th className="border border-slate-300 text-white px-2 py-2">
                                                 ID
