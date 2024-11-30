@@ -21,6 +21,7 @@ export interface Todo {
     team_id: number | null;
     created_at: Date;
     updated_at: Date;
+    team_name: string | null;
 }
 
 export interface TodoFormData {

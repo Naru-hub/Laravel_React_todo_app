@@ -109,13 +109,11 @@ class TodoController extends Controller
             $todayTodoList = $todoService->getTodayTodoList();
             // ログインユーザーが所属するチームのTodoを取得
             $userInTeamTodos =  $teamService->getUserInTeamTodos();
-            // チーム情報のリストを取得
-            $allTeamList = $teamService->getTeamList();
+
             // 取得したTodo一覧を返却
             return Inertia::render('Dashboard', [
                 'todayTodos' => $todayTodoList,
                 'userInTeamTodos' => $userInTeamTodos,
-                'allTeamList' => $allTeamList,
                 'message' => session('message')
             ]);
         } catch (\Exception $e) {

@@ -9,14 +9,14 @@ export default function Dashboard({
     auth,
     todayTodos,
     userInTeamTodos,
-    allTeamList,
+    // allTeamList,
 }: PageProps) {
     // 本日のTodo一覧の型宣言
     const todayTodoList = todayTodos as Todo[];
     // ユーザー所属チームのTodo一覧の型宣言
     const userTeamTodoList = userInTeamTodos as allTeamTodos;
     // チームリストの型宣言
-    const allTeamListInfo = allTeamList as Team[];
+    // const allTeamListInfo = allTeamList as Team[];
 
     // 本日の日付を取得,フォーマットを変換
     const Today = new Date();
@@ -99,67 +99,74 @@ export default function Dashboard({
                             </div>
                         )}
                     </div>
-                    <div className="py-8 bg-gray-100">
-                        <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                            <h2 className="px-6 pt-3 text-2xl font-semibold text-black dark:text-white">
-                                チームの予定
-                            </h2>
-                            {Object.keys(userTeamTodoList).length === 0 ? (
-                                <p className="text-gray-500 py-3 px-3">なし</p>
-                            ) : (
-                                Object.entries(userTeamTodoList).map(
-                                    ([teamId, todos]) => (
-                                        <div key={teamId} className="pb-8 pt-3">
-                                            <h3 className="px-8 text-l mb-2 text-blue-500">
+
+                    {
+                    // ログインユーザーが管理者の場合はチームの予定は表示させない（管理者はチームに所属できない）
+                    auth.user.is_admin ? null :
+                    // 管理者以外の場合はチームの予定を表示
+                    (
+                        <div className="py-8 bg-gray-100">
+                            <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                                <h2 className="px-6 pt-3 text-2xl font-semibold text-black dark:text-white">
+                                    チームの予定
+                                </h2>
+                                {Object.keys(userTeamTodoList).length === 0 ? (
+                                    <p className="text-gray-500 py-3 px-10">なし</p>
+                                ) : (
+                                    Object.entries(userTeamTodoList).map(
+                                        ([teamId, todos], index, array) => (
+                                            <div key={teamId} className="pb-8 pt-3">
+                                                <h3 className="px-8 text-l mb-2 font-bold">
                                                 {
-                                                    // teamIdをNumber型にキャスト
-                                                    allTeamListInfo[
-                                                        Number(teamId)
-                                                    ]?.name || "不明なチーム"
+                                                    todos[0]?.team_name
+                                                    || "不明なチーム"
                                                 }
-                                            </h3>
-                                            <table className="border-separate border border-slate-400 ml-8">
-                                                <thead className="bg-teal-500">
-                                                    <tr>
-                                                        <th className="text-white border border-slate-300 px-4 py-2 w-3/4">
-                                                            タイトル
-                                                        </th>
-                                                        <th className="text-white border border-slate-300 px-4 py-2">
-                                                            期限日
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {todos.map((todo: Todo) => (
-                                                        <tr
-                                                            key={todo.id}
-                                                            className="hover:bg-gray-50"
-                                                        >
-                                                            <td className="border border-slate-300 px-4 py-2 break-words">
-                                                                {todo.title}
-                                                            </td>
-                                                            <td className="border border-slate-300 px-4 py-2 text-center whitespace-nowrap">
-                                                                {format(
-                                                                    new Date(
-                                                                        todo.due_date
-                                                                    ),
-                                                                    "yyyy-MM-dd"
-                                                                )}
-                                                            </td>
+                                                </h3>
+                                                <table className="border-separate border border-slate-400 ml-8">
+                                                    <thead className="bg-teal-500">
+                                                        <tr>
+                                                            <th className="text-white border border-slate-300 px-4 py-2 w-3/4">
+                                                                タイトル
+                                                            </th>
+                                                            <th className="text-white border border-slate-300 px-4 py-2">
+                                                                期限日
+                                                            </th>
                                                         </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
-                                            {Object.keys(userTeamTodoList)
-                                                .length > 1 ? (
-                                                <div className="border-t-2 border-gray-300 mt-5"></div>
-                                            ) : null}
-                                        </div>
+                                                    </thead>
+                                                    <tbody>
+                                                        {todos.map((todo: Todo) => (
+                                                            <tr
+                                                                key={todo.id}
+                                                                className="hover:bg-gray-50"
+                                                            >
+                                                                <td className="border border-slate-300 px-4 py-2 break-words">
+                                                                    {todo.title}
+                                                                </td>
+                                                                <td className="border border-slate-300 px-4 py-2 text-center whitespace-nowrap">
+                                                                    {format(
+                                                                        new Date(
+                                                                            todo.due_date
+                                                                        ),
+                                                                        "yyyy-MM-dd"
+                                                                    )}
+                                                                </td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                                {
+                                                    // 最後の要素以外の時にborderを出す
+                                                    index < array.length - 1 && (
+                                                        <div className="border-t-2 border-gray-300 mt-8"></div>
+                                                    )
+                                                }
+                                            </div>
+                                        )
                                     )
-                                )
-                            )}
+                                )}
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </div>
         </AuthenticatedLayout>

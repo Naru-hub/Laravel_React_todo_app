@@ -8,12 +8,9 @@ import { Head, usePage } from "@inertiajs/react";
 export default function TeamTodoIndex({
     auth,
     allTeamTodos,
-    allTeamList,
 }: PageProps) {
     // チームのTodo一覧の型宣言
     const allTeamTodoList = allTeamTodos as allTeamTodos;
-    // チームリストの型宣言
-    const allTeamListInfo = allTeamList as Team[];
 
     const { props } = usePage();
     // フラッシュメッセージの型宣言
@@ -57,7 +54,7 @@ export default function TeamTodoIndex({
                     </div>
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
                         <h2 className="pt-5 text-xl font-semibold text-black dark:text-white">
-                            チーム別Todo一覧
+                            チームTodo一覧
                         </h2>
 
                         {Object.keys(allTeamTodoList).length === 0 ? (
@@ -66,31 +63,29 @@ export default function TeamTodoIndex({
                             </p>
                         ) : (
                             Object.entries(allTeamTodoList).map(
-                                ([teamId, todos]) => (
+                                ([teamId, todos], index, array) => (
                                     <div key={teamId} className="py-3">
                                         <h3 className="px-3 text-l mb-2">
                                             {
-                                                // teamIdをNumber型にキャスト
-                                                allTeamListInfo[Number(teamId)]
-                                                    ?.name || "不明なチーム"
+                                                    todos[0]?.team_name || "不明なチーム"
                                             }
                                         </h3>
-                                        <table className="min-w-full border-collapse border border-gray-200">
+                                        <table className="min-w-full border-separate border border-slate-400">
                                             <thead className="bg-emerald-300">
                                                 <tr>
-                                                    <th className="border border-gray-300 px-4 py-2 w-1/4">
+                                                    <th className="border border-slate-300 px-4 py-2 w-1/4">
                                                         タイトル
                                                     </th>
-                                                    <th className="border border-gray-300 px-4 py-2 w-1/3">
+                                                    <th className="border border-slate-300 px-4 py-2 w-1/3">
                                                         説明
                                                     </th>
-                                                    <th className="border border-gray-300 px-4 py-2 w-[140px]">
+                                                    <th className="border border-slate-300 px-4 py-2 w-[140px]">
                                                         完了状況
                                                     </th>
-                                                    <th className="border border-gray-300 px-4 py-2 w-[150px] whitespace-nowrap">
+                                                    <th className="border border-slate-300 px-4 py-2 w-[150px] whitespace-nowrap">
                                                         開始日
                                                     </th>
-                                                    <th className="border border-gray-300 px-4 py-2 w-[150px] whitespace-nowrap">
+                                                    <th className="border border-slate-300 px-4 py-2 w-[150px] whitespace-nowrap">
                                                         期限日
                                                     </th>
                                                 </tr>
@@ -101,18 +96,18 @@ export default function TeamTodoIndex({
                                                         key={todo.id}
                                                         className="hover:bg-gray-50"
                                                     >
-                                                        <td className="border border-gray-300 px-4 py-2 break-words">
+                                                        <td className="border border-slate-300 px-4 py-2 break-words">
                                                             {todo.title}
                                                         </td>
-                                                        <td className="border border-gray-300 px-4 py-2 break-words">
+                                                        <td className="border border-slate-300 px-4 py-2 break-words">
                                                             {todo.description}
                                                         </td>
-                                                        <td className="border border-gray-300 px-4 py-2 text-center">
+                                                        <td className="border border-slate-300 px-4 py-2 text-center">
                                                             {todo.is_completed
                                                                 ? "完了"
                                                                 : "未完了"}
                                                         </td>
-                                                        <td className="border border-gray-300 px-4 py-2 text-center whitespace-nowrap">
+                                                        <td className="border border-slate-300 px-4 py-2 text-center whitespace-nowrap">
                                                             {format(
                                                                 new Date(
                                                                     todo.start_date
@@ -120,7 +115,7 @@ export default function TeamTodoIndex({
                                                                 "yyyy-MM-dd"
                                                             )}
                                                         </td>
-                                                        <td className="border border-gray-300 px-4 py-2 text-center whitespace-nowrap">
+                                                        <td className="border border-slate-300 px-4 py-2 text-center whitespace-nowrap">
                                                             {format(
                                                                 new Date(
                                                                     todo.due_date
@@ -132,7 +127,12 @@ export default function TeamTodoIndex({
                                                 ))}
                                             </tbody>
                                         </table>
-                                        <div className="border-t-2 border-gray-300 mt-5"></div>
+                                        {
+                                            // 最後の要素以外の時にborderを出す
+                                            index < array.length - 1 && (
+                                                <div className="border-t-2 border-gray-300 mt-8"></div>
+                                            )
+                                        }
                                     </div>
                                 )
                             )

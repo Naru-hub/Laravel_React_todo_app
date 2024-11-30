@@ -137,9 +137,19 @@ class TeamService
     {
         try {
             // team_idがnullでないチームのTodo を取得
-            $allTeamTodos = Todo::whereNotNull('team_id')
-                ->get()
-                ->groupBy('team_id'); // チームIDでグループ化
+            $allTeamTodos = Todo::query()
+            ->join('teams', 'todos.team_id', '=', 'teams.id')
+            ->whereNotNull('todos.team_id')
+            ->select('todos.*', 'teams.name as team_name')
+            ->orderBy('teams.id')
+            ->get()
+            ->groupBy('team_id');
+            // Todo::whereNotNull('team_id')
+            //     ->get()
+            //     // チームIDでグループ化
+            //     ->groupBy('team_id')
+            //     // グループ化されたコレクションをチームID順で並べ替え
+            //     ->sortKeys();
 
             // team_id をキーにしてグループ化されたTodo配列のコレクションを返す
             return $allTeamTodos;
@@ -163,11 +173,13 @@ class TeamService
             $teamIds = $user->teams->pluck('id')->toArray();
 
             // team_idがnullではなく、ユーザーが所属するチームのTodoを取得
-            $userInTeamTodos = Todo::whereIn('team_id', $teamIds)
-                // team_idがnullでない(TeamのTodo)
-                ->whereNotNull('team_id')
+            $userInTeamTodos = Todo::query()
+                ->join('teams', 'todos.team_id', '=', 'teams.id')
+                ->whereIn('todos.team_id', $teamIds)
+                ->whereNotNull('todos.team_id')
+                ->select('todos.*', 'teams.name as team_name')
+                ->orderBy('teams.id')
                 ->get()
-                // チームIDでグループ化
                 ->groupBy('team_id');
 
             // チームごとのTodoを返す

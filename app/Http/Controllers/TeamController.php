@@ -111,14 +111,10 @@ class TeamController extends Controller
             // 管理者権限がない場合は操作を拒否
             Gate::authorize('isAdmin');
 
-            // 全チームリスト取得
-            $allTeamList = $teamService->getTeamList();
-
             // チームのTodo情報を取得
             $allTeamTodos = $teamService->getAllTeamTodos();
 
             return Inertia::render('Team/Todo/Index', [
-                'allTeamList' => $allTeamList,
                 'allTeamTodos' => $allTeamTodos,
                 'message' => session('message')
             ]);
