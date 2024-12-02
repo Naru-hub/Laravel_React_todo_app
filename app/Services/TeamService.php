@@ -154,6 +154,26 @@ class TeamService
     }
 
     /**
+     * チームTodoの詳細を取得(管理者)
+     */
+    public function getTeamTodoById($id)
+    {
+        try {
+            // チームTodo一覧のリンクから選択したTodoの詳細情報を取得
+            $todo = Todo::with('team')->findOrFail($id);
+
+            return $todo;
+        } catch (ModelNotFoundException $e) {
+            // エラーメッセージをログに記録
+            Log::error($e->getMessage());
+            throw new \Exception('指定されたTodoが見つかりませんでした');
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            throw new \Exception('Todoの取得中にエラーが発生しました。');
+        }
+    }
+
+    /**
      * ユーザー所属のチームのTodo一覧を取得する(ユーザー)
      */
     public function getUserInTeamTodos()

@@ -5,7 +5,7 @@ import SecondaryButton from '@/Components/SecondaryButton';
 import { useForm } from '@inertiajs/react';
 import { DeleteConfirmFormProps } from '@/types';
 
-export default function DeleteUserConfirmForm({
+export default function DeleteTeamTodoConfirmForm({
     id,
     onConfirm,
     onCancel,
@@ -17,7 +17,7 @@ export default function DeleteUserConfirmForm({
     } = useForm({
     });
 
-    const deleteUser: FormEventHandler = (e) => {
+    const deleteTeamTodo: FormEventHandler = (e) => {
         e.preventDefault();
         // onConfirm callbackを呼び出して削除処理を親コンポーネントで行う
         onConfirm(id);
@@ -26,9 +26,9 @@ export default function DeleteUserConfirmForm({
     return (
         <section className={`space-y-6 ${className}`}>
             <Modal show={true} onClose={onCancel}>
-                <form onSubmit={deleteUser} className="p-6">
+                <form onSubmit={deleteTeamTodo} className="p-6">
                     <h2 className="text-lg font-medium text-gray-900">
-                        ID：{id}のユーザーを削除してもよろしいですか?
+                        ID：{id}のTodoを削除してもよろしいですか?
                     </h2>
 
                     <p className="mt-1 text-sm text-red-600">

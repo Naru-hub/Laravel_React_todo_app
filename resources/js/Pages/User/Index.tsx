@@ -138,7 +138,7 @@ export default function userIndex({ auth, message, users }: PageProps) {
                                                 メールアドレス
                                             </th>
                                             <th className="border border-slate-300 text-white px-2 py-2">
-                                                管理者フラグ
+                                                権限
                                             </th>
                                             <th className="border border-slate-300 text-white px-2 py-2">
                                                 作成日
@@ -240,7 +240,7 @@ export default function userIndex({ auth, message, users }: PageProps) {
             {/* 削除確認モーダル */}
             {confirmingDeletion && selectedUserId !== null && (
                 <DeleteUserConfirmForm
-                    userId={selectedUserId}
+                    id={selectedUserId}
                     onConfirm={deleteUser}
                     onCancel={cancelDelete}
                 />

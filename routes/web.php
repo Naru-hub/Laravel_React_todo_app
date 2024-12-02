@@ -40,6 +40,8 @@ Route::middleware('auth')->group(function () {
 
     // チームTodo一覧
     Route::get('/team/todo/index', [TeamController::class, 'teamTodoIndex'])->name('team.todo.index');
+    //  チームTodo詳細
+    Route::get('/team/todo/detail/{id}', [TeamController::class, 'teamTodoShow'])->name('team.todo.detail');
 
     /**
      * ユーザー用(ルーティングを設定)

@@ -2,12 +2,23 @@ import { format } from "date-fns";
 import { useEffect, useState } from "react";
 
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { allTeamTodos, PageProps, Team, Todo } from "@/types";
-import { Head, usePage } from "@inertiajs/react";
+import { allTeamTodos, PageProps, Todo } from "@/types";
+import { Head, Link, usePage } from "@inertiajs/react";
+import EditButton from "@/Components/EditButton";
+import DangerButton from "@/Components/DangerButton";
+import PrimaryButton from "@/Components/PrimaryButton";
 
 export default function TeamTodoIndex({
     auth,
     allTeamTodos,
+    data,
+    setData,
+    post,
+    put,
+    delete: destroy,
+    processing,
+    reset,
+    errors,
 }: PageProps) {
     // チームのTodo一覧の型宣言
     const allTeamTodoList = allTeamTodos as allTeamTodos;
@@ -45,6 +56,14 @@ export default function TeamTodoIndex({
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                    <PrimaryButton
+                        // onClick={confirmTodoCreate}
+                        className="mb-5 mx-5"
+                        // disabled={processing}
+                    >
+                        追加
+                    </PrimaryButton>
+
                     <div className="px-6">
                         {showErrorMessage && errorMsg && (
                             <div className="mt-2 text-red-700 bg-red-100 p-2 rounded-lg text-center font-bold">
@@ -73,21 +92,26 @@ export default function TeamTodoIndex({
                                         <table className="min-w-full border-separate border border-slate-400">
                                             <thead className="bg-emerald-300">
                                                 <tr>
-                                                    <th className="border border-slate-300 px-4 py-2 w-1/4">
+                                                    <th className="border border-slate-300 text-white px-2 py-2">
+                                                        ID
+                                                    </th>
+                                                    <th className="border border-slate-300 text-white px-2 py-2">
                                                         タイトル
                                                     </th>
-                                                    <th className="border border-slate-300 px-4 py-2 w-1/3">
-                                                        説明
-                                                    </th>
-                                                    <th className="border border-slate-300 px-4 py-2 w-[140px]">
+                                                    <th className="border border-slate-300 text-white px-2 py-2">
                                                         完了状況
                                                     </th>
-                                                    <th className="border border-slate-300 px-4 py-2 w-[150px] whitespace-nowrap">
+                                                    <th className="border border-slate-300 text-white px-2 py-2">
                                                         開始日
                                                     </th>
-                                                    <th className="border border-slate-300 px-4 py-2 w-[150px] whitespace-nowrap">
+                                                    <th className="border border-slate-300 text-white px-2 py-2">
                                                         期限日
                                                     </th>
+                                                    <th className="border border-slate-300 text-white px-2 py-2">
+                                                        作成日
+                                                    </th>
+                                                    <th className="border border-slate-300 text-white px-2 py-2"></th>
+                                                    <th className="border border-slate-300 text-white px-2 py-2"></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -97,11 +121,29 @@ export default function TeamTodoIndex({
                                                         className="hover:bg-gray-50"
                                                     >
                                                         <td className="border border-slate-300 px-4 py-2 break-words">
+                                                            {todo.id}
+                                                        </td>
+                                                        {/* <td className="border border-slate-300 px-4 py-2 break-words">
                                                             {todo.title}
+                                                        </td> */}
+                                                        <td
+                                                            className={`${
+                                                                todo.is_completed
+                                                                    ? "border border-slate-300 px-2 py-2 line-through text-slate-400"
+                                                                    : "border border-slate-300 px-2 py-2"
+                                                            }`}
+                                                        >
+                                                            <Link
+                                                                href={`/team/todo/detail/${todo.id}`}
+                                                                method="get"
+                                                                className="underline decoration-solid"
+                                                            >
+                                                                {todo.title}
+                                                            </Link>
                                                         </td>
-                                                        <td className="border border-slate-300 px-4 py-2 break-words">
+                                                        {/* <td className="border border-slate-300 px-4 py-2 break-words">
                                                             {todo.description}
-                                                        </td>
+                                                        </td> */}
                                                         <td className="border border-slate-300 px-4 py-2 text-center">
                                                             {todo.is_completed
                                                                 ? "完了"
@@ -122,6 +164,41 @@ export default function TeamTodoIndex({
                                                                 ),
                                                                 "yyyy-MM-dd"
                                                             )}
+                                                        </td>
+                                                        <td className="border border-slate-300 px-4 py-2 text-center whitespace-nowrap">
+                                                            {format(
+                                                                new Date(
+                                                                    todo.created_at
+                                                                ),
+                                                                "yyyy-MM-dd"
+                                                            )}
+                                                        </td>
+                                                        <td className="border border-slate-300 px-2 py-2 text-center">
+                                                            <EditButton
+                                                                // onClick={() =>
+                                                                //     todoEditForm(
+                                                                //         todo.id,
+                                                                //         todo.title,
+                                                                //         todo.description,
+                                                                //         todo.is_completed,
+                                                                //         todo.start_date,
+                                                                //         todo.due_date
+                                                                //     )
+                                                                // }
+                                                                // disabled={processing}
+                                                            >
+                                                                編集
+                                                            </EditButton>
+                                                        </td>
+                                                        <td className="border border-slate-300 px-2 py-2 text-center">
+                                                            <DangerButton
+                                                                // onClick={() =>
+                                                                //     deleteTeamTodo(todo.id)
+                                                                // }
+                                                                // disabled={processing}
+                                                            >
+                                                                削除
+                                                            </DangerButton>
                                                         </td>
                                                     </tr>
                                                 ))}

@@ -7,12 +7,13 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
 use App\Services\TeamService;
+use App\Services\TodoService;
 use Illuminate\Http\Request;
 
 class TeamController extends Controller
 {
     /**
-     * ユーザー所属チーム一覧・編集ページを表示
+     * ユーザー所属チーム一覧・編集ページを表示(管理者)
      */
     public function show($userId, TeamService $teamService)
     {
@@ -33,7 +34,7 @@ class TeamController extends Controller
     }
 
     /**
-     * チーム登録
+     * チーム登録(管理者)
      */
     public function store(TeamStoreRequest $request, TeamService $teamService)
     {
@@ -56,7 +57,7 @@ class TeamController extends Controller
     }
 
     /**
-     * ユーザーをチームから削除
+     * ユーザーをチームから削除(管理者)
      */
     public function destroy(Request $request, TeamService $teamService)
     {
@@ -79,7 +80,7 @@ class TeamController extends Controller
     }
 
     /**
-     * 所属チーム他ユーザーのTodo一覧を取得・表示
+     * 所属チーム他ユーザーのTodo一覧を取得・表示(ユーザー)
      */
     public function TeamUserTodoIndex(TeamService $teamService)
     {
@@ -121,6 +122,24 @@ class TeamController extends Controller
         } catch (\Exception $e) {
             // エラーメッセージをセッションに保存して、ユーザーに通知
             return redirect()->back()->with('errorMsg', 'チームのTodo一覧の取得中にエラーが発生しました。');
+        }
+    }
+
+    /**
+     * チームのTodo詳細(管理者)
+     */
+    public function teamTodoShow($id, TeamService $teamService)
+    {
+        try {
+            // チームのTodo詳細情報を取得
+            $teamTodo = $teamService->getTeamTodoById($id);
+
+            return Inertia::render('Team/Todo/Detail', ['todo' => $teamTodo]);
+        } catch (\Exception $e) {
+            // エラーメッセージをセッションに保存して、ユーザーに通知
+            return redirect()->back()->with([
+                'errorMsg' => $e->getMessage()
+            ]);
         }
     }
 }

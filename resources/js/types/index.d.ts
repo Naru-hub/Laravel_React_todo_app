@@ -54,7 +54,7 @@ export interface TodoFormProps {
 }
 
 export interface DeleteConfirmFormProps {
-    userId: number;
+    id: number;
     onConfirm: (userId: number) => void;
     onCancel: () => void;
     className?: string;
@@ -84,10 +84,25 @@ export interface Team {
     // ISO 8601 形式の日付文字列
     created_at: string;
     updated_at: string;
-    pivot: {
-        user_id: number;
-        team_id: number;
-    };
+    // pivot: {
+    //     user_id: number;
+    //     team_id: number;
+    // };
+}
+
+// Team情報を含んだTodoの型定義
+export interface TeamTodo {
+    id: number;
+    user_id: number;
+    title: string;
+    description: string;
+    is_completed: boolean;
+    start_date: Date;
+    due_date: Date;
+    team_id: number | null;
+    created_at: Date;
+    updated_at: Date;
+    team?: Team; // オプションとしてTeam型のリレーションを含む
 }
 
 // ユーザーと所属チーム情報の型

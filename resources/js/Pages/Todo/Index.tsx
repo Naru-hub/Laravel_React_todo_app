@@ -288,7 +288,7 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
                                                 タイトル
                                             </th>
                                             <th className="border border-slate-300 text-white px-2 py-2">
-                                                ステータス
+                                                完了状況
                                             </th>
                                             <th className="border border-slate-300 text-white px-2 py-2">
                                                 開始日
