@@ -3,25 +3,38 @@ import { useEffect, useState } from "react";
 
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { allTeamTodos, PageProps, Todo } from "@/types";
-import { Head, Link, usePage } from "@inertiajs/react";
+import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import EditButton from "@/Components/EditButton";
 import DangerButton from "@/Components/DangerButton";
 import PrimaryButton from "@/Components/PrimaryButton";
 
 export default function TeamTodoIndex({
     auth,
-    allTeamTodos,
-    data,
-    setData,
-    post,
-    put,
-    delete: destroy,
-    processing,
-    reset,
-    errors,
+    allTeamTodos
 }: PageProps) {
     // チームのTodo一覧の型宣言
     const allTeamTodoList = allTeamTodos as allTeamTodos;
+
+    const {
+        data,
+        setData,
+        post,
+        put,
+        delete: destroy,
+        processing,
+        reset,
+        errors,
+    } = useForm({
+        // formの初期値を設定
+        id: 0,
+        title: "",
+        description: "",
+        is_completed: false,
+        start_date: new Date(),
+        due_date: new Date(),
+        team_id: 0,
+    });
+
 
     const { props } = usePage();
     // フラッシュメッセージの型宣言
@@ -42,6 +55,17 @@ export default function TeamTodoIndex({
             setShowErrorMessage(false); // エラーメッセージがなくなった場合も対応
         }
     }, [errorMsg]);
+
+    // 削除ボタン押下時
+    const deleteTeamTodo = (id: number, teamName: string | null) => {
+        if (teamName !== null && window.confirm(`${teamName}のIDが${id}のTodoを本当に削除してよろしいですか？`)) {
+            destroy(route("team.todo.destroy", id), {
+                // リクエスト後にページのスクロール位置を保持
+                preserveScroll: true,
+                onFinish: () => reset(),
+            });
+        }
+    };
 
     return (
         <AuthenticatedLayout
@@ -123,9 +147,6 @@ export default function TeamTodoIndex({
                                                         <td className="border border-slate-300 px-4 py-2 break-words">
                                                             {todo.id}
                                                         </td>
-                                                        {/* <td className="border border-slate-300 px-4 py-2 break-words">
-                                                            {todo.title}
-                                                        </td> */}
                                                         <td
                                                             className={`${
                                                                 todo.is_completed
@@ -141,9 +162,6 @@ export default function TeamTodoIndex({
                                                                 {todo.title}
                                                             </Link>
                                                         </td>
-                                                        {/* <td className="border border-slate-300 px-4 py-2 break-words">
-                                                            {todo.description}
-                                                        </td> */}
                                                         <td className="border border-slate-300 px-4 py-2 text-center">
                                                             {todo.is_completed
                                                                 ? "完了"
@@ -192,10 +210,8 @@ export default function TeamTodoIndex({
                                                         </td>
                                                         <td className="border border-slate-300 px-2 py-2 text-center">
                                                             <DangerButton
-                                                                // onClick={() =>
-                                                                //     deleteTeamTodo(todo.id)
-                                                                // }
-                                                                // disabled={processing}
+                                                                onClick={() => todo.team_name !== null && deleteTeamTodo(todo.id, todo.team_name)}
+                                                                disabled={processing}
                                                             >
                                                                 削除
                                                             </DangerButton>

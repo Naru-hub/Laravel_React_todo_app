@@ -131,10 +131,35 @@ class TeamController extends Controller
     public function teamTodoShow($id, TeamService $teamService)
     {
         try {
+            // 管理者権限がない場合は操作を拒否
+            Gate::authorize('isAdmin');
+
             // チームのTodo詳細情報を取得
             $teamTodo = $teamService->getTeamTodoById($id);
 
             return Inertia::render('Team/Todo/Detail', ['todo' => $teamTodo]);
+        } catch (\Exception $e) {
+            // エラーメッセージをセッションに保存して、ユーザーに通知
+            return redirect()->back()->with([
+                'errorMsg' => $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * TeamのTodo削除
+     */
+    public function destroyTeamTodo($id, TodoService $todoService)
+    {
+        try {
+            // 管理者権限がない場合は操作を拒否
+            Gate::authorize('isAdmin');
+
+            // 現状はTodo削除時にteamに関する処理は発生しないためtodoサービスのメソッドを流用
+            $todoService->deleteTodo($id);
+            return redirect()->route('team.todo.index')->with([
+                'message' => 'Todoを削除しました'
+            ]);
         } catch (\Exception $e) {
             // エラーメッセージをセッションに保存して、ユーザーに通知
             return redirect()->back()->with([

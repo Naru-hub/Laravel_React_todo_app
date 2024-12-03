@@ -47,7 +47,7 @@ export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, all
             setData((prevData) => ({
                 ...prevData,
                 // team_idを引数のteamIdで設定
-                team_id: teamId,  
+                team_id: teamId,
             }));
         }
     };
