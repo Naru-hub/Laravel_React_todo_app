@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Todo;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TeamService
@@ -170,6 +171,36 @@ class TeamService
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             throw new \Exception('Todoの取得中にエラーが発生しました。');
+        }
+    }
+
+    /**
+     * チームTodoを作成(管理者)
+     */
+    public function createTeamTodo($request)
+    {
+        try {
+            // 新規のTodoモデルを作成
+            $todo = new Todo();
+
+            // リクエストデータから日付を取得し、MySQLのDATETIME形式に変換
+            $start_date_format = isset($request->start_date) ? Carbon::parse($request->start_date)->format('Y-m-d H:i:s') : null;
+            $due_date_format = isset($request->due_date) ? Carbon::parse($request->due_date)->format('Y-m-d H:i:s') : null;
+
+            // Todoの各項目をTodoモデルに設定
+            $todo->user_id = Auth::id(); // ログインしているuser_idを設定
+            $todo->title = $request->title;
+            $todo->description = $request->description;
+            $todo->start_date =  $start_date_format;
+            $todo->due_date = $due_date_format;
+            $todo->team_id = $request->team_id;
+
+            // DBにデータを登録
+            $todo->save();
+        } catch (\Exception $e) {
+            // エラーメッセージをログに記録
+            Log::error($e->getMessage());
+            throw new \Exception();
         }
     }
 

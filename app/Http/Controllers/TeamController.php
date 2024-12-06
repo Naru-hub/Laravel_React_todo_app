@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Team\TeamStoreRequest;
+use App\Http\Requests\Team\TodoStoreRequest;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
@@ -115,8 +116,12 @@ class TeamController extends Controller
             // チームのTodo情報を取得
             $allTeamTodos = $teamService->getAllTeamTodos();
 
+            // チームリストを取得
+            $allTeamList = $teamService->getTeamList();
+
             return Inertia::render('Team/Todo/Index', [
                 'allTeamTodos' => $allTeamTodos,
+                'allTeamList' => $allTeamList,
                 'message' => session('message')
             ]);
         } catch (\Exception $e) {
@@ -142,6 +147,27 @@ class TeamController extends Controller
             // エラーメッセージをセッションに保存して、ユーザーに通知
             return redirect()->back()->with([
                 'errorMsg' => $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * チームのTodo作成・保存(管理者)
+     */
+    public function teamTodoStore(TodoStoreRequest $request, TeamService $teamService)
+    {
+        try {
+            // 管理者権限がない場合は操作を拒否
+            Gate::authorize('isAdmin');
+
+            $teamService->createTeamTodo($request);
+            return redirect('/team/todo/index')->with([
+                'message' => 'Todoを作成しました'
+            ]);
+        } catch (\Exception $e) {
+            // エラーメッセージをセッションに保存して、ユーザーに通知
+            return redirect()->back()->with([
+                'errorMsg' => 'Todoの作成中にエラーが発生しました'
             ]);
         }
     }

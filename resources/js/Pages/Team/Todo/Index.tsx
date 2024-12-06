@@ -1,19 +1,36 @@
 import { format } from "date-fns";
-import { useEffect, useState } from "react";
+import { FormEventHandler, useEffect, useRef, useState } from "react";
 
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { allTeamTodos, PageProps, Todo } from "@/types";
+import { allTeamTodos, PageProps, Team, Todo } from "@/types";
 import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import EditButton from "@/Components/EditButton";
 import DangerButton from "@/Components/DangerButton";
 import PrimaryButton from "@/Components/PrimaryButton";
+import TeamTodoForm from "./Modal/TeamTodoForm";
+import Modal from "@/Components/Modal";
 
 export default function TeamTodoIndex({
     auth,
-    allTeamTodos
+    allTeamTodos,
+    allTeamList
 }: PageProps) {
     // チームのTodo一覧の型宣言
     const allTeamTodoList = allTeamTodos as allTeamTodos;
+
+     // Todo作成・編集のステータス
+    const [todoCreate, setTodoCreate] = useState(false);
+    const [todoUpdate, setTodoUpdate] = useState(false);
+
+     // form要素の状態を管理
+    const titleInput = useRef<HTMLInputElement>(null);
+    const descriptionInput = useRef<HTMLTextAreaElement>(null);
+
+    const { props } = usePage();
+    // フラッシュメッセージの型宣言
+    const errorMsg = props.errorMsg as string;
+    // フラッシュメッセージの出現ステータス
+    const [showErrorMessage, setShowErrorMessage] = useState(!!errorMsg);
 
     const {
         data,
@@ -32,15 +49,62 @@ export default function TeamTodoIndex({
         is_completed: false,
         start_date: new Date(),
         due_date: new Date(),
-        team_id: 0,
+        team_id: 1,
     });
 
+/** TeamTodo作成関連処理 */
+     // 追加ボタン押下時
+    const confirmTeamTodoCreate = () => {
+        reset();
+        // バリデーションエラーメッセージをクリア
+        errors.title = "";
+        errors.description = "";
+        setTodoCreate(true);
+    };
 
-    const { props } = usePage();
-    // フラッシュメッセージの型宣言
-    const errorMsg = props.errorMsg as string;
-    // フラッシュメッセージの出現ステータス
-    const [showErrorMessage, setShowErrorMessage] = useState(!!errorMsg);
+     // Saveボタン押下時(Todo作成)
+    const todoStore: FormEventHandler = (e) => {
+        e.preventDefault();
+
+        post(route("team.todo.store"), {
+            preserveScroll: true,
+            onSuccess: () => {
+                // 成功時にリセット
+                reset();
+                closeModal();
+            },
+            onError: () => {
+                if (errors.title && titleInput.current) {
+                    // titleにエラーがある場合、titleInputにフォーカスを移す
+                    titleInput.current.focus();
+                } else if (errors.description && descriptionInput.current) {
+                    // descriptionにエラーがある場合、descriptionInputにフォーカスを移す
+                    descriptionInput.current.focus();
+                }
+            },
+        });
+    };
+
+     // Todo作成モーダルのキャンセルボタン押下時
+    const closeModal = () => {
+        reset();
+        setTodoCreate(false);
+        setData({
+            id: 0,
+            title: "",
+            description: "",
+            is_completed: false,
+            start_date: new Date(),
+            due_date: new Date(),
+            team_id: 0
+        });
+        // バリデーションエラーメッセージをクリア
+        errors.title = "";
+        errors.description = "";
+        errors.start_date = "";
+        errors.due_date = "";
+    };
+
 
     // フラッシュメッセージの表示・非表示
     useEffect(() => {
@@ -81,12 +145,33 @@ export default function TeamTodoIndex({
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <PrimaryButton
-                        // onClick={confirmTodoCreate}
+                        onClick={confirmTeamTodoCreate}
                         className="mb-5 mx-5"
-                        // disabled={processing}
+                        disabled={processing}
                     >
                         追加
                     </PrimaryButton>
+
+                    <Modal show={todoCreate} onClose={closeModal}>
+                        <TeamTodoForm
+                            data={data}
+                            setData={setData}
+                            allTeamList={allTeamList as Team[]}
+                            errors={errors}
+                            processing={processing}
+                            onChange={(e) =>
+                                setData(
+                                    e.target.name as keyof typeof data,
+                                    e.target.value
+                                )
+                            }
+                            onSubmit={todoStore}
+                            onCancel={closeModal}
+                            isEditing={false}
+                            titleInputRef={titleInput}
+                            descriptionInputRef={descriptionInput}
+                        />
+                    </Modal>
 
                     <div className="px-6">
                         {showErrorMessage && errorMsg && (
@@ -236,3 +321,4 @@ export default function TeamTodoIndex({
         </AuthenticatedLayout>
     );
 }
+

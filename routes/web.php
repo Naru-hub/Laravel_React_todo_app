@@ -42,6 +42,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/team/todo/index', [TeamController::class, 'teamTodoIndex'])->name('team.todo.index');
     //  チームTodo詳細
     Route::get('/team/todo/detail/{id}', [TeamController::class, 'teamTodoShow'])->name('team.todo.detail');
+    // チームTodo作成
+    Route::post('/team/todo/store', [TeamController::class, 'teamTodoStore'])->name('team.todo.store');
     // チームTodo削除
     Route::delete('/team/todo/destroy/{id}', [TeamController::class, 'destroyTeamTodo'])->name('team.todo.destroy');
 

@@ -144,6 +144,41 @@ export interface allTeamTodos {
     [teamId: string]: Todo[];
 }
 
+/** チームのTodoの型 */
+export interface TeamTodoFormData {
+    id: number;
+    title: string;
+    description: string;
+    is_completed: boolean;
+    start_date: Date;
+    due_date: Date;
+    created_at?: Date;
+    team_id: number;
+}
+
+/** チームのTodoFormの型 */
+export interface TeamTodoFormProps {
+    data: TeamTodoFormData;
+    allTeamList: Team[];
+    errors: {
+        title?: string;
+        description?: string;
+        is_completed?: string;
+        start_date?: string;
+        due_date?: string;
+        team_id?: string;
+    };
+    processing: boolean;
+    onChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+    onSubmit: FormEventHandler;
+    onCancel: () => void;
+    isEditing: boolean;
+    titleInputRef: React.RefObject<HTMLInputElement>;
+    descriptionInputRef: React.RefObject<HTMLTextAreaElement>;
+    setData: (name: keyof TeamTodoFormData, value: any) => void;
+}
+
+
 export type PageProps<
     T extends Record<string, unknown> = Record<string, unknown>
 > = T & {
