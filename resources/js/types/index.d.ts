@@ -84,10 +84,6 @@ export interface Team {
     // ISO 8601 形式の日付文字列
     created_at: string;
     updated_at: string;
-    // pivot: {
-    //     user_id: number;
-    //     team_id: number;
-    // };
 }
 
 // Team情報を含んだTodoの型定義
