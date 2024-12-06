@@ -3,16 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Team\TeamStoreRequest;
+use App\Http\Requests\Team\TodoStoreRequest;
+use App\Http\Requests\Team\TodoUpdateRequest;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
 use App\Services\TeamService;
+use App\Services\TodoService;
 use Illuminate\Http\Request;
 
 class TeamController extends Controller
 {
     /**
-     * ユーザー所属チーム一覧・編集ページを表示
+     * ユーザー所属チーム一覧・編集ページを表示(管理者)
      */
     public function show($userId, TeamService $teamService)
     {
@@ -33,9 +36,9 @@ class TeamController extends Controller
     }
 
     /**
-     * チーム登録
+     * チーム登録(管理者)
      */
-    public function store(TeamStoreRequest $request, TeamService $teamService)
+    public function userTeamStore(TeamStoreRequest $request, TeamService $teamService)
     {
         try {
             // 管理者権限がない場合は操作を拒否
@@ -56,9 +59,9 @@ class TeamController extends Controller
     }
 
     /**
-     * ユーザーをチームから削除
+     * ユーザーをチームから削除(管理者)
      */
-    public function destroy(Request $request, TeamService $teamService)
+    public function userTeamDestroy(Request $request, TeamService $teamService)
     {
         try {
             // 管理者権限がない場合は操作を拒否
@@ -79,7 +82,7 @@ class TeamController extends Controller
     }
 
     /**
-     * 所属チーム他ユーザーのTodo一覧を取得・表示
+     * 所属チーム他ユーザーのTodo一覧を取得・表示(ユーザー)
      */
     public function TeamUserTodoIndex(TeamService $teamService)
     {
@@ -114,13 +117,102 @@ class TeamController extends Controller
             // チームのTodo情報を取得
             $allTeamTodos = $teamService->getAllTeamTodos();
 
+            // チームリストを取得
+            $allTeamList = $teamService->getTeamList();
+
             return Inertia::render('Team/Todo/Index', [
                 'allTeamTodos' => $allTeamTodos,
+                'allTeamList' => $allTeamList,
                 'message' => session('message')
             ]);
         } catch (\Exception $e) {
             // エラーメッセージをセッションに保存して、ユーザーに通知
             return redirect()->back()->with('errorMsg', 'チームのTodo一覧の取得中にエラーが発生しました。');
+        }
+    }
+
+    /**
+     * チームのTodo詳細(管理者)
+     */
+    public function teamTodoShow($id, TeamService $teamService)
+    {
+        try {
+            // 管理者権限がない場合は操作を拒否
+            Gate::authorize('isAdmin');
+
+            // チームのTodo詳細情報を取得
+            $teamTodo = $teamService->getTeamTodoById($id);
+
+            return Inertia::render('Team/Todo/Detail', ['todo' => $teamTodo]);
+        } catch (\Exception $e) {
+            // エラーメッセージをセッションに保存して、ユーザーに通知
+            return redirect()->back()->with([
+                'errorMsg' => $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * チームのTodo作成・保存(管理者)
+     */
+    public function teamTodoStore(TodoStoreRequest $request, TeamService $teamService)
+    {
+        try {
+            // 管理者権限がない場合は操作を拒否
+            Gate::authorize('isAdmin');
+
+            $teamService->createTeamTodo($request);
+            return redirect('/team/todo/index')->with([
+                'message' => 'Todoを作成しました'
+            ]);
+        } catch (\Exception $e) {
+            // エラーメッセージをセッションに保存して、ユーザーに通知
+            return redirect()->back()->with([
+                'errorMsg' => 'Todoの作成中にエラーが発生しました'
+            ]);
+        }
+    }
+
+    /**
+     * TeamのTodo編集・保存
+     */
+    public function teamTodoUpdate(TodoUpdateRequest $request, $id, TeamService $teamService)
+    {
+        try {
+            // 管理者権限がない場合は操作を拒否
+            Gate::authorize('isAdmin');
+
+            $teamService->updateTeamTodo($id, $request);
+            return redirect('/team/todo/index')->with([
+                'message' => 'Todoを保存しました'
+            ]);
+        } catch (\Exception $e) {
+            // エラーメッセージをセッションに保存して、ユーザーに通知
+            return redirect()->back()->with([
+                'errorMsg' => $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * TeamのTodo削除
+     */
+    public function teamTodoDestroy($id, TodoService $todoService)
+    {
+        try {
+            // 管理者権限がない場合は操作を拒否
+            Gate::authorize('isAdmin');
+
+            // 現状はTodo削除時にteamに関する処理は発生しないためtodoサービスのメソッドを流用
+            $todoService->deleteTodo($id);
+            return redirect()->route('team.todo.index')->with([
+                'message' => 'Todoを削除しました'
+            ]);
+        } catch (\Exception $e) {
+            // エラーメッセージをセッションに保存して、ユーザーに通知
+            return redirect()->back()->with([
+                'errorMsg' => $e->getMessage()
+            ]);
         }
     }
 }

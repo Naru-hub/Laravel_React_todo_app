@@ -107,7 +107,7 @@ export default function TeamUserTodoIndex({
                                                         タイトル
                                                     </th>
                                                     <th className="text-white border border-slate-300 px-4 w-1/3">
-                                                        説明
+                                                        詳細
                                                     </th>
                                                     <th className="text-white border border-slate-300 px-4 w-[160px]">
                                                         完了状況

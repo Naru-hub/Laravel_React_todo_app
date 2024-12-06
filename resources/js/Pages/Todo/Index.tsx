@@ -48,7 +48,7 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
         due_date: new Date(),
     });
 
-    // ADDボタン押下時
+    // 追加ボタン押下時
     const confirmTodoCreate = () => {
         reset();
         // バリデーションエラーメッセージをクリア
@@ -81,7 +81,7 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
         setTodoUpdate(true);
     };
 
-    // Saveボタン押下時(Todo作成)
+    // 保存ボタン押下時(Todo作成)
     const todoStore: FormEventHandler = (e) => {
         e.preventDefault();
 
@@ -104,7 +104,7 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
         });
     };
 
-    // Saveボタン押下時(Todo編集)
+    // 保存ボタン押下時(Todo編集)
     const todoUpdateStore: FormEventHandler = (e) => {
         e.preventDefault();
 
@@ -288,7 +288,7 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
                                                 タイトル
                                             </th>
                                             <th className="border border-slate-300 text-white px-2 py-2">
-                                                ステータス
+                                                完了状況
                                             </th>
                                             <th className="border border-slate-300 text-white px-2 py-2">
                                                 開始日

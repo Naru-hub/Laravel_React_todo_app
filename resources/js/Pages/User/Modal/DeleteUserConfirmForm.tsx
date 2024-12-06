@@ -5,8 +5,8 @@ import SecondaryButton from '@/Components/SecondaryButton';
 import { useForm } from '@inertiajs/react';
 import { DeleteConfirmFormProps } from '@/types';
 
-export default function DeleteConfirmForm({
-    userId,
+export default function DeleteUserConfirmForm({
+    id,
     onConfirm,
     onCancel,
     className = '',
@@ -20,7 +20,7 @@ export default function DeleteConfirmForm({
     const deleteUser: FormEventHandler = (e) => {
         e.preventDefault();
         // onConfirm callbackを呼び出して削除処理を親コンポーネントで行う
-        onConfirm(userId); 
+        onConfirm(id);
     };
 
     return (
@@ -28,7 +28,7 @@ export default function DeleteConfirmForm({
             <Modal show={true} onClose={onCancel}>
                 <form onSubmit={deleteUser} className="p-6">
                     <h2 className="text-lg font-medium text-gray-900">
-                        ID：{userId}のユーザーを削除してもよろしいですか?
+                        ID：{id}のユーザーを削除してもよろしいですか?
                     </h2>
 
                     <p className="mt-1 text-sm text-red-600">

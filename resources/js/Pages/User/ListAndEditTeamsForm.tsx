@@ -32,7 +32,7 @@ export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, all
         id: 0,
         user_id: userIncludeTeamInfo.id,
         // 初期値はnull
-        team_id: null, 
+        team_id: null,
     });
 
     //削除処理かどうかのフラグ
@@ -47,7 +47,7 @@ export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, all
             setData((prevData) => ({
                 ...prevData,
                 // team_idを引数のteamIdで設定
-                team_id: teamId,  
+                team_id: teamId,
             }));
         }
     };
@@ -63,12 +63,12 @@ export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, all
                 },
                 onError: () => {
                     // 削除が失敗したらフラグをリセット
-                    setIsDeleting(false); 
+                    setIsDeleting(false);
                 },
             });
         }
-        // data.team_idが更新されたときに実行 
-    }, [data.team_id, isDeleting]);  
+        // data.team_idが更新されたときに実行
+    }, [data.team_id, isDeleting]);
 
     // ユーザーがすでに所属しているチームのIDリストを作成
     const userTeamIds = userTeamList.map(team => team.id);
@@ -88,7 +88,7 @@ export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, all
 
         if (data.team_id !== null) {
             // 登録処理中は削除処理フラグをリセット
-            setIsDeleting(false); 
+            setIsDeleting(false);
 
             post(route("team.store", { id: data.user_id }), {
                 preserveScroll: true,
@@ -185,7 +185,7 @@ export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, all
                                         <tbody>
                                             { userTeamList
                                                 // チームid順にソート
-                                                .sort((a, b) => a.id - b.id) 
+                                                .sort((a, b) => a.id - b.id)
                                                 .map((team: Team) => (
                                                     <tr key={team.id}>
                                                         <td className="border border-slate-300 px-2 py-2">
@@ -223,7 +223,7 @@ export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, all
                     </div>
                 </div>
             </div>
-    
+
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg py-6">
@@ -231,9 +231,9 @@ export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, all
                             チーム登録
                         </h2>
                         <form onSubmit={submit} className="flex items-center justify-center w-4/5 mx-auto space-x-4">
-                            <select 
-                                onChange={handleChange} 
-                                value={data.team_id ?? ''} 
+                            <select
+                                onChange={handleChange}
+                                value={data.team_id ?? ''}
                                 className="w-3/4 px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500"
                             >
                                 <option value="" disabled>選択してください</option>
@@ -251,7 +251,7 @@ export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, all
                             </button>
                         </form>
                     </div>
-                </div>               
+                </div>
             </div>
         </AuthenticatedLayout>
     );
