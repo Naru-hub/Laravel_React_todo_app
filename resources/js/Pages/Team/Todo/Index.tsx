@@ -13,7 +13,8 @@ import Modal from "@/Components/Modal";
 export default function TeamTodoIndex({
     auth,
     allTeamTodos,
-    allTeamList
+    allTeamList,
+    message
 }: PageProps) {
     // チームのTodo一覧の型宣言
     const allTeamTodoList = allTeamTodos as allTeamTodos;
@@ -26,10 +27,12 @@ export default function TeamTodoIndex({
     const titleInput = useRef<HTMLInputElement>(null);
     const descriptionInput = useRef<HTMLTextAreaElement>(null);
 
-    const { props } = usePage();
     // フラッシュメッセージの型宣言
+    let actionMessage: string = message as string;
+    const { props } = usePage();
     const errorMsg = props.errorMsg as string;
     // フラッシュメッセージの出現ステータス
+    const [showActionMessage, setShowActionMessage] = useState(!!actionMessage);
     const [showErrorMessage, setShowErrorMessage] = useState(!!errorMsg);
 
     const {
@@ -52,7 +55,7 @@ export default function TeamTodoIndex({
         team_id: 1,
     });
 
-/** TeamTodo作成関連処理 */
+/** チームのTodo作成関連処理 */
      // 追加ボタン押下時
     const confirmTeamTodoCreate = () => {
         reset();
@@ -62,7 +65,7 @@ export default function TeamTodoIndex({
         setTodoCreate(true);
     };
 
-     // Saveボタン押下時(Todo作成)
+     // 保存ボタン押下時(Todo作成)
     const todoStore: FormEventHandler = (e) => {
         e.preventDefault();
 
@@ -105,6 +108,89 @@ export default function TeamTodoIndex({
         errors.due_date = "";
     };
 
+/** チームのTodo編集関連処理 */
+    // 編集ボタン押下時
+    const todoEditForm = (
+        id: number,
+        title: string,
+        description: string,
+        is_completed: boolean,
+        start_date: Date,
+        due_date: Date,
+        team_id: number,
+    ) => {
+        reset();
+        setData({
+            id: id,
+            title: title,
+            description: description,
+            is_completed: is_completed,
+            start_date: start_date,
+            due_date: due_date,
+            team_id: team_id
+        });
+        // バリデーションエラーメッセージをクリア
+        errors.title = "";
+        errors.description = "";
+        setTodoUpdate(true);
+    };
+
+    // 保存ボタン押下時(Todo編集)
+    const todoUpdateStore: FormEventHandler = (e) => {
+        e.preventDefault();
+
+        put(route("team.todo.update", data.id), {
+            preserveScroll: true,
+            onSuccess: () => {
+                // 成功時のみリセットする
+                reset();
+                updateCloseModal();
+            },
+            onError: () => {
+                if (errors.title && titleInput.current) {
+                    // titleにエラーがある場合、titleInputにフォーカスを移す
+                    titleInput.current.focus();
+                } else if (errors.description && descriptionInput.current) {
+                    // descriptionにエラーがある場合、descriptionInputにフォーカスを移す
+                    descriptionInput.current.focus();
+                }
+            },
+        });
+    };
+
+    // Todo編集モーダルのキャンセルボタン押下時
+    const updateCloseModal = () => {
+        reset();
+        setTodoUpdate(false);
+        setData({
+            id: 0,
+            title: "",
+            description: "",
+            is_completed: false,
+            start_date: new Date(),
+            due_date: new Date(),
+            team_id: 1,
+        });
+        // バリデーションエラーメッセージをクリア
+        errors.title = "";
+        errors.description = "";
+        errors.start_date = "";
+        errors.due_date = "";
+        errors.team_id = "";
+    };
+
+    // フラッシュメッセージの表示・非表示
+    useEffect(() => {
+        if (actionMessage) {
+            setShowActionMessage(true);
+            const timer = setTimeout(() => {
+                setShowActionMessage(false);
+            }, 3000); // 3秒後にメッセージを非表示
+
+            return () => clearTimeout(timer); // タイマーをリセット
+        }
+    }, [actionMessage]);
+
 
     // フラッシュメッセージの表示・非表示
     useEffect(() => {
@@ -122,7 +208,7 @@ export default function TeamTodoIndex({
 
     // 削除ボタン押下時
     const deleteTeamTodo = (id: number, teamName: string | null) => {
-        if (teamName !== null && window.confirm(`${teamName}のIDが${id}のTodoを本当に削除してよろしいですか？`)) {
+        if (teamName !== null && window.confirm(`【${teamName}】の【ID：${id}】のTodoを本当に削除してよろしいですか？`)) {
             destroy(route("team.todo.destroy", id), {
                 // リクエスト後にページのスクロール位置を保持
                 preserveScroll: true,
@@ -173,14 +259,45 @@ export default function TeamTodoIndex({
                         />
                     </Modal>
 
-                    <div className="px-6">
+                    <Modal show={todoUpdate} onClose={updateCloseModal}>
+                        <TeamTodoForm
+                            data={data}
+                            setData={setData}
+                            allTeamList={allTeamList as Team[]}
+                            errors={errors}
+                            processing={processing}
+                            onChange={(e) => {
+                                const target = e.target as HTMLInputElement;
+                                const value =
+                                    target.type === "checkbox"
+                                        ? target.checked
+                                        : target.value;
+                                setData(
+                                    e.target.name as keyof typeof data,
+                                    value
+                                );
+                            }}
+                            onSubmit={todoUpdateStore}
+                            onCancel={updateCloseModal}
+                            isEditing={true}
+                            titleInputRef={titleInput}
+                            descriptionInputRef={descriptionInput}
+                        />
+                    </Modal>
+
+                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+                        {/* フラッシュメッセージを表示 */}
+                        {showActionMessage && actionMessage && (
+                            <div className="mt-2 text-green-700 bg-green-100 p-2 rounded-lg text-center font-bold">
+                                {actionMessage}
+                            </div>
+                        )}
                         {showErrorMessage && errorMsg && (
                             <div className="mt-2 text-red-700 bg-red-100 p-2 rounded-lg text-center font-bold">
                                 {errorMsg}
                             </div>
                         )}
-                    </div>
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+
                         <h2 className="pt-5 text-xl font-semibold text-black dark:text-white">
                             チームTodo一覧
                         </h2>
@@ -278,17 +395,21 @@ export default function TeamTodoIndex({
                                                         </td>
                                                         <td className="border border-slate-300 px-2 py-2 text-center">
                                                             <EditButton
-                                                                // onClick={() =>
-                                                                //     todoEditForm(
-                                                                //         todo.id,
-                                                                //         todo.title,
-                                                                //         todo.description,
-                                                                //         todo.is_completed,
-                                                                //         todo.start_date,
-                                                                //         todo.due_date
-                                                                //     )
-                                                                // }
-                                                                // disabled={processing}
+                                                                onClick={() => {
+                                                                    if (todo.team_id !== null) {
+                                                                        todoEditForm(
+                                                                            todo.id, todo.title,
+                                                                            todo.description,
+                                                                            todo.is_completed,
+                                                                            new Date(todo.start_date),
+                                                                            new Date(todo.due_date),
+                                                                            todo.team_id );
+                                                                    } else {
+                                                                        // team_idがnullの場合はエラーメッセージを表示
+                                                                        alert("チームIDが存在しません")
+                                                                    }
+                                                                }}
+                                                                disabled={processing}
                                                             >
                                                                 編集
                                                             </EditButton>

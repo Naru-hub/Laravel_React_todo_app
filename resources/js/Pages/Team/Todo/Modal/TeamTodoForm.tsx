@@ -71,7 +71,7 @@ const TeamTodoForm = ({
     };
 
     return (
-        <form onSubmit={onSubmit} method="POST" className="p-6">
+        <form onSubmit={onSubmit} className="p-6">
             <h2 className="text-lg text-gray-900 font-bold">
                 {isEditing ? "チームTodo 編集" : "チームTodo 作成"}
             </h2>

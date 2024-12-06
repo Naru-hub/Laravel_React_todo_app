@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Team\TeamStoreRequest;
 use App\Http\Requests\Team\TodoStoreRequest;
+use App\Http\Requests\Team\TodoUpdateRequest;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
@@ -37,7 +38,7 @@ class TeamController extends Controller
     /**
      * チーム登録(管理者)
      */
-    public function store(TeamStoreRequest $request, TeamService $teamService)
+    public function userTeamStore(TeamStoreRequest $request, TeamService $teamService)
     {
         try {
             // 管理者権限がない場合は操作を拒否
@@ -60,7 +61,7 @@ class TeamController extends Controller
     /**
      * ユーザーをチームから削除(管理者)
      */
-    public function destroy(Request $request, TeamService $teamService)
+    public function userTeamDestroy(Request $request, TeamService $teamService)
     {
         try {
             // 管理者権限がない場合は操作を拒否
@@ -173,9 +174,30 @@ class TeamController extends Controller
     }
 
     /**
+     * TeamのTodo編集・保存
+     */
+    public function teamTodoUpdate(TodoUpdateRequest $request, $id, TeamService $teamService)
+    {
+        try {
+            // 管理者権限がない場合は操作を拒否
+            Gate::authorize('isAdmin');
+
+            $teamService->updateTeamTodo($id, $request);
+            return redirect('/team/todo/index')->with([
+                'message' => 'Todoを保存しました'
+            ]);
+        } catch (\Exception $e) {
+            // エラーメッセージをセッションに保存して、ユーザーに通知
+            return redirect()->back()->with([
+                'errorMsg' => $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
      * TeamのTodo削除
      */
-    public function destroyTeamTodo($id, TodoService $todoService)
+    public function teamTodoDestroy($id, TodoService $todoService)
     {
         try {
             // 管理者権限がない場合は操作を拒否

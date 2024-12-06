@@ -205,6 +205,40 @@ class TeamService
     }
 
     /**
+     * チームTodoを更新(管理者)
+     */
+    public function updateTeamTodo($id, $request)
+    {
+        try {
+            // IDに紐づくTodoを取得
+            $todo = Todo::findOrFail($id);
+
+            // リクエストデータから日付を取得し、MySQLのDATETIME形式に変換
+            $start_date_format = isset($request->start_date) ? Carbon::parse($request->start_date)->format('Y-m-d H:i:s') : null;
+            $due_date_format = isset($request->due_date) ? Carbon::parse($request->due_date)->format('Y-m-d H:i:s') : null;
+
+            // Todoの各項目をTodoモデルに設定
+            $todo->title = $request->title;
+            $todo->description = $request->description;
+            $todo->is_completed = $request->is_completed;
+            $todo->start_date = $start_date_format;
+            $todo->due_date = $due_date_format;
+            $todo->team_id = $request->team_id;
+
+            // DBのTodoの値を更新
+            $todo->save();
+        } catch (ModelNotFoundException $e) {
+            // エラーメッセージをログに記録
+            Log::error($e->getMessage());
+            throw new \Exception('指定されたTodoが見つかりませんでした');
+        } catch (\Exception $e) {
+            // エラーメッセージをログに記録
+            Log::error($e->getMessage());
+            throw new \Exception('Todoの更新中にエラーが発生しました');
+        }
+    }
+
+    /**
      * ユーザー所属のチームのTodo一覧を取得する(ユーザー)
      */
     public function getUserInTeamTodos()

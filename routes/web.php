@@ -31,21 +31,23 @@ Route::middleware('auth')->group(function () {
     // ユーザー削除
     Route::delete('/user/destroy/{id}', [UserController::class, 'destroy'])->name('user.destroy');
 
-    // チーム一覧
+    // ユーザーの所属チーム一覧
     Route::get('/user/{id}/teams', [TeamController::class, 'show'])->name('team.index');
-    // チーム登録
-    Route::post('/user/{id}/team/store', [TeamController::class, 'store'])->name('team.store');
-    // チーム削除
-    Route::delete('/user/team/remove', [TeamController::class, 'destroy'])->name('team.destroy');
+    // ユーザーのチーム登録
+    Route::post('/user/{id}/team/store', [TeamController::class, 'userTeamStore'])->name('team.store');
+    // ユーザーのチーム脱退
+    Route::delete('/user/team/remove', [TeamController::class, 'userTeamDestroy'])->name('team.destroy');
 
     // チームTodo一覧
     Route::get('/team/todo/index', [TeamController::class, 'teamTodoIndex'])->name('team.todo.index');
-    //  チームTodo詳細
+    // チームTodo詳細
     Route::get('/team/todo/detail/{id}', [TeamController::class, 'teamTodoShow'])->name('team.todo.detail');
     // チームTodo作成
     Route::post('/team/todo/store', [TeamController::class, 'teamTodoStore'])->name('team.todo.store');
+    // チームTodo編集
+    Route::put('/team/todo/update/{id}', [TeamController::class, 'teamTodoUpdate'])->name('team.todo.update');
     // チームTodo削除
-    Route::delete('/team/todo/destroy/{id}', [TeamController::class, 'destroyTeamTodo'])->name('team.todo.destroy');
+    Route::delete('/team/todo/destroy/{id}', [TeamController::class, 'teamTodoDestroy'])->name('team.todo.destroy');
 
     /**
      * ユーザー用(ルーティングを設定)
@@ -54,7 +56,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Todoのルーティングを設定
+    /** Todoのルーティングを設定 */
     // 一覧
     Route::get('/Todo/Index', [TodoController::class, 'index'])->name('todo.index');
     // 作成
