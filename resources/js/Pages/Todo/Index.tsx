@@ -128,12 +128,14 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
     };
 
     // 削除ボタン押下時
-    const deleteTodo = (id: number) => {
-        destroy(route("todo.destroy", id), {
-            // リクエスト後にページのスクロール位置を保持
-            preserveScroll: true,
-            onFinish: () => reset(),
-        });
+    const deleteTodo = (id: number, title: string) => {
+        if (title !== null && window.confirm(`【${title}】のTodoを本当に削除してもよろしいですか？`)) {
+            destroy(route("todo.destroy", id), {
+                // リクエスト後にページのスクロール位置を保持
+                preserveScroll: true,
+                onFinish: () => reset(),
+            });
+        }
     };
 
     // Todo作成モーダルのキャンセルボタン押下時
@@ -314,7 +316,7 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
                                                     }`}
                                                 >
                                                     <Link
-                                                        href={`/Todo/Detail/${todo.id}`}
+                                                        href={`/todo/detail/${todo.id}`}
                                                         method="get"
                                                         className="underline decoration-solid"
                                                     >
@@ -382,7 +384,7 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
                                                 <td className="border border-slate-300 px-2 py-2 text-center">
                                                     <DangerButton
                                                         onClick={() =>
-                                                            deleteTodo(todo.id)
+                                                            deleteTodo(todo.id, todo.title)
                                                         }
                                                         disabled={processing}
                                                     >

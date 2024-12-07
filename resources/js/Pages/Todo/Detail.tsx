@@ -138,7 +138,7 @@ export default function TodoDetail({ auth, todo }: PageProps) {
                                         <dt className="text-sm font-medium text-gray-500"></dt>
                                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                             <Link
-                                                href="/Todo/Index/"
+                                                href="/todo/index/"
                                                 method="get"
                                                 as="button"
                                                 type="button"

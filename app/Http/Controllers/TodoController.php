@@ -36,7 +36,7 @@ class TodoController extends Controller
     {
         try {
             $todoService->createTodo($request);
-            return redirect('Todo/Index')->with([
+            return redirect('todo/index')->with([
                 'message' => 'Todoを作成しました'
             ]);
         } catch (\Exception $e) {
@@ -70,7 +70,7 @@ class TodoController extends Controller
     {
         try {
             $todoService->updateTodo($id, $request);
-            return redirect('Todo/Index')->with([
+            return redirect('todo/index')->with([
                 'message' => 'Todoを保存しました'
             ]);
         } catch (\Exception $e) {
@@ -88,7 +88,7 @@ class TodoController extends Controller
     {
         try {
             $todoService->deleteTodo($id);
-            return redirect('Todo/Index')->with([
+            return redirect('todo/index')->with([
                 'message' => 'Todoを削除しました'
             ]);
         } catch (\Exception $e) {

@@ -49,7 +49,7 @@ const TodoForm = ({
          // stateを更新
         setStartDate(date ?? undefined);
         // stateが変更されるたびにsetDataも更新
-        setData('start_date', date ? new Date(date) : undefined); 
+        setData('start_date', date ? new Date(date) : undefined);
     };
 
     // 期限日の変更処理
@@ -60,7 +60,7 @@ const TodoForm = ({
         }
         setDueDate(date ?? undefined);
         // stateが変更されるたびにsetDataも更新
-        setData('due_date', date ? new Date(date) : undefined); 
+        setData('due_date', date ? new Date(date) : undefined);
     };
 
 
@@ -95,8 +95,7 @@ const TodoForm = ({
                     className="ml-2"
                 />
 
-                <TextareaInput
-                    id="description"
+                <TextareaInput id="description"
                     name="description"
                     ref={descriptionInputRef}
                     value={data.description ?? ""}
