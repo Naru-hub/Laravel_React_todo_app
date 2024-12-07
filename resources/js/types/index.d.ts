@@ -49,7 +49,6 @@ export interface TodoFormProps {
     onCancel: () => void;
     isEditing: boolean;
     titleInputRef: React.RefObject<HTMLInputElement>;
-    descriptionInputRef: React.RefObject<HTMLTextAreaElement>;
     setData: (name: keyof TodoFormData, value: any) => void;
 }
 
@@ -170,7 +169,6 @@ export interface TeamTodoFormProps {
     onCancel: () => void;
     isEditing: boolean;
     titleInputRef: React.RefObject<HTMLInputElement>;
-    descriptionInputRef: React.RefObject<HTMLTextAreaElement>;
     setData: (name: keyof TeamTodoFormData, value: any) => void;
 }
 

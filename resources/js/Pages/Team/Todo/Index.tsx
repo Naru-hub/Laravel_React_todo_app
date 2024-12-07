@@ -25,7 +25,6 @@ export default function TeamTodoIndex({
 
      // form要素の状態を管理
     const titleInput = useRef<HTMLInputElement>(null);
-    const descriptionInput = useRef<HTMLTextAreaElement>(null);
 
     // フラッシュメッセージの型宣言
     let actionMessage: string = message as string;
@@ -80,9 +79,6 @@ export default function TeamTodoIndex({
                 if (errors.title && titleInput.current) {
                     // titleにエラーがある場合、titleInputにフォーカスを移す
                     titleInput.current.focus();
-                } else if (errors.description && descriptionInput.current) {
-                    // descriptionにエラーがある場合、descriptionInputにフォーカスを移す
-                    descriptionInput.current.focus();
                 }
             },
         });
@@ -150,9 +146,6 @@ export default function TeamTodoIndex({
                 if (errors.title && titleInput.current) {
                     // titleにエラーがある場合、titleInputにフォーカスを移す
                     titleInput.current.focus();
-                } else if (errors.description && descriptionInput.current) {
-                    // descriptionにエラーがある場合、descriptionInputにフォーカスを移す
-                    descriptionInput.current.focus();
                 }
             },
         });
@@ -255,7 +248,6 @@ export default function TeamTodoIndex({
                             onCancel={closeModal}
                             isEditing={false}
                             titleInputRef={titleInput}
-                            descriptionInputRef={descriptionInput}
                         />
                     </Modal>
 
@@ -281,7 +273,6 @@ export default function TeamTodoIndex({
                             onCancel={updateCloseModal}
                             isEditing={true}
                             titleInputRef={titleInput}
-                            descriptionInputRef={descriptionInput}
                         />
                     </Modal>
 
