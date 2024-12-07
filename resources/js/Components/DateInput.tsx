@@ -7,7 +7,7 @@ import DatePicker, { registerLocale } from "react-datepicker";
 import { DateInputProps } from "@/types";
 
 const DateInput = forwardRef<DatePicker, DateInputProps>(
-    ({ id, selected, onChange, className }) => {
+    ({ id, selected, onChange, className }, ref) => {
         const Today = new Date();
         registerLocale("ja", ja);
 
@@ -16,6 +16,7 @@ const DateInput = forwardRef<DatePicker, DateInputProps>(
                 id={id}
                 selected={selected ?? undefined} // `null` を `undefined` に変換
                 onChange={(date) => onChange(date)}
+                ref={ref}
                 dateFormat="yyyy/MM/dd"
                 locale="ja"
                 minDate={Today}
