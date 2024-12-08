@@ -58,15 +58,15 @@ Route::middleware('auth')->group(function () {
 
     /** Todoのルーティングを設定 */
     // 一覧
-    Route::get('/Todo/Index', [TodoController::class, 'index'])->name('todo.index');
+    Route::get('/todo/index', [TodoController::class, 'index'])->name('todo.index');
     // 作成
-    Route::post('/Todo/store', [TodoController::class, 'store'])->name('todo.store');
+    Route::post('/todo/store', [TodoController::class, 'store'])->name('todo.store');
     // 詳細
-    Route::get('/Todo/Detail/{id}', [TodoController::class, 'show'])->name('todo.detail');
+    Route::get('/todo/detail/{id}', [TodoController::class, 'show'])->name('todo.detail');
     // 編集
-    Route::put('/Todo/update/{id}', [TodoController::class, 'update'])->name('todo.update');
+    Route::put('/todo/update/{id}', [TodoController::class, 'update'])->name('todo.update');
     // 削除
-    Route::delete('/Todo/destroy/{id}', [TodoController::class, 'destroy'])->name('todo.destroy');
+    Route::delete('/todo/destroy/{id}', [TodoController::class, 'destroy'])->name('todo.destroy');
 
     // チームユーザーTodo一覧
     Route::get('/team/users/todos', [TeamController::class, 'TeamUserTodoIndex'])->name('team.users.todos.index');

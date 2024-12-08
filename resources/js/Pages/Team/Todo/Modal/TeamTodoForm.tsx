@@ -20,11 +20,9 @@ const TeamTodoForm = ({
     onCancel,
     isEditing,
     titleInputRef,
-    descriptionInputRef,
     allTeamList
 }: TeamTodoFormProps & {
     titleInputRef: React.RefObject<HTMLInputElement>;
-    descriptionInputRef: React.RefObject<HTMLTextAreaElement>;
 }) => {
     // DateInputの選択基準日
     const Today = new Date();
@@ -40,10 +38,8 @@ const TeamTodoForm = ({
     useEffect(() => {
         if (errors.title && titleInputRef.current) {
             titleInputRef.current.focus();
-        } else if (errors.description && descriptionInputRef.current) {
-            descriptionInputRef.current.focus();
         }
-    }, [errors, titleInputRef, descriptionInputRef]);
+    }, [errors, titleInputRef]);
 
     // 開始日の変更処理
     const handleStartDateChange = (date: Date | null) => {
@@ -122,7 +118,6 @@ const TeamTodoForm = ({
                 <TextareaInput
                     id="description"
                     name="description"
-                    ref={descriptionInputRef}
                     value={data.description ?? ""}
                     onChange={onChange}
                     className="mt-1 block w-3/4"

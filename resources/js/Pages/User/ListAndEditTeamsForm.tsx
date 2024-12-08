@@ -5,7 +5,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { PageProps, Team, UserInTeamInfo } from '@/types';
 import { useForm, usePage } from '@inertiajs/react';
 
-export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, allTeamList }: PageProps) {
+export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, allTeamList, timestamp }: PageProps) {
     // セレクトボックス用のチーム一覧の型宣言
     const selectAllTeamList = allTeamList as Team[];
     // User情報・所属チーム情報の型宣言
@@ -110,7 +110,7 @@ export default function ListAndEditTeamsForm ({ auth, message, userTeamInfo, all
 
             return () => clearTimeout(timer); // タイマーをリセット
         }
-    }, [actionMessage]);
+    }, [actionMessage, timestamp]);
 
     useEffect(() => {
         if (errorMessage) {

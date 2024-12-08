@@ -25,7 +25,8 @@ class UserController extends Controller
 
             return Inertia::render('User/Index', [
                 'users' => $users,
-                'message' => session('message')
+                'message' => session('message'),
+                'timestamp' => now()->timestamp
             ]);
         } catch (\Exception $e) {
             // エラーメッセージをセッションに保存して、ユーザーに通知

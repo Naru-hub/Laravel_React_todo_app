@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import Checkbox from '@/Components/Checkbox';
 import InputError from '@/Components/InputError';
@@ -20,10 +20,8 @@ const TodoForm = ({
     onCancel,
     isEditing,
     titleInputRef,
-    descriptionInputRef,
 }: TodoFormProps & {
     titleInputRef: React.RefObject<HTMLInputElement>;
-    descriptionInputRef: React.RefObject<HTMLTextAreaElement>;
 }) => {
     // DateInputの選択基準日
     const Today = new Date();
@@ -39,17 +37,15 @@ const TodoForm = ({
     useEffect(() => {
         if (errors.title && titleInputRef.current) {
             titleInputRef.current.focus();
-        } else if (errors.description && descriptionInputRef.current) {
-            descriptionInputRef.current.focus();
         }
-    }, [errors, titleInputRef, descriptionInputRef]);
+    }, [errors, titleInputRef]);
 
     // 開始日の変更処理
     const handleStartDateChange = (date: Date | null) => {
-         // stateを更新
+        // stateを更新
         setStartDate(date ?? undefined);
         // stateが変更されるたびにsetDataも更新
-        setData('start_date', date ? new Date(date) : undefined); 
+        setData('start_date', date ? new Date(date) : undefined);
     };
 
     // 期限日の変更処理
@@ -60,7 +56,7 @@ const TodoForm = ({
         }
         setDueDate(date ?? undefined);
         // stateが変更されるたびにsetDataも更新
-        setData('due_date', date ? new Date(date) : undefined); 
+        setData('due_date', date ? new Date(date) : undefined);
     };
 
 
@@ -95,10 +91,8 @@ const TodoForm = ({
                     className="ml-2"
                 />
 
-                <TextareaInput
-                    id="description"
+                <TextareaInput id="description"
                     name="description"
-                    ref={descriptionInputRef}
                     value={data.description ?? ""}
                     onChange={onChange}
                     className="mt-1 block w-3/4"

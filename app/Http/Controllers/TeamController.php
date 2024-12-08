@@ -31,7 +31,8 @@ class TeamController extends Controller
         return Inertia::render('User/ListAndEditTeamsForm', [
             'allTeamList' => $allTeamList,
             'userTeamInfo' => $userTeamInfo,
-            'message' => session('message')
+            'message' => session('message'),
+            'timestamp' => now()->timestamp
         ]);
     }
 
@@ -123,7 +124,8 @@ class TeamController extends Controller
             return Inertia::render('Team/Todo/Index', [
                 'allTeamTodos' => $allTeamTodos,
                 'allTeamList' => $allTeamList,
-                'message' => session('message')
+                'message' => session('message'),
+                'timestamp' => now()->timestamp
             ]);
         } catch (\Exception $e) {
             // エラーメッセージをセッションに保存して、ユーザーに通知

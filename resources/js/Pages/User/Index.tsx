@@ -9,7 +9,7 @@ import { Head, router, useForm, usePage } from "@inertiajs/react";
 
 import DeleteUserConfirmForm from "./Modal/DeleteUserConfirmForm";
 
-export default function userIndex({ auth, message, users }: PageProps) {
+export default function userIndex({ auth, message, users, timestamp }: PageProps) {
     // User一覧の型宣言
     const userList = users as User[];
 
@@ -76,7 +76,7 @@ export default function userIndex({ auth, message, users }: PageProps) {
 
             return () => clearTimeout(timer); // タイマーをリセット
         }
-    }, [actionMessage]);
+    }, [actionMessage, timestamp]);
 
     useEffect(() => {
         if (errorMessage) {
