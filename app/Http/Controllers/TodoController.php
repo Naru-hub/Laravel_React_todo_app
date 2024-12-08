@@ -21,7 +21,8 @@ class TodoController extends Controller
             // 取得したTodo一覧を返却
             return Inertia::render('Todo/Index', [
                 'todos' => $todos,
-                'message' => session('message')
+                'message' => session('message'),
+                'timestamp' => now()->timestamp
             ]);
         } catch (\Exception $e) {
             // エラーメッセージをセッションに保存して、ユーザーに通知

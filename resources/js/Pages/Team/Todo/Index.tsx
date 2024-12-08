@@ -14,7 +14,8 @@ export default function TeamTodoIndex({
     auth,
     allTeamTodos,
     allTeamList,
-    message
+    message,
+    timestamp
 }: PageProps) {
     // チームのTodo一覧の型宣言
     const allTeamTodoList = allTeamTodos as allTeamTodos;
@@ -182,7 +183,7 @@ export default function TeamTodoIndex({
 
             return () => clearTimeout(timer); // タイマーをリセット
         }
-    }, [actionMessage]);
+    }, [actionMessage, timestamp]);
 
 
     // フラッシュメッセージの表示・非表示

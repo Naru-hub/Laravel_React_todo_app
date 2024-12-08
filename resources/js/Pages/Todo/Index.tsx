@@ -10,7 +10,7 @@ import { Head, Link, useForm, usePage } from "@inertiajs/react";
 
 import TodoForm from "./Modal/TodoForm";
 
-export default function todoIndex({ auth, todos, message }: PageProps) {
+export default function todoIndex({ auth, todos, message, timestamp }: PageProps) {
     // Todo一覧の型宣言
     const todoLists = todos as Todo[];
     // Todo作成・編集のステータス
@@ -179,7 +179,7 @@ export default function todoIndex({ auth, todos, message }: PageProps) {
 
             return () => clearTimeout(timer); // タイマーをリセット
         }
-    }, [actionMessage]);
+    }, [actionMessage, timestamp]);
 
     useEffect(() => {
         if (errorMessage) {
