@@ -147,7 +147,7 @@ export default function Dashboard({
                                                                         new Date(
                                                                             todo.due_date
                                                                         ),
-                                                                        "yyyy-MM-dd"
+                                                                        "yyyy/MM/dd"
                                                                     )}
                                                                 </td>
                                                             </tr>
