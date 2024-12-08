@@ -366,7 +366,7 @@ export default function TeamTodoIndex({
                                                                 new Date(
                                                                     todo.start_date
                                                                 ),
-                                                                "yyyy-MM-dd"
+                                                                "yyyy/MM/dd"
                                                             )}
                                                         </td>
                                                         <td className="border border-slate-300 px-4 py-2 text-center whitespace-nowrap">
@@ -374,7 +374,7 @@ export default function TeamTodoIndex({
                                                                 new Date(
                                                                     todo.due_date
                                                                 ),
-                                                                "yyyy-MM-dd"
+                                                                "yyyy/MM/dd"
                                                             )}
                                                         </td>
                                                         <td className="border border-slate-300 px-4 py-2 text-center whitespace-nowrap">
@@ -382,7 +382,7 @@ export default function TeamTodoIndex({
                                                                 new Date(
                                                                     todo.created_at
                                                                 ),
-                                                                "yyyy-MM-dd"
+                                                                "yyyy/MM/dd"
                                                             )}
                                                         </td>
                                                         <td className="border border-slate-300 px-2 py-2 text-center">
