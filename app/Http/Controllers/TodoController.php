@@ -26,7 +26,7 @@ class TodoController extends Controller
             ]);
         } catch (\Exception $e) {
             // エラーメッセージをセッションに保存して、ユーザーに通知
-            return redirect()->back()->with('errorMsg', 'Todoの取得中にエラーが発生しました。');
+            return redirect()->back()->with('errorMsg', 'Todo一覧の取得中にエラーが発生しました。');
         }
     }
 
