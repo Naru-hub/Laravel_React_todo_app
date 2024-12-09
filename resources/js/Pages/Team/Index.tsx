@@ -55,19 +55,19 @@ export default function TeamUserTodoIndex({
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="px-6">
-                        {showErrorMessage && errorMsg && (
-                            <div className="mt-2 text-red-700 bg-red-100 p-2 rounded-lg text-center font-bold">
-                                {errorMsg}
-                            </div>
-                        )}
-                    </div>
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+                        <div className="px-6">
+                            {showErrorMessage && errorMsg && (
+                                <div className="mt-2 my-5 text-red-700 bg-red-100 p-2 rounded-lg text-center font-bold">
+                                    {errorMsg}
+                                </div>
+                            )}
+                        </div>
                         <h3 className="text-xl font-semibold text-black dark:text-white">
                             ユーザー所属チーム
                         </h3>
                         {userIncludeTeamInfo.teams.length === 0 ? (
-                            <p className="text-gray-500 py-3">
+                            <p className="text-gray-500 py-3 pl-6">
                                 チームに所属していません。
                             </p>
                         ) : (

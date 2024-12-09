@@ -111,7 +111,7 @@ export default function Dashboard({
                                     チームの予定
                                 </h2>
                                 {Object.keys(userTeamTodoList).length === 0 ? (
-                                    <p className="text-gray-500 py-3 px-10">なし</p>
+                                    <p className="pl-12 my-6">なし</p>
                                 ) : (
                                     Object.entries(userTeamTodoList).map(
                                         ([teamId, todos], index, array) => (
