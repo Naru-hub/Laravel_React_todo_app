@@ -71,13 +71,16 @@ export default function TeamUserTodoIndex({
                                 チームに所属していません。
                             </p>
                         ) : (
-                            userIncludeTeamInfo.teams.map((team) => (
-                                <div key={team.id} className="my-2">
-                                    <ul>
-                                        <li className="mx-3 font-bold">{team.name}</li>
-                                    </ul>
-                                </div>
-                            ))
+                            userIncludeTeamInfo.teams
+                                // team.idでソート
+                                .sort((a, b) => a.id - b.id)
+                                .map((team) => (
+                                    <div key={team.id} className="my-2">
+                                        <ul>
+                                            <li className="mx-3 font-bold">{team.name}</li>
+                                        </ul>
+                                    </div>
+                                ))
                         )}
                         <div className="border-t-2 border-gray-300 mt-5"></div>
                         <h2 className="pt-5 text-xl font-semibold text-black dark:text-white">
